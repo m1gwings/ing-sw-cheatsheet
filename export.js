@@ -28,13 +28,17 @@ paginate: true
 const indiceJSON = fs.readFileSync(percorsoFileIndice, 'utf-8')
 const indice = JSON.parse(indiceJSON)
 
-function primaLetteraMaiuscola(stringa) {
-    return stringa.charAt(0).toUpperCase() + stringa.slice(1)
+function formattaCapitolo(capitolo) {
+    let capitoloFormattato = capitolo.charAt(0).toUpperCase()
+    for (let i = 1; i < capitolo.length; i++) {
+        capitoloFormattato += ((capitolo.charAt(i) == '-') ? ' ' : capitolo.charAt(i))
+    }
+    return capitoloFormattato
 }
 
 for (let i = 0; i < indice.capitoli.length; i++) {
     let capitolo = indice.capitoli[i]
-    markdown += '- ' + primaLetteraMaiuscola(capitolo) + '\n'
+    markdown += '- ' + formattaCapitolo(capitolo) + '\n'
 }
 markdown += '\n'
 
