@@ -1,0 +1,22 @@
+{
+  "name": "ing-sw-cheatsheet",
+  "version": "0.0.1",
+  "description": "Cheatsheet per l'esame (open book) di Ingegneria del Software del Politecnico di Mialno. A. A. 2022/2023.",
+  "main": "export.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m1gwings/ing-sw-cheatsheet.git"
+  },
+  "author": "Cristiano Migali",
+  "bugs": {
+    "url": "https://github.com/m1gwings/ing-sw-cheatsheet/issues"
+  },
+  "homepage": "https://github.com/m1gwings/ing-sw-cheatsheet#readme",
+  "dependencies": {
+    "@marp-team/marp-cli": "^2.2.2",
+    "markdown-it-container": "^3.0.0",
+    "puppeteer": "^19.4.0"
+  },
+  "type": "module",
+  "license": "MIT"
+}

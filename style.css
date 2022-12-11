@@ -1,0 +1,48 @@
+/* @theme ing-sw-cheatsheet-theme */
+
+section {
+    /* Dimensioni dell'A4 (in orizzontale)*/
+    width: 297mm;
+    height: 200mm; /* L'altezza è ridotta di 10 mm per problemi di approssimazione di Puppeteer */
+    font-size: small;
+    margin: 0mm;
+    padding: 0mm;
+    columns: 3;
+    column-fill: auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    margin: 5mm;
+    padding: 0mm;
+}
+
+h2 {
+    margin: 5mm;
+    padding: 0mm;
+}
+
+h3 {
+    margin: 5mm;
+    padding: 0mm;
+}
+
+pre {
+    background-color: transparent;
+    border-color: black;
+    border: solid;
+    border-width: 1mm;
+    border-radius: 2mm;
+    margin: 3mm;
+    padding: 1mm;
+}
+
+p {
+    margin: 5mm;
+    padding: 0mm;
+}
+
+section::after {
+    margin: 5mm;
+    padding: 0mm;
+}
