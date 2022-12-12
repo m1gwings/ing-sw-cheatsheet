@@ -5,7 +5,7 @@ import express from 'express'
 import puppeteer from 'puppeteer'
 
 const percorsoFileIndice = 'indice.json'
-const percorsoFileStile = 'style.css'
+const percorsoFileStile = 'stile.css'
 const percorsoFileHTML = 'cheatsheet.html'
 const percorsoFileOutput = 'cheatsheet.pdf'
 
