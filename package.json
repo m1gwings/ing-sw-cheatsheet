@@ -14,6 +14,7 @@
   "homepage": "https://github.com/m1gwings/ing-sw-cheatsheet#readme",
   "dependencies": {
     "@marp-team/marp-cli": "^2.2.2",
+    "express": "^4.18.2",
     "markdown-it-container": "^3.0.0",
     "puppeteer": "^19.4.0"
   },

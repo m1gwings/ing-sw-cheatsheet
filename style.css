@@ -46,3 +46,7 @@ section::after {
     margin: 5mm;
     padding: 0mm;
 }
+
+img {
+    width: 100%;
+}

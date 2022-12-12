@@ -1,11 +1,15 @@
 import { Marpit } from '@marp-team/marpit'
 import markdownItContainer from 'markdown-it-container'
 import fs from 'fs'
+import express from 'express'
 import puppeteer from 'puppeteer'
 
 const percorsoFileIndice = 'indice.json'
 const percorsoFileStile = 'style.css'
+const percorsoFileHTML = 'cheatsheet.html'
 const percorsoFileOutput = 'cheatsheet.pdf'
+
+const numeroPorta = 8080
 
 const marpit = new Marpit().use(markdownItContainer, 'columns')
 
@@ -68,16 +72,26 @@ const fileHTML = `
 </html>
 `
 
-puppeteer.launch().then(browser => {
-    browser.newPage().then(pagina => {
-        pagina.setContent(fileHTML, { waitUntil: 'domcontentloaded' }).then(() => {
-            pagina.emulateMediaType('screen').then(() => {
-                pagina.pdf({
-                    path: percorsoFileOutput,
-                    format: 'A4',
-                    landscape: true,
-                }).then(pdf => {
-                    browser.close()
+fs.writeFileSync(percorsoFileHTML, fileHTML)
+
+const app = express();
+app.use(express.static('./'))
+
+const server = app.listen(numeroPorta, () => {
+    puppeteer.launch().then(browser => {
+        browser.newPage().then(pagina => {
+            pagina.goto(`http://localhost:${numeroPorta}/${percorsoFileHTML}`, { waitUntil: 'networkidle0' }).then(() => {
+                pagina.emulateMediaType('screen').then(() => {
+                    pagina.pdf({
+                        path: percorsoFileOutput,
+                        format: 'A4',
+                        landscape: true,
+                        printBackground: true
+                    }).then(pdf => {
+                        browser.close().then(() =>
+                            server.close()
+                        )
+                    })
                 })
             })
         })
