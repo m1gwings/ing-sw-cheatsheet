@@ -1,8 +1,20 @@
 {
     "capitoli": [
-        "java",
-        "uml",
-        "programmazione-funzionale",
-        "jml"
+        {
+            "file": "java",
+            "nome": "Java"
+        },
+        {
+            "file": "uml",
+            "nome": "UML"
+        },
+        {
+            "file": "programmazione-funzionale",
+            "nome": "Programmazione funzionale"
+        },
+        {
+            "file": "jml",
+            "nome": "JML"
+        }
     ]
 }

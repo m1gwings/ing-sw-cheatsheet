@@ -32,23 +32,15 @@ paginate: true
 const indiceJSON = fs.readFileSync(percorsoFileIndice, 'utf-8')
 const indice = JSON.parse(indiceJSON)
 
-function formattaCapitolo(capitolo) {
-    let capitoloFormattato = capitolo.charAt(0).toUpperCase()
-    for (let i = 1; i < capitolo.length; i++) {
-        capitoloFormattato += ((capitolo.charAt(i) == '-') ? ' ' : capitolo.charAt(i))
-    }
-    return capitoloFormattato
-}
-
 for (let i = 0; i < indice.capitoli.length; i++) {
-    let capitolo = indice.capitoli[i]
-    markdown += '- ' + formattaCapitolo(capitolo) + '\n'
+    let nomeCapitolo = indice.capitoli[i].nome
+    markdown += '- ' + nomeCapitolo + '\n'
 }
 markdown += '\n'
 
 for (let i = 0; i < indice.capitoli.length; i++) {
-    let capitolo = indice.capitoli[i]
-    const markdownCapitolo = fs.readFileSync(capitolo + '.md', 'utf-8')
+    let percorsoFileCapitolo = indice.capitoli[i].file + '.md'
+    const markdownCapitolo = fs.readFileSync(percorsoFileCapitolo, 'utf-8')
     markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n---\n' : '')
 }
 
