@@ -9,12 +9,32 @@
             "nome": "UML"
         },
         {
+            "file": "programmazione-concorrente",
+            "nome": "Programmazione concorrente"
+        },
+        {
             "file": "programmazione-funzionale",
             "nome": "Programmazione funzionale"
         },
         {
+            "file": "metriche",
+            "nome": "Metriche"
+        },
+        {
+            "file": "design-pattern",
+            "nome": "Design pattern"
+        },
+        {
             "file": "jml",
             "nome": "JML"
+        },
+        {
+            "file": "principio-sostituzione",
+            "nome": "Principio di sostituzione"
+        },
+        {
+            "file": "testing",
+            "nome": "Testing"
         }
     ]
 }
