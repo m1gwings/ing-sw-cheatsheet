@@ -1,6 +1,6 @@
-## Java
+# Java
 
-### Le classi
+## Le classi
 
 Vediamo un esempio di classe che rappresenta una data.
 
@@ -54,7 +54,7 @@ e che siano stati definiti due nuovi metodi:
 ```java
 public Class Data {
     ...
-    private static int numeroGiorni() {
+    private int numeroGiorni() {
         switch (mese) {
         case 1:
             return 31;
