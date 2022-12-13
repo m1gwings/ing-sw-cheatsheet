@@ -15,7 +15,12 @@
 - Pushare il branch
 - git push -u origin <branch-name>
 - Dopo aver lavorato, fare pull request sul sito
-- gh pr create
+- git add .
+- git commit
+- Premere esc e poi digitare :wq
+- git push
+- gh pr create (selezionare la repository m1gwings, premere invio per skippare)
+- Fare submit
 - Se la pull request viene accettata:
 - Cancellare il branch dal sito di GitHub
 - git branch -d nomeDelBranchLocale
