@@ -15,3 +15,8 @@
 - Pushare il branch
 - git push -u origin <branch-name>
 - Dopo aver lavorato, fare pull request sul sito
+- gh pr create
+- Se la pull request viene accettata:
+- Cancellare il branch dal sito di GitHub
+- git branch -d nomeDelBranchLocale
+- git push origin --delete nomeDelBranchRemoto
