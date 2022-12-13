@@ -1,5 +1,6 @@
 import { Marpit } from '@marp-team/marpit'
 import markdownItContainer from 'markdown-it-container'
+import markdownItMermaid from 'markdown-it-mermaid-plugin'
 import fs from 'fs'
 import express from 'express'
 import puppeteer from 'puppeteer'
@@ -12,9 +13,13 @@ const percorsoFileOutput = 'cheatsheet.pdf'
 const numeroPorta = 8080
 
 const marpit = new Marpit().use(markdownItContainer, 'columns')
+    .use(markdownItMermaid)
 
 const tema = fs.readFileSync(percorsoFileStile, 'utf-8')
 marpit.themeSet.default = marpit.themeSet.add(tema)
+
+const temaMermaid = `%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#FFFFFF',
+    'primaryBorderColor': '#000000'}}}%%`
 
 let markdown = `---
 
@@ -39,8 +44,11 @@ for (let i = 0; i < indice.capitoli.length; i++) {
 markdown += '\n'
 
 for (let i = 0; i < indice.capitoli.length; i++) {
-    let percorsoFileCapitolo = indice.capitoli[i].file + '.md'
-    const markdownCapitolo = fs.readFileSync(percorsoFileCapitolo, 'utf-8')
+    const percorsoFileCapitolo = indice.capitoli[i].file + '.md'
+    let markdownCapitolo = fs.readFileSync(percorsoFileCapitolo, 'utf-8')
+
+    // Aggiunge il tema custom ad ogni diagramma di mermaid
+    markdownCapitolo = markdownCapitolo.replaceAll('```mermaid\n', '```mermaid\n' + temaMermaid + '\n')
     markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n---\n' : '')
 }
 
@@ -58,6 +66,10 @@ const fileHTML = `
 </head>
 <html style="margin: 0mm; padding: 0mm; height: fit-content; width: fit-content;">
     <body style="margin: 0mm; padding: 0mm; height: fit-content; width: fit-content;">
+        <script type="module">
+            import mermaid from './mermaid/mermaid.esm.min.js';
+            mermaid.initialize({ theme: 'base', startOnLoad: true });
+        </script>
         <style>${css}</style>
         ${html}
     </body>

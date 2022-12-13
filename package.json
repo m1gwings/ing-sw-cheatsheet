@@ -16,6 +16,7 @@
     "@marp-team/marp-cli": "^2.2.2",
     "express": "^4.18.2",
     "markdown-it-container": "^3.0.0",
+    "markdown-it-mermaid-plugin": "^0.1.0",
     "puppeteer": "^19.4.0"
   },
   "type": "module",
