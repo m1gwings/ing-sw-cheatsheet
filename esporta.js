@@ -18,8 +18,7 @@ const marpit = new Marpit().use(markdownItContainer, 'columns')
 const tema = fs.readFileSync(percorsoFileStile, 'utf-8')
 marpit.themeSet.default = marpit.themeSet.add(tema)
 
-const temaMermaid = `%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#FFFFFF',
-    'primaryBorderColor': '#000000'}}}%%`
+const temaMermaid = `%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#FFFFFF', 'primaryBorderColor': '#000000'}}}%%`
 
 let markdown = `---
 
@@ -48,7 +47,7 @@ for (let i = 0; i < indice.capitoli.length; i++) {
     let markdownCapitolo = fs.readFileSync(percorsoFileCapitolo, 'utf-8')
 
     // Aggiunge il tema custom ad ogni diagramma di mermaid
-    markdownCapitolo = markdownCapitolo.replaceAll('```mermaid\n', '```mermaid\n' + temaMermaid + '\n')
+    markdownCapitolo = markdownCapitolo.replaceAll('```mermaid', '```mermaid\n' + temaMermaid)
     markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n---\n' : '')
 }
 
