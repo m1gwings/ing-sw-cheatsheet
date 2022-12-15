@@ -1,7 +1,7 @@
 {
   "name": "ing-sw-cheatsheet",
   "version": "0.0.1",
-  "description": "Cheatsheet per l'esame (open book) di Ingegneria del Software del Politecnico di Mialno. A. A. 2022/2023.",
+  "description": "Cheatsheet per l'esame (open book) di Ingegneria del Software del Politecnico di Milano. A. A. 2022/2023.",
   "main": "export.js",
   "repository": {
     "type": "git",
