@@ -14,7 +14,7 @@ In seguito spiegheremo come utilizzare i tool, sia nel caso abbiate installato G
 
 ## Con Github CLI
 
-### Autenticazione
+- ### Autenticazione
 
 Per prima cosa sarà necessario effettuare il login (con le vostre credenziali di Github) su Github CLI attraverso il seguente comando.
 
@@ -165,3 +165,71 @@ git push origin --delete <nome-branch>
 
 Ogni volta che volete aggiungere una modifica dovete ripetere il procedimento descritto a partire dalla creazione del branch.
 **Ricordate di aggiornare il main (per semplificare il rebase) e di creare il nuovo branch dopo esservi posizionati sul main con `git checkout main`**.
+
+---
+
+## Con Github Desktop (solo per Windows e macOS)
+
+- ### Installazione e Autenticazione
+
+Procedete con l'installazione di Github Desktop dal [sito ufficiale](https://desktop.github.com/). 
+
+Una volta installato autenticatevi con le vostre credenziali Github andando su File > Options > Accounts.
+
+- ### Fork e Clone del progetto
+
+Forkate il progetto andando sulla [pagina del progetto](https://github.com/m1gwings/ing-sw-cheatsheet) premendo su Fork in alto a destra.
+
+Clonate la repository appena forkata, andando su Github Desktop e successivamente: File > Clone repository..., selezionate la repository di nome `ing-sw-cheatsheet`, imposta la cartella di destinazione e cliccate su Clone.
+
+- ### Setup del progetto
+
+Aprite la cartella del progetto, aprite il terminale e installate le dipendenze con il comando:
+
+```bash
+npm i
+```
+
+Dopo aver installato le dipendenze, provate a esportare il progetto in PDF con il comando:
+
+```bash
+node esporta.js
+```
+
+Se tutto è andato a buon fine, verrà generato il PDF `cheatsheet.pdf` nella stessa cartella.
+
+- ### Contribuzione e creazione di una nuova feature
+
+Per contribuire al progetto, prima di tutto, creiamo un nuovo branch per la feature che stiamo implementando (immaginando quindi di voler implementare il capitolo sul testing, il nome del branch che aggiungeremo sarà qualcosa di simile a `testing`).
+
+Per aggiungere un nuovo branch, andate su Github Desktop e cliccate su Current branch > New branch... e inserite il nome del branch.
+
+![](./immagini/new-branch.png)
+
+Switchate al nuovo branch appena creato, andando su Current branch e selezionando il branch appena creato. Dobbiamo ora aggiungere il branch alla repository in remoto cliccando su Publish branch (affianco a Current branch).
+
+Possiamo ora iniziare a lavorare sulla nuova feature. Una volta terminata, salvate le modifiche e andate su Github Desktop. In alto a sinistra, nella sezione Changes, vedrete le modifiche che avete appena apportato. Selezionate le modifiche che volete aggiungere al progetto e cliccate sul pulsante `Commit to nomeDelBranch` in basso a sinistra (è importante aggiungere un titolo e una descrizione su cosa avete modificato/aggiunto).
+
+Dobbiamo ora pushare i cambiamenti sulla repository in remoto, cliccate su Push origin in alto a destra.
+
+![](./immagini/push-origin.png)
+
+- ### Creazione della pull request
+
+Ci occupiamo ora di aggiornare la repository originale con le modifiche che abbiamo appena apportato. Per farlo, andiamo su Branch > Create pull request, vi si la pagina di Github con la pull rquest da submittare. Potete, quindi, aggiungere eventuali commenti e cliccare su Create pull request.
+
+Se tutto è andato a buon fine, la pull request verrà accettata e la vostra feature verrà aggiunta al progetto.
+
+- ### Aggiornamento del repository forkato
+
+Può succedere che, nel frattempo scriviate la vostra feature, il repository originale abbia subito delle modifiche (le pull request di altri utenti sono state accettate  e mergiate sul main nel repository principale). Bisogna quindi aggiornare periodicamente il vostro repository forkato, soprattutto quando la vostra pull request viene accettata e mergiata. Per aggiornare il vostro repository remoto, andate sulla pagina web del vostro repository e cliccate su `Sync fork`.
+
+![](./immagini/sync-fork.png)
+
+Una volta fatto ciò, andate su Github Desktop e cliccate su `Fetch origin` in alto a destra. Se vi sono cambiamenti il tasto diventerà `Pull origin`, quindi cliccatelo. Il vostro progetto in locale è quindi aggiornato.
+
+- ### Eliminazione del vecchio branch
+
+La nostra feature è stata implementata nel main ed è presente sia nel repository principale che nel nostro repository forkato. Possiamo quindi switchare sul branch main ed eliminare il vecchio branch dal nostro repository locale e remoto. Per farlo, andate su Github Desktop e andate su Current branch > Tasto destro sul branch che abbiamo creato per implementare la feature > Delete... > Spuntate la casella `Yes, delete this branch on the remote` > Delete.
+
+![](./immagini/delete-branch.png)
