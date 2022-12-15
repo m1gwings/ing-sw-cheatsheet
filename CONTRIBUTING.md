@@ -29,7 +29,7 @@ Seguite il processo di login inserendo i dati richiesti.
 
 Quando sarà richiesto quale protocollo scegliere come default, consigliamo HTTPS.
 
-### Fare una fork della repository
+- ### Fare una fork della repository
 
 Una volta configurati correttamente i tool, vogliamo effettuare una fork del progetto: una repository clonata che apparirà sul vostro profilo Github e che sarà scaricata anche in locale.
 
@@ -46,7 +46,7 @@ gh repo fork m1gwings/ing-sw-cheatsheet --clone
 ```
 L'opzione `--clone` specifica che non solo volete creare una copia del progetto sul vostro account Github, ma che volete scaricare questa copia anche in locale.
 
-### Installazione delle librerie necessarie
+- ### Installazione delle librerie necessarie
 
 Spostatevi all'interno della nuova cartella creata:
 ```bash
@@ -58,7 +58,7 @@ Per poter testare lo script di esportazione è necessario installare le libreria
 npm i
 ```
 
-### Esportazione del PDF
+- ### Esportazione del PDF
 
 Siamo pronti per l'esportazione.
 Lanciate lo script:
@@ -68,7 +68,7 @@ node esporta.js
 
 Al termine dell'esecuzione il file `cheatsheet.pdf` dovrebbe comparire all'interno della cartella. Complimenti! Avete esportato il PDF con successo.
 
-### Modificare il progetto
+- ### Modificare il progetto
 
 Prima di iniziare a modificare il progetto occorre creare un nuovo branch: questo vi permetterà di poter aggiornare periodicamente la storia del branch principale (`main`) senza che ciò su cui state lavorando (all'interno del vostro branch) ne risenta.
 
@@ -105,7 +105,7 @@ Ora dovremo salvare le modifiche apportate alla storia del vostro branch su Gith
 git push
 ```
 
-### Mantenere la propria copia aggiornata
+- ### Mantenere la propria copia aggiornata
 
 Mentre lavorate alla vostra modifica, altri contributors potrebbero modificare il progetto principale. Per mantenere aggiornata la vostra versione del progetto utilizzate i seguenti comandi.
 
@@ -121,7 +121,7 @@ git pull
 
 Per le motivazioni spiegate precedentemente, l'unico branch su cui potreste trovare delle modifiche è il `main`, il vostro branch rimarrà inalterato.
 
-### Aprire una pull request
+- ### Aprire una pull request
 
 Una volta che la modifica che volevate apportare è stata completata, è il momento di proporla perchè venga aggiunta al progetto originale. Per fare questo apriremo una pull request.
 
@@ -143,7 +143,7 @@ gh pr create
 ```
 Selezionate nel menù la `repository m1gwings/ing-sw-cheatsheet`; poi potete premere invio ripetutamente per skippare la compilazione degli altri campi e lasciare i valori di default.
 
-### Cancellare il branch relativo ad una modifica
+- ### Cancellare il branch relativo ad una modifica
 
 Una volta che la pull request è stata accettata potete cancellare il branch che avevate creato appositamente per la modifica (la modifica ora è disponibile sul main). Prima di tutto tornate sul branch `main`:
 ```bash
@@ -161,7 +161,7 @@ E cancellatelo anche da Github:
 git push origin --delete <nome-branch>
 ```
 
-### Passare alla prossima modifica
+- ### Passare alla prossima modifica
 
 Ogni volta che volete aggiungere una modifica dovete ripetere il procedimento descritto a partire dalla creazione del branch.
 **Ricordate di aggiornare il main (per semplificare il rebase) e di creare il nuovo branch dopo esservi posizionati sul main con `git checkout main`**.
@@ -172,7 +172,7 @@ Ogni volta che volete aggiungere una modifica dovete ripetere il procedimento de
 
 - ### Installazione e Autenticazione
 
-Procedete con l'installazione di Github Desktop dal [sito ufficiale](https://desktop.github.com/). 
+Procedete (se non l'avete già fatto) con l'installazione di Github Desktop dal [sito ufficiale](https://desktop.github.com/). 
 
 Una volta installato autenticatevi con le vostre credenziali Github andando su File > Options > Accounts.
 
@@ -180,7 +180,7 @@ Una volta installato autenticatevi con le vostre credenziali Github andando su F
 
 Forkate il progetto andando sulla [pagina del progetto](https://github.com/m1gwings/ing-sw-cheatsheet) premendo su Fork in alto a destra.
 
-Clonate la repository appena forkata, andando su Github Desktop e successivamente: File > Clone repository..., selezionate la repository di nome `ing-sw-cheatsheet`, imposta la cartella di destinazione e cliccate su Clone.
+Clonate la repository appena forkata, andando su Github Desktop e successivamente: File > Clone repository..., selezionate la repository di nome `ing-sw-cheatsheet`, impostate la cartella di destinazione e cliccate su Clone.
 
 - ### Setup del progetto
 
@@ -208,7 +208,7 @@ Per aggiungere un nuovo branch, andate su Github Desktop e cliccate su Current b
 
 Switchate al nuovo branch appena creato, andando su Current branch e selezionando il branch appena creato. Dobbiamo ora aggiungere il branch alla repository in remoto cliccando su Publish branch (affianco a Current branch).
 
-Possiamo ora iniziare a lavorare sulla nuova feature. Una volta terminata, salvate le modifiche e andate su Github Desktop. In alto a sinistra, nella sezione Changes, vedrete le modifiche che avete appena apportato. Selezionate le modifiche che volete aggiungere al progetto e cliccate sul pulsante `Commit to nomeDelBranch` in basso a sinistra (è importante aggiungere un titolo e una descrizione su cosa avete modificato/aggiunto).
+Possiamo ora iniziare a lavorare sulla nuova feature. Una volta terminata, salvate le modifiche e andate su Github Desktop. In alto a sinistra, nella sezione Changes, vedrete le modifiche che avete appena apportato. Selezionate le modifiche che volete aggiungere al progetto e cliccate sul pulsante `Commit to <nome-branch>` in basso a sinistra (è importante aggiungere un titolo e una descrizione su cosa avete modificato/aggiunto).
 
 Dobbiamo ora pushare i cambiamenti sulla repository in remoto, cliccate su Push origin in alto a destra.
 
@@ -216,13 +216,13 @@ Dobbiamo ora pushare i cambiamenti sulla repository in remoto, cliccate su Push 
 
 - ### Creazione della pull request
 
-Ci occupiamo ora di aggiornare la repository originale con le modifiche che abbiamo appena apportato. Per farlo, andiamo su Branch > Create pull request, vi si la pagina di Github con la pull rquest da submittare. Potete, quindi, aggiungere eventuali commenti e cliccare su Create pull request.
+Ci occupiamo ora di aggiornare la repository originale con le modifiche che abbiamo appena apportato. Per farlo, andiamo su Branch > Create pull request, vi si aprirà la pagina di Github con la pull rquest da submittare. Potete, quindi, aggiungere eventuali commenti e cliccare su Create pull request.
 
 Se tutto è andato a buon fine, la pull request verrà accettata e la vostra feature verrà aggiunta al progetto.
 
-- ### Aggiornamento del repository forkato
+- ### Aggiornamento della repository forkata
 
-Può succedere che, nel frattempo scriviate la vostra feature, il repository originale abbia subito delle modifiche (le pull request di altri utenti sono state accettate  e mergiate sul main nel repository principale). Bisogna quindi aggiornare periodicamente il vostro repository forkato, soprattutto quando la vostra pull request viene accettata e mergiata. Per aggiornare il vostro repository remoto, andate sulla pagina web del vostro repository e cliccate su `Sync fork`.
+Può succedere che, nel frattempo scriviate la vostra feature, la repository originale abbia subito delle modifiche (le pull request di altri utenti sono state accettate  e mergiate sul main nel repository principale). Bisogna quindi aggiornare periodicamente la vostra repository forkata, soprattutto quando la vostra pull request viene accettata e mergiata. Per aggiornare la vostra repository remota, andate sulla pagina web della vostra repository e cliccate su `Sync fork`.
 
 ![](./immagini/sync-fork.png)
 
