@@ -106,3 +106,25 @@ Switchate al nuovo branch appena creato, andando su Current branch e selezionand
 Possiamo ora iniziare a lavorare sulla nuova feature. Una volta terminata, salvate le modifiche e andate su Github Desktop. In alto a sinistra, nella sezione Changes, vedrete le modifiche che avete appena apportato. Selezionate le modifiche che volete aggiungere al progetto e cliccate sul pulsante `Commit to nomeDelBranch` in basso a sinistra (è importante aggiungere un titolo e una descrizione su cosa avete modificato/aggiunto).
 
 Dobbiamo ora pushare i cambiamenti sulla repository in remoto, cliccate su Push origin in alto a destra.
+
+![](./immagini/push-origin.png)
+
+- ### Creazione della pull request
+
+Ci occupiamo ora di aggiornare la repository originale con le modifiche che abbiamo appena apportato. Per farlo, andiamo su Branch > Create pull request, vi si la pagina di Github con la pull rquest da submittare. Potete, quindi, aggiungere eventuali commenti e cliccare su Create pull request.
+
+Se tutto è andato a buon fine, la pull request verrà accettata e la vostra feature verrà aggiunta al progetto.
+
+- ### Aggiornamento del repository forkato
+
+Può succedere che, nel frattempo scriviate la vostra feature, il repository originale abbia subito delle modifiche (le pull request di altri utenti sono state accettate  e mergiate sul main nel repository principale). Bisogna quindi aggiornare periodicamente il vostro repository forkato, soprattutto quando la vostra pull request viene accettata e mergiata. Per aggiornare il vostro repository remoto, andate sulla pagina web del vostro repository e cliccate su `Sync fork`.
+
+![](./immagini/sync-fork.png)
+
+Una volta fatto ciò, andate su Github Desktop e cliccate su `Fetch origin` in alto a destra. Se vi sono cambiamenti il tasto diventerà `Pull origin`, quindi cliccatelo. Il vostro progetto in locale è quindi aggiornato.
+
+- ### Eliminazione del vecchio branch
+
+La nostra feature è stata implementata nel main ed è presente sia nel repository principale che nel nostro repository forkato. Possiamo quindi switchare sul branch main ed eliminare il vecchio branch dal nostro repository locale e remoto. Per farlo, andate su Github Desktop e andate su Current branch > Tasto destro sul branch che abbiamo creato per implementare la feature > Delete... > Spuntate la casella `Yes, delete this branch on the remote` > Delete.
+
+![](./immagini/delete-branch.png)
