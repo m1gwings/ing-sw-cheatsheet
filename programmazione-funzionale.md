@@ -138,7 +138,7 @@ Otterrò uno `stream`, contenente le stringhe: "Luigi", "30", "Pippo", "40", "Pl
 
 ### `reduce`
 
-La **`T reduce(Identità, <funzione binaria>)`** è un'operazione per avere un singolo valore a partire da uno `stream`. 
+La **`T reduce(Identità, <funzione binaria>)`** è un'operazione di aggregazione che restituisce un singolo valore a partire da uno `stream`. 
 
 Si ha come primo parametro un valore iniziale (identità), e come secondo parametro una funzione binaria che prende in input due elementi dello `stream` e restituisce un altro elemento (dello stesso tipo) ottenuto a partire dai due. La funzione verrà applicata induttivamente ad ogni elemento dello `stream`, fino ad ottenere un solo elemento.
 
