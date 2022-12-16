@@ -203,6 +203,8 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 
 ---
 
+<!-- _class: due -->
+
 Facciamo un esempio usando gli `Optional` e i tre metodi visti in precendenza:
 
 ```java
@@ -250,4 +252,44 @@ Otterremo in output:
     ciao mondo
     vuoto
     vuoto
+```
+
+## Esercizio sulla programmazione funzionale (TdE del 2019-02-18, esercizio 4 - punto c)
+
+### Testo dell'esercizio
+
+Si consideri il seguente metodo statico, che ha la precondizione che ciascun elemento di nums è una stringa corrispondente a una rappresenatazione testuale di un numero intero
+
+```java
+public static List<Integer> addX(List<String> nums, int x) {
+    List<Integer> plusX = new LinkedList<>();
+    for(String numString : nums) {
+        number = Integer.valueOf(numString);
+        if (number>0)
+            plusX.add(number + x);
+    }
+    return plusX;
+}
+```
+
+Si riscriva il metodo utilizzando i costrutti della programmazione funzionale di Java 8.
+
+### Soluzione
+
+Il metodo `addX` non fa altro che prendere in input una lista di stringhe `nums` e un intero `x`, e restituire una lista di interi ottenuta sommando `x` a tutti gli interi positivi presenti in `nums` (gli interi <= 0 nella lista `nums` non vengono aggiunti nella lista `plusX`).
+
+Quindi possiamo: 
+- applicare il metodo `stream()` alla lista di stringhe per iniziare la nostra "catena di funzioni",
+- convertire ogni stringa della lista di partenza in un intero (ritornando poi lo `stream` di interi), tramite una `map` con parametro parametro il metodo `Integer.valueOf(numString)`, 
+- filtrare gli interi positivi, 
+- sommare `x` a ciascuno di essi.
+
+```java
+public static List<Integer> addX(List<String> nums, int x) {
+    return nums.stream()
+        .map(numString -> Integer.valueOf(numString))
+        .filter(number -> number > 0)
+        .map(number -> number + x)
+        .collect(Collectors.toList());
+}
 ```
