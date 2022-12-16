@@ -51,8 +51,6 @@ for (let i = 0; i < indice.capitoli.length; i++) {
     markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n\n---\n\n' : '')
 }
 
-// console.log(markdown)
-
 const { html, css } = marpit.render(markdown)
 
 const fileHTML = `

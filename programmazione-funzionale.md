@@ -1,6 +1,6 @@
 # Programmazione funzionale
 
-Il concetto di programmazione funzionale si basa sul fatto di considerare le funzioni come valori, e quindi utilizzarle come tali. In questo modo, le funzioni possono essere passate come parametri, ritornate come risultati, memorizzate in variabili, ecc.
+Il paradigma di programmazione funzionale si basa sul principio di considerare le funzioni come oggetti, e quindi utilizzarli come tali. In questo modo, le funzioni possono essere passate come parametri, restituite come risultati, memorizzate in variabili, ecc.
 Le funzioni usate come parametro senza specificare il nome della funzione, ma solo il comportamento che essa deve avere, sono dette **funzioni anonime**.
 
 ## Espressioni lambda
@@ -78,10 +78,10 @@ Questa catena inizierà invocando il metodo **`stream()`** sulla collezione. Nel
 Stream<Persona> stream = persone.stream();
 ```
 
-### `Filter`
+### `filter`
 
-Possiamo filtrare lo `stream` per far si che tutti gli elementi della collezione soddisfino un cetro predicato (funzione che ritorna solo true o false).
-Per farlo, usiamo il metodo **`filter(<predicato>)`**. Nel nostro esempio, vogliamo filtrare le persone che hanno più di 30 anni:
+Possiamo filtrare lo `stream` per far si che tutti gli elementi della collezione soddisfino un cetro predicato (funzione che restituisce solo true o false).
+Per farlo, usiamo il metodo **`Stream<T> filter(<predicato>)`**. Nel nostro esempio, vogliamo filtrare le persone che hanno più di 30 anni:
 
 ```java
 Stream<Persona> stream = persone.stream()
@@ -90,9 +90,9 @@ Stream<Persona> stream = persone.stream()
 
 La funzione lambda nel metodo `filter` sarà `true` per tre persone: Luigi, Pippo e Pluto. Verrà quindi eliminato Mario (che ha 20 anni) dal nostro `stream`.
 
-### `Map`
+### `map`
 
-**`map(<funzione da T a U>)`** prende in input una funzione e la applica ad ogni elemento dello `stream`. Si usa per trasformare gli elementi dello `stream` in altri elementi. Nel nostro esempio, vogliamo trasformare le persone (già filtrate) in stringhe contenenti il nome e l'età:
+**`Stream<U> map(<funzione da T a U>)`** prende in input una funzione e la applica ad ogni elemento dello `stream`. Si usa per trasformare gli elementi dello `stream` in altri elementi. Nel nostro esempio, vogliamo trasformare le persone (già filtrate) in stringhe contenenti il nome e l'età:
 
 ```java
 Stream<String> stream = persone.stream()
@@ -108,17 +108,17 @@ Stream<String> stream = persone.stream()
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto: 50".
 
-### `Distinct` e `Sort`
+### `distinct` e `sort`
 
-- **`distinct()`** elimina gli elementi duplicati dello `stream`.
+- **`Stream<T> distinct()`** elimina gli elementi duplicati dello `stream`.
 
-- **`sort()`** ordina gli elementi dello `stream`. Ha bisogno di un `Comparator` per oggetti diversi da `Integer` e `String`.
+- **`Stream<T> sort()`** ordina gli elementi dello `stream`. Ha bisogno di un `Comparator` per oggetti diversi da `Integer` e `String`.
 
 ---
 
 ### `flatMap`
 
-**`flatMap(<funzione da T a Stream<U>>)`** prende in input una funzione, la applica ad ogni elemento di tipo T dello `stream`. La funzione ritorna un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` vengono concatenati in un unico `stream`.
+**`Stream<U> flatMap(<funzione da T a Stream<U>>)`** prende in input una funzione, la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
 
 Nel nostro esempio, vogliamo trasformare ogni persona (sempre filtrata con età >= 30) in una lista di stringhe contenenti il nome e l'età, e poi concatenare tutti gli `stream` in un unico `stream`:
 
@@ -136,11 +136,11 @@ Stream<String> stream = persone.stream()
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi", "30", "Pippo", "40", "Pluto", "50".
 
-### `Reduce`
+### `reduce`
 
-La **`reduce(Identità, <funzione binaria>)`** è un'operazione per avere un singolo valore a partire da uno `stream`. 
+La **`T reduce(Identità, <funzione binaria>)`** è un'operazione per avere un singolo valore a partire da uno `stream`. 
 
-Si ha come primo parametro un valore iniziale (identità), e come secondo parametro una funzione binaria che prende in input due elementi dello `stream` e ritorna un altro elemento (dello stesso tipo) ottenuto a partire dai due. La funzione verrà applicata ricorsivamente ad ogni coppia di elementi dello `stream`, fino ad ottenere un solo elemento.
+Si ha come primo parametro un valore iniziale (identità), e come secondo parametro una funzione binaria che prende in input due elementi dello `stream` e restituisce un altro elemento (dello stesso tipo) ottenuto a partire dai due. La funzione verrà applicata induttivamente ad ogni elemento dello `stream`, fino ad ottenere un solo elemento.
 
 Nel nostro esempio, vogliamo ottenere la somma delle età delle persone (filtrate):
 
@@ -148,18 +148,22 @@ Nel nostro esempio, vogliamo ottenere la somma delle età delle persone (filtrat
 Integer sommaEta = persone.stream()
     .filter(p -> p.getEta() >= 30)
     /* mapToInt è uguale alla map, 
-    ma ritorna uno stream di interi */
+    ma restituisce uno stream di interi */
     .mapToInt(p -> p.getEta())  
     .reduce(
         0, 
         (eta1, eta2) -> eta1 + eta2 );
 ```
 
-Otterrò un intero: 120 (= 30 + 40 + 50).
+Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le età `[30, 40, 50]`, la `reduce` si applica in questo modo: 
 
-### `Collect`
+- 0 (valore iniziale) + 30 (primo elemento dello stream) = 30 (risultato parziale), 
+- 30 (risultato parziale della iterazione precedente) + 40 (secondo elemento dello stream) = 70, 
+- 70 + 50 = 120.
 
-Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo **`collect(<funzione che ritorna una Collezione>)`**. Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
+### `collect`
+
+Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo **`Collection<T> collect(<funzione che restituisce una Collezione>)`**. Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
 
 ```java
 List<String> lista = persone.stream()
@@ -193,6 +197,57 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 
 - **`ifPresent(<funzione>)`** che applica la funzione in input solo se l'Optional non è vuoto.
 
-- **`orElse(<val>)`** che ritorna il valore dell'Optional se non è vuoto, altrimenti ritorna il valore `val` in input.
+- **`orElse(<val>)`** che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
 
-- **`flatMap(<funzione da T a Optional<U>)`** che ritorna un `Optional<U>`, se è vuoto ritorna vuoto, altrimenti applica la funzione.
+- **`flatMap(<funzione da T a Optional<U>)`** restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto.
+
+---
+
+Facciamo un esempio usando gli `Optional` e i tre metodi visti in precendenza:
+
+```java
+Optional<String> opt = Optional.of("ciao");
+
+// Stampa "ciao"
+opt.ifPresent(s -> System.out.println(s));
+
+// Stampa "ciao" perché opt non è vuoto
+System.out.println(opt.orElse("vuoto"));
+
+/* La funzione in flatMap viene applicata
+e restituisce un Optional<String> 
+contenente "ciao mondo", 
+quindi viene stampato "ciao mondo" 
+per effetto della orElse */
+System.out.println(
+    opt .flatMap(
+        s -> Optional.of(s + " mondo"))
+    .orElse("vuoto"));
+
+
+Optional<String> opt2 = Optional.empty();
+
+// Non stampa nulla perché opt2 è vuoto
+opt2.ifPresent(s -> System.out.println(s));
+
+// Stampa "vuoto" perché opt2 è vuoto
+System.out.println(opt2.orElse("vuoto"));
+
+/* La funzione in flatMap non viene applicata
+e restituisce un Optional<String> vuoto, 
+quindi viene stampato "vuoto" 
+per effetto della orElse */
+System.out.println(
+    opt2.flatMap(
+        s -> Optional.of(s + " mondo"))
+    .orElse("vuoto"));
+```
+
+Otterremo in output:
+```
+    ciao
+    ciao
+    ciao mondo
+    vuoto
+    vuoto
+```
