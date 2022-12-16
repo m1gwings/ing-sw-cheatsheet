@@ -48,8 +48,10 @@ for (let i = 0; i < indice.capitoli.length; i++) {
 
     // Aggiunge il tema custom ad ogni diagramma di mermaid
     markdownCapitolo = markdownCapitolo.replaceAll('```mermaid', '```mermaid\n' + temaMermaid)
-    markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n---\n' : '')
+    markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n\n---\n\n' : '')
 }
+
+// console.log(markdown)
 
 const { html, css } = marpit.render(markdown)
 

@@ -12,6 +12,10 @@ section {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+section.due {
+    columns: 2;
+}
+
 h1 {
     margin: 5mm;
     padding: 0mm;
