@@ -1,5 +1,8 @@
 # Come contribuire al progetto
 
+Sfogliate la lista degli issue aperti. Ciascuno fa riferimento ad un capitolo da scrivere ed all'interno è presente la task list con i relativi paragrafi. Cercatene qualcuno che non sia già stato scritto, dove nessuno ci sta già lavorando (se c'è accanto la scritta WIP allora il paragrafo (o il capitolo) sono già stati assegnati a qualcun altro) e soprattutto **che vi andrebbe di scrivere**.
+Una volta trovato un paragrafo (o un capitolo) non assegnato potete aggiungere un commento sotto al relativo issue per specificare che intendete iniziare a lavorarci, in modo tale che noi potremo aggiungerlo tra quelli in lavorazione.
+
 ## Prerequisiti
 
 Per poter contribuire al progetto è necessario installare i seguenti tool:
@@ -69,6 +72,8 @@ node esporta.js
 Al termine dell'esecuzione il file `cheatsheet.pdf` dovrebbe comparire all'interno della cartella. Complimenti! Avete esportato il PDF con successo.
 
 - ### Modificare il progetto
+
+Per mantenere una certa uniformità nel progetto, consultate il [paragrafo](./CONTRIBUTING.md#convenzioni-e-stile) sulle convenzioni e lo stile da adottare.
 
 Prima di iniziare a modificare il progetto occorre creare un nuovo branch: questo vi permetterà di poter aggiornare periodicamente la storia del branch principale (`main`) senza che ciò su cui state lavorando (all'interno del vostro branch) ne risenta.
 
@@ -200,6 +205,8 @@ Se tutto è andato a buon fine, verrà generato il PDF `cheatsheet.pdf` nella st
 
 - ### Contribuzione e creazione di una nuova feature
 
+Per mantenere una certa uniformità nel progetto, consultate il [paragrafo](./CONTRIBUTING.md#convenzioni-e-stile) sulle convenzioni e lo stile da adottare.
+
 Per contribuire al progetto, prima di tutto, creiamo un nuovo branch per la feature che stiamo implementando (immaginando quindi di voler implementare il capitolo sul testing, il nome del branch che aggiungeremo sarà qualcosa di simile a `testing`).
 
 Per aggiungere un nuovo branch, andate su Github Desktop e cliccate su Current branch > New branch... e inserite il nome del branch.
@@ -233,3 +240,48 @@ Una volta fatto ciò, andate su Github Desktop e cliccate su `Fetch origin` in a
 La nostra feature è stata implementata nel main ed è presente sia nel repository principale che nel nostro repository forkato. Possiamo quindi switchare sul branch main ed eliminare il vecchio branch dal nostro repository locale e remoto. Per farlo, andate su Github Desktop e andate su Current branch > Tasto destro sul branch che abbiamo creato per implementare la feature > Delete... > Spuntate la casella `Yes, delete this branch on the remote` > Delete.
 
 ![](./immagini/delete-branch.png)
+
+## Convenzioni e stile
+
+In generale è sufficiente seguire il buon senso e le convenzioni basilari del Markdown.
+Iniziata la stesura di un nuovo capitolo con
+```markdown
+# Titolo del capitolo
+```
+con un solo cancelletto.
+
+Ogni volta che aggiungete un paragrafo e poi via via sottoparagrafi annidati: aggiungete un cancelletto:
+```markdown
+# Titolo del capitolo
+...
+## Primo paragrafo
+...
+### Sottoparagrafo del primo paragrafo
+...
+```
+
+Per aggiungere immagini, elenchi, porzioni di codice sarà sufficiente scrivere i relativi costrutti del Markdown standard.
+In particolare per i diagrammi UML non serve aggiungere immagini, bensì potete utilizzare il plugin `mermaid` (che estende il normale Markdown) descritto in seguito.
+
+### Come aggiungere nuove pagine ad un capitolo
+
+Il testo che avete scritto sfora oltre il foglio?
+Nessun problema. Sarà sufficiente aggiungere una nuova pagina al capitolo con
+```markdown
+
+---
+
+```
+Lasciate una riga bianca sopra e sotto come indicato.
+
+Questa funzionalità è un'aggiunta al Markdown standard (che non prevede la divisione in pagine) dovuta ad un plugin esterno.
+
+### Come aggiungere diagrammi UML con `mermaid`
+
+Per aggiungere i diagrammi UML fate riferimento alla [documentazione](https://mermaid-js.github.io/mermaid/syntax/classDiagram.html) del plugin `mermaid`.
+
+In particolare dovrete racchiudere il codice mermaid (che segue la sintassi specificata nella documentazione) in un blocco come quello che segue:
+<br>
+\`\`\`mermaid<br>
+Codice mermaid...<br>
+\`\`\`
