@@ -85,7 +85,7 @@ Supponiamo di voler specificare che un array `a[]` venga modificato da un metodo
 
 - `//@ assignable a[*];`: ogni elemento di `a` può essere modificato
 - `//@ assignable a[5];`: solo l'elemento `a[5]` può essere modificato
-- `//@ assignable a[1..8]`: gli elementi `a[1]`, `a[2]`, ..., `a[8]` possono essere modificati
+- `//@ assignable a[1..8];`: gli elementi `a[1]`, `a[2]`, ..., `a[8]` possono essere modificati
 
 ---
 
@@ -94,3 +94,7 @@ Supponiamo di voler specificare che un array `a[]` venga modificato da un metodo
 A volte è utile inserire all'interno delle condizioni JML delle specifiche informali.
 Per farlo si utilizzano i commenti, esprimibili attraverso la seguente sintassi: `(* <commento> *)`.
 Ciascun commento al momento della valutazione della condizione è da intendersi con valore `true`.
+
+<!-- TODO:
+ - L'old non restituisce solo valori booleani
+ - I metodi puri non hanno bisogno che nella specifica si espliciti che l'oggetto non cambia  -->
