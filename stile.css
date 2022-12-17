@@ -16,6 +16,10 @@ section.due {
     columns: 2;
 }
 
+section.una {
+    columns: 1;
+}
+
 h1 {
     margin: 5mm;
     padding: 0mm;
