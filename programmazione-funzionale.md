@@ -40,8 +40,8 @@ persone.add(new Persona("Pluto", 50));
 Possiamo, ad esempio, ordinare la lista di persone per età, usando il metodo `sort` della classe `Collections`: 
 ```java
 public static <T> void sort(
-    List<T> list, Comparator<? super T>
-) c
+    List<T> list, Comparator<? super T> c
+)
 ```
 
 Il metodo `sort` prende come primo parametro una lista di oggetti di tipo `T`, e come secondo parametro un oggetto di tipo `Comparator`, possiamo passare un `Comparator` direttamente usando una **espressione lambda**:
@@ -68,6 +68,44 @@ Collections.sort(persone, (p1, p2) -> {
 });
 ```
 
+## Interfacce funzionali
+
+Nell'esempio di prima, nel metodo `public static <T> void sort(List<T> list, Comparator<? super T> c)`, il secondo parametro è un oggetto di tipo `Comparator<T>`, è una **interfaccia funzionale**.
+
+Una **interfaccia funzionale** è un'interfaccia che prevede di implementare un solo metodo. In questo caso, l'interfaccia `Comparator<T>` prevede di implementare il metodo `int compare(T o1, T o2)`, che impone un ordine tra due oggetti di tipo `T` e restituisce 1, 0, -1 a seconda che il primo parametro o1 sia rispettivamente maggiore, uguale o minore del secondo.
+
+Avendo l'interfaccia funzionale un solo metodo, possiamo usare direttamente una **espressione lambda** per implementarla:
+
+```java
+Comparator<Persona> comparator = (p1, p2) -> {
+    if(p1.getEta() > p2.getEta()) {
+        return 1; }
+    else if(p1.getEta() < p2.getEta()) {
+        return -1; }
+    else return 0;
+};
+```
+
+è come se avessimo _"assegnato una funzione ad una variabile (comparator)"_. Possiamo quindi passare la variabile `comparator` come secondo parametro al metodo `sort`: `Collections.sort(persone, comparator);`. Oppure, possiamo passare direttamente una lambda  (come mostrato nel capitolo precedente).
+
+Java fornisce delle interfacce funzionali nel package `java.util.function` quali:
+
+- **`Function<T, R>`**: funzione che prende un parametro di tipo `T` e restituisce un oggetto di tipo `R`;
+- **`Consumer<T>`**: funzione che prende un parametro di tipo `T` e non restituisce nulla;
+- **`Supplier<T>`**: funzione che non prende parametri e restituisce un oggetto di tipo `T`;
+- **`Predicate<T>`**: funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
+- **`BiFunction<T, U, R>`**: funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
+
+E le corrispondenti per i tipi primitivi:
+
+- **`IntFunction<R>`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
+- **`IntConsumer`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
+- **`IntSupplier`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
+- **`IntPredicate`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
+- **`DoubleToIntFunction`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
+
+---
+
 ## Composizione di funzioni (`Stream<T>`)
 
 Possiamo concatenare delle funzioni che agiscono su una Collezione per costruire una **catena di funzioni**, che filtrerà, mapperà e agirà sulla nostra collezione.
@@ -80,7 +118,7 @@ Stream<Persona> stream = persone.stream();
 
 ### `filter`
 
-Possiamo filtrare lo `stream` per far si che tutti gli elementi della collezione soddisfino un cetro predicato (funzione che restituisce solo true o false).
+Possiamo filtrare lo `stream` per far si che tutti gli elementi della collezione soddisfino un certo `Predicate<T>`.
 Per farlo, usiamo il metodo **`Stream<T> filter(<predicato>)`**. Nel nostro esempio, vogliamo filtrare le persone che hanno più di 30 anni:
 
 ```java
@@ -92,7 +130,7 @@ La funzione lambda nel metodo `filter` sarà `true` per tre persone: Luigi, Pipp
 
 ### `map`
 
-**`Stream<U> map(<funzione da T a U>)`** prende in input una funzione e la applica ad ogni elemento dello `stream`. Si usa per trasformare gli elementi dello `stream` in altri elementi. Nel nostro esempio, vogliamo trasformare le persone (già filtrate) in stringhe contenenti il nome e l'età:
+**`Stream<U> map(<funzione da T a U>)`** prende in input una funzione (`Function<T, U>`) e la applica ad ogni elemento dello `stream`. Si usa per trasformare gli elementi dello `stream` in altri elementi. Nel nostro esempio, vogliamo trasformare le persone (già filtrate) in stringhe contenenti il nome e l'età:
 
 ```java
 Stream<String> stream = persone.stream()
@@ -114,11 +152,9 @@ Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto:
 
 - **`Stream<T> sort()`** ordina gli elementi dello `stream`. Ha bisogno di un `Comparator` per oggetti diversi da `Integer` e `String`.
 
----
-
 ### `flatMap`
 
-**`Stream<U> flatMap(<funzione da T a Stream<U>>)`** prende in input una funzione, la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
+**`Stream<U> flatMap(<funzione da T a Stream<U>>)`** prende in input una funzione (`Function<T, Stream<U>>`), la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
 
 Nel nostro esempio, vogliamo trasformare ogni persona (sempre filtrata con età >= 30) in una lista di stringhe contenenti il nome e l'età, e poi concatenare tutti gli `stream` in un unico `stream`:
 
@@ -161,6 +197,10 @@ Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le et
 - 30 (risultato parziale della iterazione precedente) + 40 (secondo elemento dello stream) = 70, 
 - 70 + 50 = 120.
 
+---
+
+<!-- _class: due -->
+
 ### `collect`
 
 Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo **`Collection<T> collect(<funzione che restituisce una Collezione>)`**. Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
@@ -199,11 +239,7 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 
 - **`orElse(<val>)`** che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
 
-- **`flatMap(<funzione da T a Optional<U>)`** restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto.
-
----
-
-<!-- _class: due -->
+- **`Optional<U> flatMap(<funzione da T a Optional<U>)`** restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto; altrimenti ritorna un `Optional` vuoto.
 
 Facciamo un esempio usando gli `Optional` e i tre metodi visti in precendenza:
 
@@ -253,6 +289,10 @@ Otterremo in output:
     vuoto
     vuoto
 ```
+
+---
+
+<!-- _class: una -->
 
 ## Esercizio sulla programmazione funzionale (TdE del 2019-02-18, esercizio 4 - punto c)
 
