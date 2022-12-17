@@ -244,6 +244,9 @@ La nostra feature è stata implementata nel main ed è presente sia nel reposito
 ## Convenzioni e stile
 
 In generale è sufficiente seguire il buon senso e le convenzioni basilari del Markdown.
+
+Il testo relativo a ciascun capitolo è contenuto nel file `nome-capitolo.md`.
+
 Iniziata la stesura di un nuovo capitolo con
 ```markdown
 # Titolo del capitolo
