@@ -177,7 +177,7 @@ Ogni volta che volete aggiungere una modifica dovete ripetere il procedimento de
 
 - ### Installazione e Autenticazione
 
-Procedete (se non l'avete già fatto) con l'installazione di Github Desktop dal [sito ufficiale](https://desktop.github.com/). 
+Procedete (se non l'avete già fatto) con l'installazione di Github Desktop dal [sito ufficiale](https://desktop.github.com/) o per linux [download non ufficiale](https://github.com/shiftkey/desktop). 
 
 Una volta installato autenticatevi con le vostre credenziali Github andando su File > Options > Accounts.
 
