@@ -35,6 +35,11 @@ h3 {
     padding: 0mm;
 }
 
+h4 {
+    margin: 5mm;
+    padding: 0mm;
+}
+
 pre {
     background-color: transparent;
     border-color: black;
