@@ -183,3 +183,105 @@ public class Main {
 ```
 
 In questo modo, il `Main` crea solo la classe `ConcreteFactory` della famiglia richiesta dall'utente e richiama i metodi generici `createButton()` e `createScrollBar()` per creare la famiglia di oggetti, ma sarà la `ConcreteFactory` a preoccuparsi di creare gli oggetti della famiglia corretta.
+
+---
+
+## Pattern strutturali
+
+I pattern strutturali sono quelli che si occupano di come le classi e gli oggetti vengono composti per formare strutture più grandi.
+
+### Adapter
+
+L'**Adapter** è un pattern che permette di adattare un'interfaccia ad un'altra. Supponiamo di voler implementare una feature e, per farlo, ci serviamo di una libreria esterna. La libreria, però, lavora su dati e oggetti diversi da quelli con cui lavoriamo noi. In questo caso, possiamo creare un **Adapter** che si occupa di _adattare_ l'interfaccia della libreria esterna all'interfaccia che usiamo.
+
+#### UML
+
+![](./immagini/adapter.svg)
+
+In questo diagramma, abbiamo `Target` che definisce l'interfaccia che il Client usa, `Adaptee` che definisce l'interfaccia che vogliamo _adattare_ (ad esempio una libreria esterna), e `Adapter`, che estende `Target`, e usa `Adaptee` per adattare il methodo `methodToAdapt()` al metodo `request()` di `Target`.
+
+_Attenzione_: Java non supporta l'ereditarietà multipla, quindi, in Java, `Target` è un'interfaccia e `Adapter` la implementa.
+
+#### Esempio
+
+Supponiamo di voler implementare un programma che legge un file di testo e lo stampa a video. Per farlo, usiamo una libreria esterna, che però lavora su oggetti diversi da quelli che usiamo noi. In questo caso, possiamo creare un **Adapter** che si occupa di _adattare_ l'interfaccia della libreria esterna all'interfaccia che usiamo.
+
+Per prima cosa, definiamo l'interfaccia `Target`, in questo esempio la chiamiamo `TextPrinter`, che lavora con il tipo di file `TextFile`:
+
+```java
+public class TextFile {
+    private String name;
+    private String path;
+    private int size;
+
+    public TextFile
+    (String name, String path, int size) {
+        this.name = name;
+        this.path = path;
+        this.size = size;
+    }
+
+    public String getPath() {
+        return path;
+    }
+    
+    ...
+}
+
+public interface TextPrinter {
+    public void printText(TextFile textFile);
+}
+```
+
+Definiamo anche l'interfaccia `Adaptee` (la libreria esterna), in questo esempio la chiamiamo `FilePrinterLibrary`, che usera un tipo di file diverso da `TextFile` (`File`):
+
+```java
+public class File {
+    private String path;
+
+    public File(String path) {
+        this.path = path;
+    }
+    ...
+}
+
+class FilePrinterLibrary {
+    public void printFile(File file) {
+        System.out.println(
+            "Printing file " + file.getPath());
+    }
+}
+```
+
+`TextPrinter` e `FilePrinterLibrary` lavorano con oggetti diversi, quindi, per adattare l'interfaccia di `FilePrinterLibrary` a quella di `TextPrinter`, creiamo un **Adapter**:
+
+```java
+public class FilePrinterLibraryAdapter 
+extends FilePrinterLibrary
+implements TextPrinter {
+    @Override
+    public void printText(TextFile textFile) {
+        File file=new File(textFile.getPath());
+        super.printFile(file);
+    }
+}
+```
+
+`FilePrinterLibraryAdapter` estende `FilePrinterLibrary` per poter usare il metodo `printFile()` e implementa `TextPrinter` per poter implementare il metodo `printText()`. Il metodo `printText()` crea un oggetto `File` a partire da un oggetto `TextFile`, quindi può chiamare il metodo `printFile()` di `FilePrinterLibrary`.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        TextFile textFile = new TextFile(
+            "test.txt", "/home/user", 100
+        );
+
+        TextPrinter textPrinter = 
+            new FilePrinterLibraryAdapter();
+
+        textPrinter.printText(textFile);
+    }
+}
+```
+
+In questo modo, il `Main` usa il tipo di file `TextFile`, sarà poi l'**Adapter** che si occuperà di convertirlo in `File` per richiamare la funzione di libreria.
