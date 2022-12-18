@@ -242,6 +242,11 @@ public class File {
     public File(String path) {
         this.path = path;
     }
+
+    public String getPath() {
+        return path;
+    }
+
     ...
 }
 
