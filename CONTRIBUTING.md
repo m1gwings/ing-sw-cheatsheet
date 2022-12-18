@@ -264,7 +264,7 @@ Ogni volta che aggiungete un paragrafo e poi via via sottoparagrafi annidati: ag
 ```
 
 Per aggiungere immagini, elenchi, porzioni di codice sarà sufficiente scrivere i relativi costrutti del Markdown standard.
-In particolare per i diagrammi UML non serve aggiungere immagini, bensì potete utilizzare il plugin `mermaid` (che estende il normale Markdown) descritto in seguito.
+In particolare per i diagrammi UML seguire le indicazioni nel paragrafo apposito.
 
 ### Come aggiungere nuove pagine ad un capitolo
 
@@ -279,12 +279,9 @@ Lasciate una riga bianca sopra e sotto come indicato.
 
 Questa funzionalità è un'aggiunta al Markdown standard (che non prevede la divisione in pagine) dovuta ad un plugin esterno.
 
-### Come aggiungere diagrammi UML con `mermaid`
+### Come aggiungere diagrammi UML
 
-Per aggiungere i diagrammi UML fate riferimento alla [documentazione](https://mermaid-js.github.io/mermaid/syntax/classDiagram.html) del plugin `mermaid`.
-
-In particolare dovrete racchiudere il codice mermaid (che segue la sintassi specificata nella documentazione) in un blocco come quello che segue:
-<br>
-\`\`\`mermaid<br>
-Codice mermaid...<br>
-\`\`\`
+Per realizzare i diagrammi UML consigliamo di utilizzare un tool come `draw.io` (o analoghi) ed esportare l'immagine in formato `.png`.
+Una volta esportata, l'immagine può essere spostata nella cartella `immagini` della repository ed importata all'interno del capitolo con l'usuale sintassi di Markdown per aggiungere immagini.
+L'immagine deve essere necessariamente in bianco e nero.
+Cercate di seguire lo stile dei diagrammi utilizzato in quelli già presenti sul cheatsheet.

@@ -59,10 +59,6 @@ const fileHTML = `
 </head>
 <html style="margin: 0mm; padding: 0mm; height: fit-content; width: fit-content;">
     <body style="margin: 0mm; padding: 0mm; height: fit-content; width: fit-content;">
-        <script type="module">
-            import mermaid from './mermaid/mermaid.esm.min.js';
-            mermaid.initialize({ theme: 'base', startOnLoad: true });
-        </script>
         <style>${css}</style>
         ${html}
     </body>

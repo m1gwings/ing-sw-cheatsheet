@@ -21,27 +21,26 @@ Nell'UML, la classe astratta `Creator`, che ha bisogno di creare un oggetto `Pro
 Supponiamo di voler creare un programma per creare dei documenti. Il programma deve essere in grado di creare documenti di diversi tipi (documenti di testo, di calcolo, pdf, ...) decisi a runtime dall'utente. Il programma non può prevedere che tipo di documento l'utente deciderà di creare, quindi il **Factory Method** è la soluzione migliore.
 
 ```java
-public interface Document {
-    public void setTitle(String title);
+public abstract class Document {
+    private String title;
+
+    public abstract void
+        setTitle(String title);
     ...
 }
 
-public class TextDocument implements Document {
-    private String title;
-
+public class TextDocument extends Document {
     @Override
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title + ".txt";
     }
     ...
 }
 
-public class PDFDocument implements Document {
-    private String title;
-
+public class PDFDocument extends Document {
     @Override
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title + ".pdf";
     }
     ...
 }
