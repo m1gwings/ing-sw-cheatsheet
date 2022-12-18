@@ -1,6 +1,5 @@
 import { Marpit } from '@marp-team/marpit'
 import markdownItContainer from 'markdown-it-container'
-import markdownItMermaid from 'markdown-it-mermaid-plugin'
 import fs from 'fs'
 import express from 'express'
 import puppeteer from 'puppeteer'
@@ -13,12 +12,9 @@ const percorsoFileOutput = 'cheatsheet.pdf'
 const numeroPorta = 8080
 
 const marpit = new Marpit().use(markdownItContainer, 'columns')
-    .use(markdownItMermaid)
 
 const tema = fs.readFileSync(percorsoFileStile, 'utf-8')
 marpit.themeSet.default = marpit.themeSet.add(tema)
-
-const temaMermaid = `%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#FFFFFF', 'primaryBorderColor': '#000000'}}}%%`
 
 let markdown = `---
 
@@ -46,8 +42,6 @@ for (let i = 0; i < indice.capitoli.length; i++) {
     const percorsoFileCapitolo = indice.capitoli[i].file + '.md'
     let markdownCapitolo = fs.readFileSync(percorsoFileCapitolo, 'utf-8')
 
-    // Aggiunge il tema custom ad ogni diagramma di mermaid
-    markdownCapitolo = markdownCapitolo.replaceAll('```mermaid', '```mermaid\n' + temaMermaid)
     markdown += markdownCapitolo + ((i < indice.capitoli.length - 1) ? '\n\n---\n\n' : '')
 }
 
