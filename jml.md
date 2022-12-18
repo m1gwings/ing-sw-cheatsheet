@@ -35,7 +35,12 @@ Siano `a` e `b` due condizioni JML, allora le seguenti sono valide condizioni JM
 - `a <== b`: `b` implica `a`
 - `a <==> b`: `a` se e solo se `b`
 - `a <=!=> b`: `!(a <==> b)`
-- `\old(a)`: l'operatore `\old` è da utilizzare all'interno di una postcondizione. Restituisce il valore della condizione `a`, valutata prima che il metodo venga eseguito.
+
+#### `\old`
+
+L'operatore `\old(<espressione>)` prende in input una espressione che può essere una condizione JML oppure una espressione Java che non ha "effetti collaterali" (non si può utilizzare `++`, `=`, metodi **non** puri, etc.) e restituisce il risultato che si ottiene valutando tale espressione prima che il metodo che stiamo specificando venga eseguito.
+Notare che, valutando una espressione Java (tra quelle ammissibili), `\old` in generale non restituisce valori booleani.
+Non ha senso utilizzare `\old` nel blocco `requires` dato che stiamo specificando ciò che deve essere vero **prima** che il metodo venga eseguito.
 
 #### Quantificatori
 
@@ -81,13 +86,13 @@ public static void metodo(S s, T t, U u) {
 Per specificare che `s` e `t` vengono modificati, ma non `u`, possiamo aggiungere nella specifica:
 `//@ assignable s, t;`
 
+---
+
 Supponiamo di voler specificare che un array `a[]` venga modificato da un metodo di cui stiamo scrivendo la specifica:
 
 - `//@ assignable a[*];`: ogni elemento di `a` può essere modificato
 - `//@ assignable a[5];`: solo l'elemento `a[5]` può essere modificato
 - `//@ assignable a[1..8];`: gli elementi `a[1]`, `a[2]`, ..., `a[8]` possono essere modificati
-
----
 
 ### Commenti
 
@@ -96,5 +101,4 @@ Per farlo si utilizzano i commenti, esprimibili attraverso la seguente sintassi:
 Ciascun commento al momento della valutazione della condizione è da intendersi con valore `true`.
 
 <!-- TODO:
- - L'old non restituisce solo valori booleani
  - I metodi puri non hanno bisogno che nella specifica si espliciti che l'oggetto non cambia  -->
