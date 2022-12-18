@@ -22,6 +22,9 @@ Lo schema generale di una specifica in JML è il seguente:
 ```
 Ogni riga della specifica (dopo l'`OVERVIEW`) inizia con `//@ `.
 Alla fine di ciascun "blocco" (`assignable`, `requires`, ...) è necessario aggiungere `;`.
+Omettere il blocco `requires` equivale a scrivere `//@ requires true;`.
+Omettere il blocco `ensures` equivale a scrivere `//@ ensures true;`.
+Nella condizione del blocco `signals` possiamo fare riferimento all'oggetto eccezione `e` (il nome è arbitrario).
 
 ### Condizioni
 
@@ -38,9 +41,9 @@ Siano `a` e `b` due condizioni JML, allora le seguenti sono valide condizioni JM
 
 #### `\old`
 
-L'operatore `\old(<espressione>)` prende in input una espressione che può essere una condizione JML oppure una espressione Java che non ha "effetti collaterali" (non si può utilizzare `++`, `=`, metodi **non** puri, etc.) e restituisce il risultato che si ottiene valutando tale espressione prima che il metodo che stiamo specificando venga eseguito.
+L'operatore `\old(<espressione>)` prende in input una espressione che può essere una condizione JML oppure una espressione Java che non ha "effetti collaterali" (non si può utilizzare `++`, `=`, metodi **non** puri, etc.) e restituisce il risultato che si ottiene valutando tale espressione nel momento della chiamata del metodo che stiamo specificando.
 Notare che, valutando una espressione Java (tra quelle ammissibili), `\old` in generale non restituisce valori booleani.
-Non ha senso utilizzare `\old` nel blocco `requires` dato che stiamo specificando ciò che deve essere vero **prima** che il metodo venga eseguito.
+Non ha senso utilizzare `\old` nel blocco `requires` dato che lì stiamo specificando ciò che deve essere vero **prima** che il metodo venga eseguito.
 
 #### Quantificatori
 
@@ -73,6 +76,7 @@ Ha senso utilizzare `\result` solo nell'`ensures` (in `requires` il metodo non �
 ### `assignable`
 
 Il blocco `assignable` nella specifica permette di esplicitare i parametri (di tipo riferimento) che vengono modificati dal metodo.
+Omettere `assignable` significa che tutti i parametri possono essere modificati.
 
 Se un metodo non modifica nessuno dei parametri possiamo usare la keyword `\nothing`:
 `//@ assignable \nothing;`.
@@ -100,5 +104,23 @@ A volte è utile inserire all'interno delle condizioni JML delle specifiche info
 Per farlo si utilizzano i commenti, esprimibili attraverso la seguente sintassi: `(* <commento> *)`.
 Ciascun commento al momento della valutazione della condizione è da intendersi con valore `true`.
 
+## Semantica
+
+### Precondizione
+
+La **precondizione** è la condizione sulla base della quale è definita la specifica: se la precondizione non dovesse essere rispettata allora non è detto che il metodo si comporti secondo la specifica (in generale non lo farà, qualsiasi comportamento è ammesso).
+In JML è possibile esprimere una precondizione del metodo che stiamo specificando attraverso il blocco `requires`.
+Nel caso in cui la precondizione sia `true` il metodo "non ha una precondizione": la sua specifica è valida a prescindere dei parametri passati.
+Un metodo con precondizione `true` si dice **totale**, altrimenti si dice **parziale**.
+
+### Postcondizione
+
+La **postcondizione** esplicita una serie di "effetti" garantiti al termine dell'esecuzione del metodo che stiamo specificando, assumendo che la precondizione fosse verificata.
+In JML è possibile definire separatamente la postcondizione che vale nel caso in cui il metodo esegua regolarmente dalle postcondizioni che valgono nel caso in cui durante l'esecuzione del metodo si verifichino delle eccezioni.
+La prima si esplicita attraverso il blocco `ensures`.
+La seconda attraverso `signals (<tipo eccezione> e)`.
+Nel caso in cui la postcondizione sia `true` il metodo non garantisce nessun "effetto" al termine della sua esecuzione, quindi può "fare ciò che vuole": non c'è motivo di omettere la postcondizione.
+
 <!-- TODO:
- - I metodi puri non hanno bisogno che nella specifica si espliciti che l'oggetto non cambia  -->
+ - I metodi puri non hanno bisogno che nella specifica si espliciti che l'oggetto non cambia
+ - assertions (di secondaria importanza)  -->
