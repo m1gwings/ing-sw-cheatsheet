@@ -1,5 +1,3 @@
-<!-- _class: due -->
-
 # Design pattern
 
 I design pattern sono dei modelli di soluzione a problemi comuni di progettazione software. Esistono diversi tipi di design pattern, ma in generale si possono suddividere in 4 categorie: _creazionali, strutturali, comportamentali e architetturali_.
@@ -10,7 +8,7 @@ I design pattern creazionali sono quelli che si occupano di risolvere problemi r
 
 ### Factory Method
 
-Il **Factory Method** permette di creare oggetti senza specificare la loro classe concreta. Questo pattern è particolarmente utile quando si deve creare un oggetto che dipende da altri oggetti, o quando si deve creare un oggetto che dipende da parametri variabili. Infatti, il Factory Method permette di creare oggetti in modo indipendente dalle dipendenze che essi hanno.
+Il **Factory Method** permette di creare oggetti senza specificare la loro classe concreta. Questo pattern è particolarmente utile quando abbiamo bisogno di istanziare uno o più oggetti astratti per poi effettuarvi delle operazioni che non dipendono dal loro tipo concreto (uguale per tutti gli oggetti). Come è ben noto non è possibile costruire un oggetto astratto. Per ovviare a questo problema si usa il **Factory Method** che permette al Client di specificare al metodo che dovrà effettuare tali operazioni, solo la _factory_ con cui costruire gli oggetti astratti, il metodo poi potrà lavorare con gli oggetti astratti e non sarà necessario creare un metodo diverso (che effettua le stesse operazioni) per ciascun tipo concreto, solo per avere accesso al costruttore del tipo concreto in questione.
 
 #### UML
 
@@ -20,27 +18,48 @@ Nell'UML, la classe astratta `Creator`, che ha bisogno di creare un oggetto `Pro
 
 #### Esempio
 
-Supponiamo di voler creare un programma per creare dei documenti. Il programma deve essere in grado di creare documenti di diversi tipi (documenti di testo, di calcolo, pdf, ...) decisi a runtime dall'utente. Il programma non può prevedere che tipo di documento l'utente deciderà di creare, quindi il Factory Method è la soluzione migliore.
+Supponiamo di voler creare un programma per creare dei documenti. Il programma deve essere in grado di creare documenti di diversi tipi (documenti di testo, di calcolo, pdf, ...) decisi a runtime dall'utente. Il programma non può prevedere che tipo di documento l'utente deciderà di creare, quindi il **Factory Method** è la soluzione migliore.
 
 ```java
-public interface Document { /* ... */ }
+public interface Document {
+    public void setTitle(String title);
+    ...
+}
 
-public class TextDocument implements Document { /* ... */ }
+public class TextDocument implements Document {
+    private String title;
 
-public class PDFDocument implements Document { /* ... */ }
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    ...
+}
+
+public class PDFDocument implements Document {
+    private String title;
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    ...
+}
 
 public abstract class DocumentFactory {
     public abstract Document createDocument();
 }
 
-public class TextDocumentFactory extends DocumentFactory {
+public class TextDocumentFactory 
+extends DocumentFactory {
     @Override
     public Document createDocument() {
         return new TextDocument();
     }
 }
 
-public class PDFDocumentFactory extends DocumentFactory {
+public class PDFDocumentFactory 
+extends DocumentFactory {
     @Override
     public Document createDocument() {
         return new PDFDocument();
@@ -48,28 +67,44 @@ public class PDFDocumentFactory extends DocumentFactory {
 }
 
 public class Main {
+    /* Crea n documenti dello stesso tipo 
+    e ne setta il titolo */
+    private Document[] createNDocuments
+    (int n, DocumentFactory factory) {
+        Document[] documents=new Documents[n];
+        for (int i = 0; i < n; i++) {
+            documents[i] 
+                = factory.createDocument();
+            documents[i]
+                .setTitle(String.valueOf(i));
+        }
+
+        return documents;
+    }
+
     public static void main(String[] args) {
+        Document[] docs;
         DocumentFactory factory;
-        Document document;
 
-        // Creazione di un documento di testo
+        // Creazione di n documenti di testo
         factory = new TextDocumentFactory();
-        document = factory.createDocument();
+        docs = createNDocuments(10, factory);
 
-        // Creazione di un documento PDF
+        // Creazione di n documenti PDF
         factory = new PDFDocumentFactory();
-        document = factory.createDocument();
+        docs = createNDocuments(5, factory);
     }
 }
 ```
 
-In questo modo, il `Main` creerà solo una classe `Factory` del tipo rischiesto dall'utente, ma sarà solo la classe `Factory` a preoccuparsi di creare l'oggetto corretto.
+In questo modo, il metodo nel `Main` crea n documenti allo stesso modo, senza dover conoscere il tipo di documento da creare, grazie al **Factory Method** che richiama il metodo `createDocument()`. Sarà il Client a decidere quale _factory_ inserire nel metodo `createNDocuments()`.
+Senza il **Factory Method**, ci sarebbero stati diversi metodi `createNDocuments()` per ogni tipo di documento.
 
 ---
 
 ### Abstract Factory
 
-A differenza del Factory Method, l'**Abstract Factory** permette di creare _famiglie_ di oggetti correlati senza specificare la loro classe concreta. Questo pattern è particolarmente utile quando si deve creare una famiglia di oggetti che dipende da altri oggetti, o quando si deve creare una famiglia di oggetti che dipende da parametri variabili. Infatti, l'Abstract Factory permette di creare famiglie di oggetti in modo indipendente dalle dipendenze che essi hanno.
+A differenza del Factory Method, l'**Abstract Factory** permette di creare _famiglie_ di oggetti correlati senza specificare la loro classe concreta.
 
 #### UML
 
