@@ -98,12 +98,12 @@ Java fornisce delle `<interfacce funzionali / il corrispondente metodo per esegu
 
 E le corrispondenti per i tipi primitivi:
 
-- **`IntFunction<R>`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
-- **`IntConsumer`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
-- **`IntSupplier`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
-- **`IntPredicate`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
+- **`IntFunction<R>` / `.apply(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
+- **`IntConsumer` / `.accept(int v)`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
+- **`IntSupplier` / `.getAsInt()`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
+- **`IntPredicate` / `.test(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
 ---
-- **`DoubleToIntFunction`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
+- **`DoubleToIntFunction` / `.applyAsInt(double v)`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
 
 ## Composizione di funzioni (`Stream<T>`)
 
