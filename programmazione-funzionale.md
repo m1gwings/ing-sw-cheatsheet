@@ -103,6 +103,7 @@ E le corrispondenti per i tipi primitivi:
 - **`IntSupplier` / `.getAsInt()`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
 - **`IntPredicate` / `.test(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
 ---
+- **`ToIntFunction<T>` / `.applyAsInt(T v)`**: funzione che prende un parametro di tipo `T` e restituisce un primitivo di tipo `int`: `int applyAsInt(T value)`;
 - **`DoubleToIntFunction` / `.applyAsInt(double v)`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
 
 ## Composizione di funzioni (`Stream<T>`)
