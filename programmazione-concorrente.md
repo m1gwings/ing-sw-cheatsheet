@@ -100,12 +100,12 @@ class Account {
   }
   
   public synchronized void deposit(
-    float money) { 
+                              float money) { 
     balance += money; 
   }
 
   public synchronized void withdraw(
-    float money) {
+                                float money) {
     balance -= money; 
   }
 }
@@ -154,11 +154,9 @@ public class ExampleClass {
       // sezione critica
     }
   }
-  
-  // Di default Java effettua la stessa 
-  // cosa anche per  synchronized posto 
-  // su un metodo statico
-  // I due metodi sono equivalenti
+  // Di default Java effettua la stessa cosa  
+  // anche per synchronized posto su un metodo
+  // statico. I due metodi sono equivalenti
   public static synchronized void static2() {
     // sezione critica
   }
@@ -267,13 +265,12 @@ public class ImmutableRGB {
 
   private int check(int component) {
     if (component < 0 || component > 255)
-      throw new 
-        IllegalArgumentException();
+      throw new IllegalArgumentException();
     return component;
   }
   
   public ImmutableRGB(int r, int g, int b, 
-                String name) {
+                      String name) {
     this.red = check(r);
     this.green = check(g);
     this.blue = check(b);
@@ -281,12 +278,13 @@ public class ImmutableRGB {
   }
 
   public int getRGB() {
-    return 
-      (red << 16) | (green << 8) | blue;
+    return (red << 16) | (green << 8) | blue;
   }
+
   public String getName() {
     return name;
   }
+
   public ImmutableRGB invert() {
     return new ImmutableRGB(255 - red, 
             255 - green, 
@@ -333,12 +331,10 @@ class Account {
   public void withdraw(float money) 
         throws InterruptedException {
     synchronized(lock) {
-      // Notiamo l'utilizzo del while 
-      // al posto di un if: questo 
-      // perché il thread potrebbe 
-      // svegliarsi spontaneamente 
-      // (su alcune architetture 
-      //  e/o OS specifici)
+      // Notiamo l'utilizzo del while al posto 
+      // di un if: questo perché il thread può 
+      // svegliarsi spontaneamente (su alcune 
+      // architetture e/o OS specifici)
       while (balance - money < 0) 
         lock.wait();
       balance -= money;
@@ -392,10 +388,9 @@ utilizza un numero fisso di thread a cui fare eseguire le task.
 ExecutorService executor = 
   Executors.newFixedThreadPool(5);
 executor.submit(() -> {
-  // Questo viene eseguito 
-  // su uno dei 5 thread
-  System.out.println("Executed on " + 
-      Thread.currentThread());
+  // Questo viene eseguito su uno dei 5 thread
+  System.out.println(
+    "Executed on " + Thread.currentThread());
 });
 ```
 
@@ -430,18 +425,15 @@ public class ScoreBoard {
   }
 
   public int getScore() {
-    for(int i = 0; 
-      i < students.length; i++) {
+    for(int i = 0; i < students.length; i++) {
       if(students[i].equals(stud)) 
         return scores[i];
     }
     return -1;
   }
 
-  public int setScore(String stud, 
-                      int score) {
-    for(int i = 0; 
-      i < students.length; i++) {
+  public int setScore(String stud, int score) {
+    for(int i = 0; i < students.length; i++) {
       if(students[i].equals(stud)) 
         scores[i] = score;
     }
@@ -473,8 +465,7 @@ public class ScoreBoard {
   ...
 
   public int getScore() {
-    for(int i = 0; 
-      i < students.length; i++) {
+    for(int i = 0; i < students.length; i++) {
       if(students[i].equals(stud)) {
         synchronized(students[i]) {
           return scores[i];
@@ -484,10 +475,8 @@ public class ScoreBoard {
     return -1;
   }
 
-  public int setScore(String stud, 
-                int score) {
-    for(int i = 0; 
-      i < students.length; i++) {
+  public int setScore(String stud, int score) {
+    for(int i = 0; i < students.length; i++) {
       if(students[i].equals(stud)) {
         synchronized(students[i]) {
           scores[i] = score;
@@ -515,8 +504,7 @@ public class ScoreBoard {
   ...
 
   public int getScore() {
-    for(int i = 0; 
-      i < students.length; i++) {
+    for(int i = 0; i < students.length; i++) {
       if(students[i].equals(stud)) {
         synchronized(students[i]) {
           while(scores[i] <= 0)
@@ -528,10 +516,8 @@ public class ScoreBoard {
     return -1;
   }
 
-  public int setScore(String stud, 
-                int score) {
-    for(int i = 0; 
-      i < students.length; i++) {
+  public int setScore(String stud, int score) {
+    for(int i = 0; i < students.length; i++) {
       if(students[i].equals(stud)) {
         synchronized(students[i]) {
             scores[i] = score;
