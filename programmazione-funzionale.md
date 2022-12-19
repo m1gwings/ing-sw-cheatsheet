@@ -199,8 +199,6 @@ Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le et
 
 ---
 
-<!-- _class: due -->
-
 ### `collect`
 
 Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo **`Collection<T> collect(<funzione che restituisce una Collezione>)`**. Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
@@ -288,6 +286,42 @@ Otterremo in output:
   ciao mondo
   vuoto
   vuoto
+```
+
+## Closures
+
+Viene detta closure la combinazione di una funzione insieme a una referenza allo stato che
+la circonda. 
+
+Detto in maniera diversa, data una funzione lambda, si dice che questa "si chiuda attorno"
+(ovvero catturi) le variabili all'interno del suo scope di definizione, permettendo di 
+utilizzarle all'interno della lambda stessa.
+
+Con un esempio:
+```java
+final String prefix = "Z";
+Predicate<String> pred = s -> 
+    s.startsWith(prefix);
+```
+la lambda `pred` cattura la variabile prefix, utilizzandola al suo interno, prendendo
+quindi il nome di closure.
+
+Per evitare effetti collaterali (*side effects*), viene consentito di catturare solo variabili
+`final` oppure **effectively final**, ovvero non dichiarata final ma usata come se fosse tale.
+```java
+String prefix = "Z";
+// Altre istruzioni che fanno cose
+String nonFinalPrefix = prefix + "aaaa";
+System.out.println(nonFinalPrefix);
+nonFinalPrefix = "";
+// prefix non è dichiarata final, ma non è 
+// mai modificata: è effectively final
+Predicate<String> pred = s -> 
+    s.startsWith(prefix);
+// Errore di compilazione: nonFinalPrefix é 
+// modificata, quindi non è effectively final
+Predicate<String> pred2 = s -> 
+    s.startsWith(nonFinalPrefix);
 ```
 
 ---
