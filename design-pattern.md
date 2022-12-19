@@ -107,7 +107,7 @@ A differenza del Factory Method, l'**Abstract Factory** permette di creare _fami
 
 #### UML
 
-![](./immagini/abstract-factory.png)
+![](./immagini/abstract-factory.svg)
 
 In questo diagramma, si hanno 2 famiglie di oggetti: `AbstractProductA` e `AbstractProductB`, e i rispettivi prodotti concreti `ProductA1`, `ProductA2`, `ProductB1` e `ProductB2`. La classe astratta `AbstractFactory` ha bisogno di creare una famiglia di oggetti, e delega la creazione a 2 classi concrete `ConcreteFactory1` e `ConcreteFactory2`. Le classi concrete implementano i metodi `createProductA()` e `createProductB()` che creano rispettivamente un oggetto `ProductA1` o `ProductA2`, e un oggetto `ProductB1` o `ProductB2`. Il Client, che ha bisogno di creare una famiglia di oggetti, crea una classe `ConcreteFactory` e usa i metodi `createProductA()` e `createProductB()` per creare la famiglia di oggetti.
 
@@ -183,3 +183,249 @@ public class Main {
 ```
 
 In questo modo, il `Main` crea solo la classe `ConcreteFactory` della famiglia richiesta dall'utente e richiama i metodi generici `createButton()` e `createScrollBar()` per creare la famiglia di oggetti, ma sarà la `ConcreteFactory` a preoccuparsi di creare gli oggetti della famiglia corretta.
+
+---
+
+## Pattern strutturali
+
+I pattern strutturali sono quelli che si occupano di come le classi e gli oggetti vengono composti per formare strutture più grandi.
+
+### Adapter
+
+L'**Adapter** è un pattern che permette di adattare un'interfaccia ad un'altra. Supponiamo di voler implementare una feature e, per farlo, ci serviamo di una libreria esterna. La libreria, però, lavora su dati e oggetti diversi da quelli con cui lavoriamo noi. In questo caso, possiamo creare un **Adapter** che si occupa di _adattare_ l'interfaccia della libreria esterna all'interfaccia che usiamo.
+
+#### UML
+
+![](./immagini/adapter.svg)
+
+In questo diagramma, abbiamo `Target` che definisce l'interfaccia che il Client usa, `Adaptee` che definisce l'interfaccia che vogliamo _adattare_ (ad esempio una libreria esterna), e `Adapter`, che estende `Target`, e usa `Adaptee` per adattare il methodo `methodToAdapt()` al metodo `request()` di `Target`.
+
+#### Esempio
+
+Supponiamo di voler implementare un programma che legge un file di testo e lo stampa a video. Per farlo, usiamo una libreria esterna, che però lavora su oggetti diversi da quelli che usiamo noi. In questo caso, possiamo creare un **Adapter** che si occupa di _adattare_ l'interfaccia della libreria esterna all'interfaccia che usiamo.
+
+Per prima cosa, definiamo l'interfaccia `Target`, in questo esempio la chiamiamo `TextPrinter`, che lavora con il tipo di file `TextFile`:
+
+```java
+public class TextFile {
+    private String name;
+    private String path;
+    private int size;
+
+    public TextFile
+    (String name, String path, int size) {
+        this.name = name;
+        this.path = path;
+        this.size = size;
+    }
+
+    public String getPath() {
+        return path;
+    }
+    
+    ...
+}
+
+public interface TextPrinter {
+    public void printText(TextFile textFile);
+}
+```
+
+Definiamo anche l'interfaccia `Adaptee` (la libreria esterna), in questo esempio la chiamiamo `FilePrinterLibrary`, che userà un tipo di file diverso da `TextFile` (`File`):
+
+```java
+public class File {
+    private String path;
+
+    public File(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    ...
+}
+
+public class FilePrinterLibrary {
+    public void printFile(File file) {
+        System.out.println(
+            "Printing file " + file.getPath());
+    }
+}
+```
+
+`TextPrinter` e `FilePrinterLibrary` lavorano con oggetti diversi, quindi, per adattare l'interfaccia di `FilePrinterLibrary` a quella di `TextPrinter`, creiamo un **Adapter**:
+
+```java
+public class FilePrinterLibraryAdapter
+implements TextPrinter {
+    FilePrinterLibrary filePrinterLibrary =
+        new FilePrinterLibrary();
+
+    @Override
+    public void printText(TextFile textFile) {
+        File file=new File(textFile.getPath());
+
+        filePrinterLibrary.printFile(file);
+    }
+}
+```
+
+`FilePrinterLibraryAdapter` definisce il metodo `printText()` per poter implementare l'interfaccia `TextPrinter`. Implementiamo il metodo `printText()` utilizzando un oggetto `FilePrinterLibrary` e creando un oggetto `File` a partire da un oggetto `TextFile`, quindi possiamo chiamare il metodo `printFile()` di `FilePrinterLibrary`.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        TextFile textFile = new TextFile(
+            "test.txt", "/home/user", 100
+        );
+
+        TextPrinter textPrinter = 
+            new FilePrinterLibraryAdapter();
+
+        textPrinter.printText(textFile);
+    }
+}
+```
+
+In questo modo, il `Main` usa il tipo di file `TextFile`, sarà poi l'**Adapter** che si occuperà di convertirlo in `File` per richiamare la funzione di libreria.
+
+---
+
+<!-- _class: due -->
+
+### Decorator
+
+Il **Decorator** è un pattern che permette di aggiungere dinamicamente una o più funzionalità ad un sistema.
+
+#### UML
+
+![](./immagini/decorator.svg)
+
+In questo diagramma, abbiamo `Component` che definisce l'interfaccia che il Client usa, `ConcreteComponent` che implementa `Component`, e `Decorator` che estende `Component` e usa `Component` per aggiungervi funzionalità, vi sono poi i vari `ConcreteDecorator` che estendono `Decorator` e realizzano (ciascuno) una funzionalità.
+
+Si noti che l'attributo `component` di `Decorator` è di tipo `Component`, e non deve essere per forza un `ConcreteComponent`, ma anche un altro `Decorator` (`ConcreteDecoratorA` o `ConcreteDecoratorB`), che a sua volta avrà di nuovo un `component`. Si può quindi aggiungere quante funzionalità si vogliono al `ConcreteComponent` _base_.
+
+#### Esempio
+
+Supponiamo di voler costruire un programma che gestisce un'interfaccia per la visualizzazione di un testo. Il programma deve essere in grado di visualizzare il testo in modo semplice, in grassetto, ma anche cambiando il colore del testo, o tutti e due insieme. Per farlo, usiamo un **Decorator**.
+
+Per prima cosa, definiamo l'interfaccia `Component`, in questo esempio la chiamiamo `TextView`, che definisce il metodo `draw()`:
+
+```java
+public interface TextView {
+    public void draw();
+}
+```
+
+Definiamo anche la classe `ConcreteComponent`, in questo esempio la chiamiamo `SimpleTextView`, che implementa `TextView` (e stamperà semplicemente il testo che gli viene passato):
+
+```java
+public class SimpleTextView implements TextView {
+    private String text;
+
+    public SimpleTextView(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println(text);
+    }
+}
+```
+
+Definiamo la classe astratta `Decorator`, in questo esempio la chiamiamo `TextViewDecorator`, che estende `TextView` e usa `TextView` per aggiungere funzionalità:
+
+```java
+public abstract class TextViewDecorator implements TextView {
+    private TextView textView;
+
+    public TextViewDecorator(TextView textView) {
+        this.textView = textView;
+    }
+
+    @Override
+    public void draw() {
+        textView.draw();
+    }
+}
+```
+
+L'attributo `textView` di `TextViewDecorator` è di tipo `TextView`, e (come detto prima) può essere sia un `SimpleTextView` che un altro `ConcreteDecorator`.
+
+---
+
+<!-- _class: due -->
+
+Definiamo le classi `ConcreteDecoratorA`, in questo esempio la chiamiamo `ColoredTextView`; e `ConcreteDecoratorB`, in questo esempio la chiamiamo `BoldTextView`, che estendono `TextViewDecorator`:
+
+```java
+public class ColoredTextView extends TextViewDecorator {
+    private String color;
+
+    public ColoredTextView(TextView textView, String color) {
+        super(textView);
+        this.color = color;
+    }
+
+    // Stampa il testo colorato
+    @Override
+    public void draw() {
+        System.out.print(color);
+        super.draw();
+        System.out.print("\u001B[0m");
+    }
+}
+```
+
+```java
+public class BoldTextView extends TextViewDecorator {
+    public BoldTextView(TextView textView) {
+        super(textView);
+    }
+
+    // Stampa il testo in grassetto
+    @Override
+    public void draw() {
+        System.out.print("\u001B[1m");
+        super.draw();
+        System.out.print("\u001B[0m");
+    }
+}
+```
+
+Si noti che `ColoredTextView` e `BoldTextView` hanno nel loro costruttore l'istruzione `super(textView)`, che chiama il costruttore di `TextViewDecorator` per settare l'attributo `textView` (che può essere sia un `SimpleTextView` che un `ColoredTextView` o un `BoldTextView`).
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Stampa "Hello World!" normale
+        TextView textView = new SimpleTextView("Hello World!");
+        textView.draw();
+
+        // Stampa "Hello World!" in rosso
+        TextView coloredTextView = new ColoredTextView(
+            new SimpleTextView("Hello World!"), "\u001B[31m");
+        coloredTextView.draw();
+
+        // Stampa "Hello World!" in grassetto
+        TextView boldTextView = new BoldTextView(
+            new SimpleTextView("Hello World!"));
+        boldTextView.draw();
+
+        // Stampa "Hello World!" in rosso e in grassetto
+        TextView coloredBoldTextView = new ColoredTextView(
+            new BoldTextView(
+                new SimpleTextView("Hello World!")
+            ), 
+            "\u001B[31m"
+        );
+        coloredBoldTextView.draw();
+    }
+}
+```
+
+Con questa _catena_ di **Decorator** è possibile aggiungere dinamicamente più funzionalità al `SimpleTextView` _base_.
