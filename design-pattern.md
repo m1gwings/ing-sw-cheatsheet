@@ -231,7 +231,7 @@ public interface TextPrinter {
 }
 ```
 
-Definiamo anche l'interfaccia `Adaptee` (la libreria esterna), in questo esempio la chiamiamo `FilePrinterLibrary`, che usera un tipo di file diverso da `TextFile` (`File`):
+Definiamo anche l'interfaccia `Adaptee` (la libreria esterna), in questo esempio la chiamiamo `FilePrinterLibrary`, che userà un tipo di file diverso da `TextFile` (`File`):
 
 ```java
 public class File {
@@ -261,10 +261,11 @@ public class FilePrinterLibrary {
 ```java
 public class FilePrinterLibraryAdapter
 implements TextPrinter {
+    FilePrinterLibrary filePrinterLibrary =
+        new FilePrinterLibrary();
+
     @Override
     public void printText(TextFile textFile) {
-        FilePrinterLibrary filePrinterLibrary =
-            new FilePrinterLibrary();
         File file=new File(textFile.getPath());
 
         filePrinterLibrary.printFile(file);
@@ -290,3 +291,141 @@ public class Main {
 ```
 
 In questo modo, il `Main` usa il tipo di file `TextFile`, sarà poi l'**Adapter** che si occuperà di convertirlo in `File` per richiamare la funzione di libreria.
+
+---
+
+<!-- _class: due -->
+
+### Decorator
+
+Il **Decorator** è un pattern che permette di aggiungere dinamicamente una o più funzionalità ad un sistema.
+
+#### UML
+
+![](./immagini/decorator.svg)
+
+In questo diagramma, abbiamo `Component` che definisce l'interfaccia che il Client usa, `ConcreteComponent` che implementa `Component`, e `Decorator` che estende `Component` e usa `Component` per aggiungere funzionalità, vi sono poi i vari `ConcreteDecorator` che estendono `Decorator` e aggiungono (ognuno di loro) una funzionalità.
+
+Si noti che l'attributo `component` di `Decorator` è di tipo `Component`, e non può essere solo un `ConcreteComponent`, ma anche un altro `Decorator` (`ConcreteDecoratorA` o `ConcreteDecoratorB`), che a sua volta avrà di nuovo un `component`. Si può quindi aggiungere quante funzionalità si vogliono al `ConcreteComponent` _base_.
+
+#### Esempio
+
+Supponiamo di voler costruire un programma che gestisce un sistema di gestione di un'interfaccia per la visualizzazione di un testo. Il programma deve essere in grado di visualizzare il testo in modo semplice, ma anche cambiando il colore del testo, in grassetto, o tutti e due insieme. Per farlo, usiamo un **Decorator**.
+
+Per prima cosa, definiamo l'interfaccia `Component`, in questo esempio la chiamiamo `TextView`, che definisce il metodo `draw()`:
+
+```java
+public interface TextView {
+    public void draw();
+}
+```
+
+Definiamo anche la classe `ConcreteComponent`, in questo esempio la chiamiamo `SimpleTextView`, che implementa `TextView` (e stamperà semplicemente il testo che gli viene passato):
+
+```java
+public class SimpleTextView implements TextView {
+    private String text;
+
+    public SimpleTextView(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println(text);
+    }
+}
+```
+
+Definiamo anche la classe astratta `Decorator`, in questo esempio la chiamiamo `TextViewDecorator`, che estende `TextView` e usa `TextView` per aggiungere funzionalità:
+
+```java
+public abstract class TextViewDecorator implements TextView {
+    private TextView textView;
+
+    public TextViewDecorator(TextView textView) {
+        this.textView = textView;
+    }
+
+    @Override
+    public void draw() {
+        textView.draw();
+    }
+}
+```
+
+L'attributo `textView` di `TextViewDecorator` è di tipo `TextView`, e (come detto prima) può essere sia un `SimpleTextView` che un altro `ConcreteDecorator`.
+
+---
+
+<!-- _class: due -->
+
+Definiamo anche le classi `ConcreteDecoratorA`, in questo esempio la chiamiamo `ColoredTextView`; e `ConcreteDecoratorB`, in questo esempio la chiamiamo `BoldTextView`, che estendono `TextViewDecorator` e aggiungono (ognuno di loro) una funzionalità:
+
+```java
+public class ColoredTextView extends TextViewDecorator {
+    private String color;
+
+    public ColoredTextView(TextView textView, String color) {
+        super(textView);
+        this.color = color;
+    }
+
+    // Stampa il testo colorato
+    @Override
+    public void draw() {
+        System.out.print(color);
+        super.draw();
+        System.out.print("\u001B[0m");
+    }
+}
+```
+
+```java
+public class BoldTextView extends TextViewDecorator {
+    public BoldTextView(TextView textView) {
+        super(textView);
+    }
+
+    // Stampa il testo in grassetto
+    @Override
+    public void draw() {
+        System.out.print("\u001B[1m");
+        super.draw();
+        System.out.print("\u001B[0m");
+    }
+}
+```
+
+Si noti che `ColoredTextView` e `BoldTextView` hanno nel loro costruttore l'istruzione `super(textView)`, che chiama il costruttore di `TextViewDecorator` per settare l'attributo `textView` (che può essere sia un `SimpleTextView` che un `ColoredTextView` o un `BoldTextView`).
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Stampa "Hello World!" normale
+        TextView textView = new SimpleTextView("Hello World!");
+        textView.draw();
+
+        // Stampa "Hello World!" in rosso
+        TextView coloredTextView = new ColoredTextView(
+            new SimpleTextView("Hello World!"), "\u001B[31m");
+        coloredTextView.draw();
+
+        // Stampa "Hello World!" in grassetto
+        TextView boldTextView = new BoldTextView(
+            new SimpleTextView("Hello World!"));
+        boldTextView.draw();
+
+        // Stampa "Hello World!" in rosso e in grassetto
+        TextView coloredBoldTextView = new ColoredTextView(
+            new BoldTextView(
+                new SimpleTextView("Hello World!")
+            ), 
+            "\u001B[31m"
+        );
+        coloredBoldTextView.draw();
+    }
+}
+```
+
+Con questa _catena_ di **Decorator** è possibile aggiungere dinamicamente più funzionalità al `SimpleTextView` _base_.
