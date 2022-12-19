@@ -200,8 +200,6 @@ L'**Adapter** è un pattern che permette di adattare un'interfaccia ad un'altra.
 
 In questo diagramma, abbiamo `Target` che definisce l'interfaccia che il Client usa, `Adaptee` che definisce l'interfaccia che vogliamo _adattare_ (ad esempio una libreria esterna), e `Adapter`, che estende `Target`, e usa `Adaptee` per adattare il methodo `methodToAdapt()` al metodo `request()` di `Target`.
 
-_Attenzione_: Java non supporta l'ereditarietà multipla, quindi, in Java, `Target` è un'interfaccia e `Adapter` la implementa.
-
 #### Esempio
 
 Supponiamo di voler implementare un programma che legge un file di testo e lo stampa a video. Per farlo, usiamo una libreria esterna, che però lavora su oggetti diversi da quelli che usiamo noi. In questo caso, possiamo creare un **Adapter** che si occupa di _adattare_ l'interfaccia della libreria esterna all'interfaccia che usiamo.
@@ -250,7 +248,7 @@ public class File {
     ...
 }
 
-class FilePrinterLibrary {
+public class FilePrinterLibrary {
     public void printFile(File file) {
         System.out.println(
             "Printing file " + file.getPath());
@@ -261,18 +259,20 @@ class FilePrinterLibrary {
 `TextPrinter` e `FilePrinterLibrary` lavorano con oggetti diversi, quindi, per adattare l'interfaccia di `FilePrinterLibrary` a quella di `TextPrinter`, creiamo un **Adapter**:
 
 ```java
-public class FilePrinterLibraryAdapter 
-extends FilePrinterLibrary
+public class FilePrinterLibraryAdapter
 implements TextPrinter {
     @Override
     public void printText(TextFile textFile) {
+        FilePrinterLibrary filePrinterLibrary =
+            new FilePrinterLibrary();
         File file=new File(textFile.getPath());
-        super.printFile(file);
+
+        filePrinterLibrary.printFile(file);
     }
 }
 ```
 
-`FilePrinterLibraryAdapter` estende `FilePrinterLibrary` per poter usare il metodo `printFile()` e implementa `TextPrinter` per poter implementare il metodo `printText()`. Il metodo `printText()` crea un oggetto `File` a partire da un oggetto `TextFile`, quindi può chiamare il metodo `printFile()` di `FilePrinterLibrary`.
+`FilePrinterLibraryAdapter` implementa `TextPrinter` per poter implementare il metodo `printText()`. Implementiamo il metodo `printText()` istanziando un oggetto `FilePrinterLibrary` e creando un oggetto `File` a partire da un oggetto `TextFile`, quindi può chiamare il metodo `printFile()` di `FilePrinterLibrary`.
 
 ```java
 public class Main {
