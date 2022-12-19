@@ -281,7 +281,7 @@ Questa funzionalità è un'aggiunta al Markdown standard (che non prevede la div
 
 ### Come aggiungere diagrammi UML
 
-Per realizzare i diagrammi UML consigliamo di utilizzare un tool come `draw.io` (o analoghi) ed esportare l'immagine in formato `.png` o `svg`.
+Per realizzare i diagrammi UML consigliamo di utilizzare un tool come `draw.io` (o analoghi) ed esportare l'immagine in formato `.png` o `.svg`.
 Una volta esportata, l'immagine può essere spostata nella cartella `immagini` della repository ed importata all'interno del capitolo con l'usuale sintassi di Markdown per aggiungere immagini.
 L'immagine deve essere necessariamente in bianco e nero.
 Cercate di seguire lo stile dei diagrammi utilizzato in quelli già presenti sul cheatsheet.
