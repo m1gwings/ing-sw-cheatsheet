@@ -22,10 +22,10 @@ Per creare un thread, è sufficiente estendere la classe `java.lang.Thread`, far
 istanziare la classe e chiamare il metodo `start()` (**NB: start, non run**):
 ```java
 class MyThread extends Thread {
-    @Override
-    public void run() {
-        // Fai cose
-    }
+  @Override
+  public void run() {
+    // Fai cose
+  }
 }
 ...
  // Fa partire il thread e ritorna subito
@@ -36,10 +36,10 @@ Per motivi di riutilizzo del codice, viene solitamente preferito utilizzare un m
 un Thread, implementando invece l'interfaccia `java.lang.Runnable`:
 ```java
 class MyRunnable implements Runnable {
-    @Override
-    public void run() {
-        // Fai cose
-    }
+  @Override
+  public void run() {
+    // Fai cose
+  }
 }
 ...
 // Fa partire il thread e ritorna subito
@@ -57,22 +57,22 @@ i vari thread su sezioni di codice di interesse. Questo avviene mediante l'uso d
 l'oggetto di cui si vuole utilizzare il lock:
 ```java
 class Account {
-    private float balance;
+  private float balance;
 
-    public Account(float balanceIniz) { 
-        balance = balanceIniz; 
+  public Account(float balanceIniz) { 
+    balance = balanceIniz; 
+  }
+  
+  public void deposit(float money) { 
+    synchronized(this) { 
+      balance += money; 
     }
-    
-    public void deposit(float money) { 
-        synchronized(this) { 
-            balance += money; 
-        }
+  }
+  public void withdraw(float money) {
+    synchronized(this) {
+      balance -= money; 
     }
-    public void withdraw(float money) {
-        synchronized(this) {
-            balance -= money; 
-        }
-    }
+  }
 }
 ```
 
@@ -93,21 +93,21 @@ Esiste anche una forma più breve di scrivere il codice precedente, mettendo la 
 direttamente sul metodo:
 ```java
 class Account {
-    private float balance;
+  private float balance;
 
-    public Account(float balanceIniz) { 
-        balance = balanceIniz; 
-    }
-    
-    public synchronized void deposit(
-        float money) { 
-        balance += money; 
-    }
+  public Account(float balanceIniz) { 
+    balance = balanceIniz; 
+  }
+  
+  public synchronized void deposit(
+    float money) { 
+    balance += money; 
+  }
 
-    public synchronized void withdraw(
-        float money) {
-        balance -= money; 
-    }
+  public synchronized void withdraw(
+    float money) {
+    balance -= money; 
+  }
 }
 ```
 
@@ -117,19 +117,19 @@ E' possibile chiamare il metodo `synchronized` su qualsiasi oggetto di cui si ha
 (quindi escludendo i primitivi):
 ```java
 class Account {
-    private float balance;
-    private final Object lock = new Object();
-    ...    
-    public void deposit(float money) { 
-        synchronized(lock) { 
-            balance += money; 
-        }
+  private float balance;
+  private final Object lock = new Object();
+  ...  
+  public void deposit(float money) { 
+    synchronized(lock) { 
+      balance += money; 
     }
-    public void withdraw(float money) {
-        synchronized(lock) {
-            balance -= money; 
-        }
+  }
+  public void withdraw(float money) {
+    synchronized(lock) {
+      balance -= money; 
     }
+  }
 }
 ```
 
@@ -149,19 +149,19 @@ Altre cose su cui riporre particolare attenzione quando si utilizza un intrinsic
   un istanza su cui sincronizzare. Si utilizza quindi l'istanza della classe stessa, ovvero:
 ```java
 public class ExampleClass {
-    public static void static1() {
-        synchronized(ExampleClass.class) {
-            // sezione critica
-        }
+  public static void static1() {
+    synchronized(ExampleClass.class) {
+      // sezione critica
     }
-    
-    // Di default Java effettua la stessa 
-    // cosa anche per  synchronized posto 
-    // su un metodo statico
-    // I due metodi sono equivalenti
-    public static synchronized void static2() {
-        // sezione critica
-    }
+  }
+  
+  // Di default Java effettua la stessa 
+  // cosa anche per  synchronized posto 
+  // su un metodo statico
+  // I due metodi sono equivalenti
+  public static synchronized void static2() {
+    // sezione critica
+  }
 }
 ```
 - `synchronized` posto su un metodo non sarà automaticamente ereditato da metodi che ne effettuano l'overriding.
@@ -174,20 +174,20 @@ variabile della cache locale del thread con la memoria centrale, possiamo utiliz
 sulla variabile di interesse:
 ```java
 class StudentGrade {
-    private final String matricola;
-    private volatile int grade;
+  private final String matricola;
+  private volatile int grade;
 
-    public StudentGrade(String matricola) {
-        this.matricola = matricola;
-    }
+  public StudentGrade(String matricola) {
+    this.matricola = matricola;
+  }
 
-    public void getGrade() {
-        return grade;
-    }
+  public void getGrade() {
+    return grade;
+  }
 
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
+  public void setGrade(int grade) {
+    this.grade = grade;
+  }
 }
 ```
 
@@ -197,20 +197,20 @@ Questo problema viene risolto dall'utilizzo delle variabili atomiche, che sono i
 `AtomicBoolean`, `AtomicInteger`, `AtomicLong` e `AtomicReference<V>`.
 ```java
 class Counter {
-    private final AtomicInteger count = 
-            new AtomicInteger();
+  private final AtomicInteger count = 
+      new AtomicInteger();
 
-    public int get() {
-        return count.get();
-    }
+  public int get() {
+    return count.get();
+  }
 
-    public void increment() {
-        count.getAndIncrement();
-    }
+  public void increment() {
+    count.getAndIncrement();
+  }
 
-    public void set(int count) {
-        count.getAndSet(count);
-    }
+  public void set(int count) {
+    count.getAndSet(count);
+  }
 }
 ```
 
@@ -221,20 +221,20 @@ La mancanza di un tipo atomico per double e float può essere sopperita mediante
 oppure, se è necessario sommare, utilizzando `DoubleAdder`:
 ```java
 class Account {
-    private final DoubleAdder balance =
-            new DoubleAdder();
-    
-    public float get() { 
-        return (float) balance.sum(); 
-    }
-    
-    public void deposit(float money) { 
-        balance.add(money); 
-    }
+  private final DoubleAdder balance =
+      new DoubleAdder();
+  
+  public float get() { 
+    return (float) balance.sum(); 
+  }
+  
+  public void deposit(float money) { 
+    balance.add(money); 
+  }
 
-    public void withdraw(float money) {
-        balance.add(-money); 
-    }
+  public void withdraw(float money) {
+    balance.add(-money); 
+  }
 }
 ```
 
@@ -259,40 +259,40 @@ Questo ci porta agli oggetti immutabili: un oggetto si dice **immutabile** se og
 e ogni modifica dello stesso avviene mediante la creazione di un nuovo oggetto:
 ```java
 public class ImmutableRGB {
-    private final String name;
-    // Values must be between 0 and 255.
-    private final int red;
-    private final int green;
-    private final int blue;
+  private final String name;
+  // Values must be between 0 and 255.
+  private final int red;
+  private final int green;
+  private final int blue;
 
-    private int check(int component) {
-        if (component < 0 || component > 255)
-            throw new 
-                IllegalArgumentException();
-        return component;
-    }
-    
-    public ImmutableRGB(int r, int g, int b, 
-                        String name) {
-        this.red = check(r);
-        this.green = check(g);
-        this.blue = check(b);
-        this.name = name;
-    }
+  private int check(int component) {
+    if (component < 0 || component > 255)
+      throw new 
+        IllegalArgumentException();
+    return component;
+  }
+  
+  public ImmutableRGB(int r, int g, int b, 
+                String name) {
+    this.red = check(r);
+    this.green = check(g);
+    this.blue = check(b);
+    this.name = name;
+  }
 
-    public int getRGB() {
-        return 
-          (red << 16) | (green << 8) | blue;
-    }
-    public String getName() {
-        return name;
-    }
-    public ImmutableRGB invert() {
-        return new ImmutableRGB(255 - red, 
-                    255 - green, 
-                    255 - blue, 
-                    "Inverse of " + name);
-    }
+  public int getRGB() {
+    return 
+      (red << 16) | (green << 8) | blue;
+  }
+  public String getName() {
+    return name;
+  }
+  public ImmutableRGB invert() {
+    return new ImmutableRGB(255 - red, 
+            255 - green, 
+            255 - blue, 
+            "Inverse of " + name);
+  }
 }
 ```
 
@@ -316,34 +316,34 @@ Riprendendo l'esempio di un account bancario, se volessimo aspettare che l'utent
 un'operazione di prelievo:
 ```java
 class Account {
-    private final Object lock = new Object();
-    private float balance;
+  private final Object lock = new Object();
+  private float balance;
 
-    public Account(float balanceIniz) {
-        balance = balanceIniz;
+  public Account(float balanceIniz) {
+    balance = balanceIniz;
+  }
+  
+  public void deposit(float money) { 
+    synchronized(lock) {
+      balance += money;
+      lock.notifyAll();
     }
-    
-    public void deposit(float money) { 
-        synchronized(lock) {
-            balance += money;
-            lock.notifyAll();
-        }
-    }
+  }
 
-    public void withdraw(float money) 
-            throws InterruptedException {
-        synchronized(lock) {
-            // Notiamo l'utilizzo del while 
-            // al posto di un if: questo 
-            // perché il thread potrebbe 
-            // svegliarsi spontaneamente 
-            // (su alcune architetture 
-            //  e/o OS specifici)
-            while (balance - money < 0) 
-                lock.wait();
-            balance -= money;
-        }
+  public void withdraw(float money) 
+        throws InterruptedException {
+    synchronized(lock) {
+      // Notiamo l'utilizzo del while 
+      // al posto di un if: questo 
+      // perché il thread potrebbe 
+      // svegliarsi spontaneamente 
+      // (su alcune architetture 
+      //  e/o OS specifici)
+      while (balance - money < 0) 
+        lock.wait();
+      balance -= money;
     }
+  }
 }
 ```
 
@@ -366,17 +366,17 @@ di base `Lock` che, oltre a permettere le stesse operazioni dell'intrinsic lock,
 ```java
 Lock lock = new ReentrantLock();
 if (lock.tryLock()) {
-    try {
-        // qui siamo in sezione critica
-    } finally {
-        // 'finally' per rilasciare il lock 
-        // qualsiasi cosa succeda, sia 
-        // esecuzione normale che eccezioni
-        lock.unlock();
-    }
+  try {
+    // qui siamo in sezione critica
+  } finally {
+    // 'finally' per rilasciare il lock 
+    // qualsiasi cosa succeda, sia 
+    // esecuzione normale che eccezioni
+    lock.unlock();
+  }
 } else {
-    // azioni alternative dove il 
-    // lock non è necessario
+  // azioni alternative dove il 
+  // lock non è necessario
 }
 ```
 
@@ -390,12 +390,12 @@ nella classe `Executors` per istanziarne implementazioni concrete. Per esempio `
 utilizza un numero fisso di thread a cui fare eseguire le task.
 ```java
 ExecutorService executor = 
-    Executors.newFixedThreadPool(5);
+  Executors.newFixedThreadPool(5);
 executor.submit(() -> {
-    // Questo viene eseguito 
-    // su uno dei 5 thread
-    System.out.println("Executed on " + 
-        Thread.currentThread());
+  // Questo viene eseguito 
+  // su uno dei 5 thread
+  System.out.println("Executed on " + 
+      Thread.currentThread());
 });
 ```
 
@@ -419,33 +419,33 @@ Si consideri la seguente classe `ScoreBoard` per memorizzare i voti di un insiem
 fase di costruzione:
 ```java
 public class ScoreBoard {
-    private String[] students;
-    private int[] scores;
+  private String[] students;
+  private int[] scores;
 
-    public ScoreBoard(String[] stud) {
-        students = new String[stud.length];
-        for(int i = 0; i < stud.length; i++) 
-            students[i] = stud[i];
-        scores = new int[stud.length];
-    }
+  public ScoreBoard(String[] stud) {
+    students = new String[stud.length];
+    for(int i = 0; i < stud.length; i++) 
+      students[i] = stud[i];
+    scores = new int[stud.length];
+  }
 
-    public int getScore() {
-        for(int i = 0; 
-            i < students.length; i++) {
-            if(students[i].equals(stud)) 
-                return scores[i];
-        }
-        return -1;
+  public int getScore() {
+    for(int i = 0; 
+      i < students.length; i++) {
+      if(students[i].equals(stud)) 
+        return scores[i];
     }
+    return -1;
+  }
 
-    public int setScore(String stud, 
-                        int score) {
-        for(int i = 0; 
-            i < students.length; i++) {
-            if(students[i].equals(stud)) 
-                scores[i] = score;
-        }
+  public int setScore(String stud, 
+                      int score) {
+    for(int i = 0; 
+      i < students.length; i++) {
+      if(students[i].equals(stud)) 
+        scores[i] = score;
     }
+  }
 }
 ```
 
@@ -470,31 +470,31 @@ dentro all'array students, in quanto come detto in precedenza non vengono modifi
 ```java
 public class ScoreBoard {
 
-    ...
+  ...
 
-    public int getScore() {
-        for(int i = 0; 
-            i < students.length; i++) {
-            if(students[i].equals(stud)) {
-                synchronized(students[i]) {
-                    return scores[i];
-                }
-            }
+  public int getScore() {
+    for(int i = 0; 
+      i < students.length; i++) {
+      if(students[i].equals(stud)) {
+        synchronized(students[i]) {
+          return scores[i];
         }
-        return -1;
+      }
     }
+    return -1;
+  }
 
-    public int setScore(String stud, 
-                        int score) {
-        for(int i = 0; 
-            i < students.length; i++) {
-            if(students[i].equals(stud)) {
-                synchronized(students[i]) {
-                    scores[i] = score;
-                }
-            }
+  public int setScore(String stud, 
+                int score) {
+    for(int i = 0; 
+      i < students.length; i++) {
+      if(students[i].equals(stud)) {
+        synchronized(students[i]) {
+          scores[i] = score;
         }
+      }
     }
+  }
 }
 ```
 
@@ -512,33 +512,33 @@ Questo è un esempio di consumer/producer standard:
 ```java
 public class ScoreBoard {
 
-    ...
+  ...
 
-    public int getScore() {
-        for(int i = 0; 
-            i < students.length; i++) {
-            if(students[i].equals(stud)) {
-                synchronized(students[i]) {
-                    while(scores[i] <= 0)
-                        students[i].wait();
-                    return scores[i];
-                }
-            }
+  public int getScore() {
+    for(int i = 0; 
+      i < students.length; i++) {
+      if(students[i].equals(stud)) {
+        synchronized(students[i]) {
+          while(scores[i] <= 0)
+            students[i].wait();
+          return scores[i];
         }
-        return -1;
+      }
     }
+    return -1;
+  }
 
-    public int setScore(String stud, 
-                        int score) {
-        for(int i = 0; 
-            i < students.length; i++) {
-            if(students[i].equals(stud)) {
-                synchronized(students[i]) {
-                    scores[i] = score;
-                    students[i].notifyAll();
-                }
-            }
+  public int setScore(String stud, 
+                int score) {
+    for(int i = 0; 
+      i < students.length; i++) {
+      if(students[i].equals(stud)) {
+        synchronized(students[i]) {
+            scores[i] = score;
+            students[i].notifyAll();
         }
+      }
     }
+  }
 }
 ```

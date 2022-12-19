@@ -9,21 +9,21 @@ Supponiamo di avere una classe fatta in questo modo:
 
 ```java
 class Persona {
-    private String nome;
-    private int eta;
+  private String nome;
+  private int eta;
 
-    public Persona(String nome, int eta) {
-        this.nome = nome;
-        this.eta = eta;
-    }
+  public Persona(String nome, int eta) {
+    this.nome = nome;
+    this.eta = eta;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public int getEta() {
-        return eta;
-    }
+  public int getEta() {
+    return eta;
+  }
 }
 ```
 
@@ -40,7 +40,7 @@ persone.add(new Persona("Pluto", 50));
 Possiamo, ad esempio, ordinare la lista di persone per età, usando il metodo `sort` della classe `Collections`: 
 ```java
 public static <T> void sort(
-    List<T> list, Comparator<? super T> c
+  List<T> list, Comparator<? super T> c
 )
 ```
 
@@ -48,9 +48,9 @@ Il metodo `sort` prende come primo parametro una lista di oggetti di tipo `T`, e
 
 ```java
 obj.method(
-    (param1, param2) -> {
-        // corpo della funzione
-    }
+  (param1, param2) -> {
+    // corpo della funzione
+  }
 );
 ```
 
@@ -58,13 +58,13 @@ Nel nostro esempio il metodo `sort` sarà implementato così:
 
 ```java
 Collections.sort(persone, (p1, p2) -> {
-    /* Java conosce già il tipo di p1 e p2, 
-    quindi non è necessario specificarlo */
-    if(p1.getEta() > p2.getEta()) {
-        return 1; }
-    else if(p1.getEta() < p2.getEta()) {
-        return -1; }
-    else return 0;
+  /* Java conosce già il tipo di p1 e p2, 
+  quindi non è necessario specificarlo */
+  if(p1.getEta() > p2.getEta()) {
+    return 1; }
+  else if(p1.getEta() < p2.getEta()) {
+    return -1; }
+  else return 0;
 });
 ```
 
@@ -78,11 +78,11 @@ Avendo l'interfaccia funzionale un solo metodo, possiamo usare direttamente una 
 
 ```java
 Comparator<Persona> comparator = (p1, p2) -> {
-    if(p1.getEta() > p2.getEta()) {
-        return 1; }
-    else if(p1.getEta() < p2.getEta()) {
-        return -1; }
-    else return 0;
+  if(p1.getEta() > p2.getEta()) {
+    return 1; }
+  else if(p1.getEta() < p2.getEta()) {
+    return -1; }
+  else return 0;
 };
 ```
 
@@ -123,7 +123,7 @@ Per farlo, usiamo il metodo **`Stream<T> filter(<predicato>)`**. Nel nostro esem
 
 ```java
 Stream<Persona> stream = persone.stream()
-    .filter(p -> p.getEta() >= 30);
+  .filter(p -> p.getEta() >= 30);
 ```
 
 La funzione lambda nel metodo `filter` sarà `true` per tre persone: Luigi, Pippo e Pluto. Verrà quindi eliminato Mario (che ha 20 anni) dal nostro `stream`.
@@ -134,14 +134,14 @@ La funzione lambda nel metodo `filter` sarà `true` per tre persone: Luigi, Pipp
 
 ```java
 Stream<String> stream = persone.stream()
-    .filter(p -> p.getEta() >= 30)
-    .map(p -> {
-        return p.getNome() + ": " + 
-        p.getEta().toString();
-    });
-    /* return implicito 
-    (valido solo per funzioni 
-    con una sola riga) */
+  .filter(p -> p.getEta() >= 30)
+  .map(p -> {
+    return p.getNome() + ": " + 
+    p.getEta().toString();
+  });
+  /* return implicito 
+  (valido solo per funzioni 
+  con una sola riga) */
 ```
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto: 50".
@@ -160,14 +160,14 @@ Nel nostro esempio, vogliamo trasformare ogni persona (sempre filtrata con età 
 
 ```java
 Stream<String> stream = persone.stream()
-    .filter(p -> p.getEta() >= 30)
-    .flatMap(p -> {
-        List<String> listaPerP;
-        listaPerP = new ArrayList<>();
-        listaPerP.add(p.getNome());
-        listaPerP.add(p.getEta().toString());
-        return listaPerP.stream();
-    });
+  .filter(p -> p.getEta() >= 30)
+  .flatMap(p -> {
+    List<String> listaPerP;
+    listaPerP = new ArrayList<>();
+    listaPerP.add(p.getNome());
+    listaPerP.add(p.getEta().toString());
+    return listaPerP.stream();
+  });
 ```
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi", "30", "Pippo", "40", "Pluto", "50".
@@ -182,13 +182,13 @@ Nel nostro esempio, vogliamo ottenere la somma delle età delle persone (filtrat
 
 ```java
 Integer sommaEta = persone.stream()
-    .filter(p -> p.getEta() >= 30)
-    /* mapToInt è uguale alla map, 
-    ma restituisce uno stream di interi */
-    .mapToInt(p -> p.getEta())  
-    .reduce(
-        0, 
-        (eta1, eta2) -> eta1 + eta2 );
+  .filter(p -> p.getEta() >= 30)
+  /* mapToInt è uguale alla map, 
+  ma restituisce uno stream di interi */
+  .mapToInt(p -> p.getEta())  
+  .reduce(
+    0, 
+    (eta1, eta2) -> eta1 + eta2 );
 ```
 
 Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le età `[30, 40, 50]`, la `reduce` si applica in questo modo: 
@@ -207,12 +207,12 @@ Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno st
 
 ```java
 List<String> lista = persone.stream()
-    .filter(p -> p.getEta() >= 30)
-    .map(p -> 
-        p.getNome() + ": " + 
-        p.getEta().toString()
-    );
-    .collect(Collectors.toList());
+  .filter(p -> p.getEta() >= 30)
+  .map(p -> 
+    p.getNome() + ": " + 
+    p.getEta().toString()
+  );
+  .collect(Collectors.toList());
 ```
 
 ### `forEach`
@@ -221,10 +221,10 @@ Possiamo usare il metodo **`forEach(<funzione da T a void>)`** per eseguire una 
 
 ```java
 persone.stream()
-    .filter(p -> p.getEta() >= 30)
-    .forEach(p -> 
-        System.out.println(p.getNome() + ": "
-        + p.getEta().toString()));
+  .filter(p -> p.getEta() >= 30)
+  .forEach(p -> 
+    System.out.println(p.getNome() + ": "
+    + p.getEta().toString()));
 ```
 
 ## `Optional<T>`
@@ -258,9 +258,9 @@ contenente "ciao mondo",
 quindi viene stampato "ciao mondo" 
 per effetto della orElse */
 System.out.println(
-    opt .flatMap(
-        s -> Optional.of(s + " mondo"))
-    .orElse("vuoto"));
+  opt .flatMap(
+    s -> Optional.of(s + " mondo"))
+  .orElse("vuoto"));
 
 
 Optional<String> opt2 = Optional.empty();
@@ -276,18 +276,18 @@ e restituisce un Optional<String> vuoto,
 quindi viene stampato "vuoto" 
 per effetto della orElse */
 System.out.println(
-    opt2.flatMap(
-        s -> Optional.of(s + " mondo"))
-    .orElse("vuoto"));
+  opt2.flatMap(
+    s -> Optional.of(s + " mondo"))
+  .orElse("vuoto"));
 ```
 
 Otterremo in output:
 ```
-    ciao
-    ciao
-    ciao mondo
-    vuoto
-    vuoto
+  ciao
+  ciao
+  ciao mondo
+  vuoto
+  vuoto
 ```
 
 ---
@@ -302,13 +302,13 @@ Si consideri il seguente metodo statico, che ha la precondizione che ciascun ele
 
 ```java
 public static List<Integer> addX(List<String> nums, int x) {
-    List<Integer> plusX = new LinkedList<>();
-    for(String numString : nums) {
-        number = Integer.valueOf(numString);
-        if (number>0)
-            plusX.add(number + x);
-    }
-    return plusX;
+  List<Integer> plusX = new LinkedList<>();
+  for(String numString : nums) {
+    number = Integer.valueOf(numString);
+    if (number>0)
+      plusX.add(number + x);
+  }
+  return plusX;
 }
 ```
 
@@ -326,10 +326,10 @@ Quindi possiamo:
 
 ```java
 public static List<Integer> addX(List<String> nums, int x) {
-    return nums.stream()
-        .map(numString -> Integer.valueOf(numString))
-        .filter(number -> number > 0)
-        .map(number -> number + x)
-        .collect(Collectors.toList());
+  return nums.stream()
+    .map(numString -> Integer.valueOf(numString))
+    .filter(number -> number > 0)
+    .map(number -> number + x)
+    .collect(Collectors.toList());
 }
 ```

@@ -6,24 +6,24 @@ Vediamo un esempio di classe che rappresenta una data.
 
 ```java
 public class Data {
-    private int giorno;
-    private int mese;
-    private int anno;
+  private int giorno;
+  private int mese;
+  private int anno;
 
-    // Restituisce il giorno
-    public int ottieniGiorno() {
-        return giorno;
-    }
+  // Restituisce il giorno
+  public int ottieniGiorno() {
+    return giorno;
+  }
 
-    // Restituisce il mese
-    public int ottieniMese() {
-        return mese;
-    }
+  // Restituisce il mese
+  public int ottieniMese() {
+    return mese;
+  }
 
-    // Restituisce l'anno
-    public int ottieniAnno() {
-        return anno;
-    }
+  // Restituisce l'anno
+  public int ottieniAnno() {
+    return anno;
+  }
 }
 ```
 
@@ -53,33 +53,33 @@ d.ottieniMese() + "/" d.ottieniAnno());
 e che siano stati definiti due nuovi metodi:
 ```java
 public Class Data {
+  ...
+  private int numeroGiorni() {
+    switch (mese) {
+    case 1:
+      return 31;
+    case 2:
+      return 28;
     ...
-    private int numeroGiorni() {
-        switch (mese) {
-        case 1:
-            return 31;
-        case 2:
-            return 28;
-        ...
-        case 12:
-            return 31;
-        default:
-            return -1;
-        }
+    case 12:
+      return 31;
+    default:
+      return -1;
     }
-    ...
-    private void giornoDopo {
-        giorno++;
-        if (giorno > numeroGiorni()) {
-            giorno = 1;
-            mese++;
-        }
-        if (mese > 12) {
-            mese = 1;
-            anno++;
-        }
+  }
+  ...
+  private void giornoDopo {
+    giorno++;
+    if (giorno > numeroGiorni()) {
+      giorno = 1;
+      mese++;
     }
-    ...
+    if (mese > 12) {
+      mese = 1;
+      anno++;
+    }
+  }
+  ...
 }
 ```
 Allora se invochiamo `giornoDopo`:
