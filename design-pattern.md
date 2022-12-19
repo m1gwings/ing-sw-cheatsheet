@@ -273,7 +273,7 @@ implements TextPrinter {
 }
 ```
 
-`FilePrinterLibraryAdapter` implementa `TextPrinter` per poter implementare il metodo `printText()`. Implementiamo il metodo `printText()` istanziando un oggetto `FilePrinterLibrary` e creando un oggetto `File` a partire da un oggetto `TextFile`, quindi può chiamare il metodo `printFile()` di `FilePrinterLibrary`.
+`FilePrinterLibraryAdapter` definisce il metodo `printText()` per poter implementare l'interfaccia `TextPrinter`. Implementiamo il metodo `printText()` utilizzando un oggetto `FilePrinterLibrary` e creando un oggetto `File` a partire da un oggetto `TextFile`, quindi possiamo chiamare il metodo `printFile()` di `FilePrinterLibrary`.
 
 ```java
 public class Main {
@@ -304,13 +304,13 @@ Il **Decorator** è un pattern che permette di aggiungere dinamicamente una o pi
 
 ![](./immagini/decorator.svg)
 
-In questo diagramma, abbiamo `Component` che definisce l'interfaccia che il Client usa, `ConcreteComponent` che implementa `Component`, e `Decorator` che estende `Component` e usa `Component` per aggiungere funzionalità, vi sono poi i vari `ConcreteDecorator` che estendono `Decorator` e aggiungono (ognuno di loro) una funzionalità.
+In questo diagramma, abbiamo `Component` che definisce l'interfaccia che il Client usa, `ConcreteComponent` che implementa `Component`, e `Decorator` che estende `Component` e usa `Component` per aggiungervi funzionalità, vi sono poi i vari `ConcreteDecorator` che estendono `Decorator` e realizzano (ciascuno) una funzionalità.
 
-Si noti che l'attributo `component` di `Decorator` è di tipo `Component`, e non può essere solo un `ConcreteComponent`, ma anche un altro `Decorator` (`ConcreteDecoratorA` o `ConcreteDecoratorB`), che a sua volta avrà di nuovo un `component`. Si può quindi aggiungere quante funzionalità si vogliono al `ConcreteComponent` _base_.
+Si noti che l'attributo `component` di `Decorator` è di tipo `Component`, e non deve essere per forza un `ConcreteComponent`, ma anche un altro `Decorator` (`ConcreteDecoratorA` o `ConcreteDecoratorB`), che a sua volta avrà di nuovo un `component`. Si può quindi aggiungere quante funzionalità si vogliono al `ConcreteComponent` _base_.
 
 #### Esempio
 
-Supponiamo di voler costruire un programma che gestisce un sistema di gestione di un'interfaccia per la visualizzazione di un testo. Il programma deve essere in grado di visualizzare il testo in modo semplice, ma anche cambiando il colore del testo, in grassetto, o tutti e due insieme. Per farlo, usiamo un **Decorator**.
+Supponiamo di voler costruire un programma che gestisce un'interfaccia per la visualizzazione di un testo. Il programma deve essere in grado di visualizzare il testo in modo semplice, in grassetto, ma anche cambiando il colore del testo, o tutti e due insieme. Per farlo, usiamo un **Decorator**.
 
 Per prima cosa, definiamo l'interfaccia `Component`, in questo esempio la chiamiamo `TextView`, che definisce il metodo `draw()`:
 
@@ -337,7 +337,7 @@ public class SimpleTextView implements TextView {
 }
 ```
 
-Definiamo anche la classe astratta `Decorator`, in questo esempio la chiamiamo `TextViewDecorator`, che estende `TextView` e usa `TextView` per aggiungere funzionalità:
+Definiamo la classe astratta `Decorator`, in questo esempio la chiamiamo `TextViewDecorator`, che estende `TextView` e usa `TextView` per aggiungere funzionalità:
 
 ```java
 public abstract class TextViewDecorator implements TextView {
@@ -360,7 +360,7 @@ L'attributo `textView` di `TextViewDecorator` è di tipo `TextView`, e (come det
 
 <!-- _class: due -->
 
-Definiamo anche le classi `ConcreteDecoratorA`, in questo esempio la chiamiamo `ColoredTextView`; e `ConcreteDecoratorB`, in questo esempio la chiamiamo `BoldTextView`, che estendono `TextViewDecorator` e aggiungono (ognuno di loro) una funzionalità:
+Definiamo le classi `ConcreteDecoratorA`, in questo esempio la chiamiamo `ColoredTextView`; e `ConcreteDecoratorB`, in questo esempio la chiamiamo `BoldTextView`, che estendono `TextViewDecorator`:
 
 ```java
 public class ColoredTextView extends TextViewDecorator {
