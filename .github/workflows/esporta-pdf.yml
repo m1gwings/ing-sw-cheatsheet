@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-  pull_request_raget:
+  pull_request_target:
     types:
       - closed
 jobs:
