@@ -1,0 +1,17 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+indent_style = space
+
+[package.json]
+indent_size = 2
+
+[*.{js,json,html,css}]
+indent_size = 4
+
+[*.md]
+indent_size = 2
