@@ -1,5 +1,11 @@
-name: Export PDF
-on: [ push, pull_request ]
+name: Esporta PDF
+on:
+  push:
+    branches:
+      - main
+  pull_request_raget:
+    types:
+      - closed
 jobs:
   build:
     runs-on: ubuntu-latest
