@@ -96,7 +96,7 @@ Java fornisce delle `<interfacce funzionali / il corrispondente metodo per esegu
 - **`Predicate<T>` / `.test(T t)`**: funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
 - **`BiFunction<T, U, R>` / `.apply(T t, U u)`**: funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
 
-E le corrispondenti per i tipi primitivi:
+E le corrispondenti per i tipi primitivi `int`, `double` e `long`:
 
 - **`IntFunction<R>` / `.apply(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
 - **`IntConsumer` / `.accept(int v)`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
