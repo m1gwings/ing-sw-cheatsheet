@@ -88,13 +88,13 @@ Comparator<Persona> comparator = (p1, p2) -> {
 
 è come se avessimo _"assegnato una funzione ad una variabile (comparator)"_. Possiamo quindi passare la variabile `comparator` come secondo parametro al metodo `sort`: `Collections.sort(persone, comparator);`. Oppure, possiamo passare direttamente una lambda  (come mostrato nel capitolo precedente).
 
-Java fornisce delle interfacce funzionali nel package `java.util.function` quali:
+Java fornisce delle `<interfacce funzionali / il corrispondente metodo per eseguire la funzione>` nel package `java.util.function` quali:
 
-- **`Function<T, R>`**: funzione che prende un parametro di tipo `T` e restituisce un oggetto di tipo `R`;
-- **`Consumer<T>`**: funzione che prende un parametro di tipo `T` e non restituisce nulla;
-- **`Supplier<T>`**: funzione che non prende parametri e restituisce un oggetto di tipo `T`;
-- **`Predicate<T>`**: funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
-- **`BiFunction<T, U, R>`**: funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
+- **`Function<T, R>` / `.apply(T t)`**: funzione che prende un parametro di tipo `T` e restituisce un oggetto di tipo `R`;
+- **`Consumer<T>` / `.accept(T t)`**: funzione che prende un parametro di tipo `T` e non restituisce nulla;
+- **`Supplier<T>` / `.get()`**: funzione che non prende parametri e restituisce un oggetto di tipo `T`;
+- **`Predicate<T>` / `.test(T t)`**: funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
+- **`BiFunction<T, U, R>` / `.apply(T t, U u)`**: funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
 
 E le corrispondenti per i tipi primitivi:
 
@@ -102,9 +102,8 @@ E le corrispondenti per i tipi primitivi:
 - **`IntConsumer`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
 - **`IntSupplier`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
 - **`IntPredicate`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
-- **`DoubleToIntFunction`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
-
 ---
+- **`DoubleToIntFunction`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
 
 ## Composizione di funzioni (`Stream<T>`)
 
