@@ -266,7 +266,7 @@ un lock fa partire tutto il meccanismo di lifecycle del thread, che all'effettiv
 
 ## Variabili finali e oggetti immutabili
 
-Le variabili finali non hanno bisogno di essere sincronizzate in alcuna maniera, in quanto, non potendo cambiare,
+Le variabili `final` non hanno bisogno di essere sincronizzate in alcuna maniera, in quanto, non potendo cambiare,
 è impossibile che avvenga un desync tra la cache locale e la memoria centrale.
 
 Questo ci porta agli oggetti immutabili: un oggetto si dice **immutabile** se ogni suo campo è dichiarato `final` 
@@ -312,6 +312,10 @@ public class ImmutableRGB {
 
 Gli oggetti immutabili non necessitano di alcun tipo di sincronizzazione.
 
+## Variabili `static`
+Al contrario delle variabili `final`, le variabili `static` non sono necessariamente thread-safe, in quanto possono essere lette e modificate da più classi e più thread contemporaneamente.
+Bisognerebbe quindi sempre sincronizzare l'accesso alle variabili `static` per evitare che si leggano valori non aggiornati.
+
 ## `wait`, `notify` e `notifyAll` (producer/consumer pattern)
 
 Java mette a disposizione nell'intrinsic lock anche delle primitive per implementare dei **Guarded Blocks**,
@@ -325,6 +329,10 @@ L'invocazione di questi metodi richiede che il thread invocante sia possessore d
 
 Notiamo inoltre come il metodo wait sollevi l'eccezione `InterruptedException`, che avviene se il thread corrente viene
 interrotto (ad esempio perché viene richiesta la terminazione del programma).
+
+---
+
+<!-- _class: due -->
 
 Riprendendo l'esempio di un account bancario, se volessimo aspettare che l'utente abbia soldi prima di effettuare
 un'operazione di prelievo:
@@ -367,10 +375,6 @@ sconsigliato in quanto essendo un API molto low-level
 [è molto facile sbagliare](https://github.com/HugoMatilla/Effective-JAVA-Summary#69-prefer-concurrency-utilities-to-wait-and-notify)
 e non ottenere l'effetto desiderato.
 -->
-
----
-
-<!-- _class: due -->
 
 ## Explicit lock
 
