@@ -33,7 +33,7 @@ new MyThread().start();
 ```
 
 Per motivi di riutilizzo del codice, viene solitamente preferito utilizzare un metodo alternativo per la creazione di
-un Thread, implementando invece l'interfaccia `java.lang.Runnable`:
+un Thread, implementando invece l'interfaccia funzionale `java.lang.Runnable`:
 ```java
 class MyRunnable implements Runnable {
     @Override
@@ -43,11 +43,25 @@ class MyRunnable implements Runnable {
 }
 ...
 // Fa partire il thread e ritorna subito
-new MyThread(new MyRunnable()).start();
+new Thread(new MyRunnable()).start();
 ```
 
+Oppure usando i paradigmi della programmazione funzionale:
 
-Notiamo come, in entrambi i casi, il thread sia libero di accedere a qualsiasi variabile globale o passata nel costruttore,
+```java
+Runnable r = () -> {
+    // Fai cose
+};
+
+new Thread(r).start();
+```
+
+O in modo ancora più compatto: 
+```java
+new Thread(() -> { /* Fai cose */ }).start();
+```
+
+Notiamo come, in entrambi i casi di crezione (estendendo `Thread` o implementando `Runnable`), il thread sia libero di accedere a qualsiasi variabile globale o passata nel costruttore,
 causando potenzialmente errori di interferenza se più thread accedono alle stesse variabili contemporaneamente.
 
 ## Intrinsic lock
@@ -89,6 +103,8 @@ mettere in sezioni sincronizzate anche metodi che leggono solo una variabile, se
 Questo perché, sebbene il metodo stesso non la modifichi, la variabile potrebbe però essere
 cambiata esternamente da altri thread, causando un desync tra la cache locale e la memoria centrale.
 
+---
+
 Esiste anche una forma più breve di scrivere il codice precedente, mettendo la keyword
 direttamente sul metodo:
 ```java
@@ -110,8 +126,6 @@ class Account {
     }
 }
 ```
-
----
 
 E' possibile chiamare il metodo `synchronized` su qualsiasi oggetto di cui si ha una referenza 
 (quindi escludendo i primitivi):
@@ -218,6 +232,8 @@ La mancanza di un tipo atomico per double e float può essere sopperita mediante
 - float: AtomicInteger con i metodi `Float.floatToIntBits(float)` e `Float.intBitstoFloat(int)`
 - double: AtomicLong con i metodi `Double.doubleToLongBits(double)` e `Double.longBitsToDouble(long)`
 
+---
+
 oppure, se è necessario sommare, utilizzando `DoubleAdder`:
 ```java
 class Account {
@@ -247,8 +263,6 @@ Anche se non richiesto dal corso, il vantaggio di usare questo tipo di variabili
 (intrinseco o esplicito che sia) è che, sebbene volatile disattivi alcune ottimizzazioni del compilatore,
 un lock fa partire tutto il meccanismo di lifecycle del thread, che all'effettivo è nettamente più lento
 -->
-
----
 
 ## Variabili finali e oggetti immutabili
 
@@ -354,6 +368,10 @@ sconsigliato in quanto essendo un API molto low-level
 e non ottenere l'effetto desiderato.
 -->
 
+---
+
+<!-- _class: due -->
+
 ## Explicit lock
 
 Meccanismi di lock più sofisticati sono forniti dal package `java.util.concurrent.locks`. Questo definisce un'interfaccia
@@ -369,18 +387,14 @@ if (lock.tryLock()) {
     try {
         // qui siamo in sezione critica
     } finally {
-        // 'finally' per rilasciare il lock 
-        // qualsiasi cosa succeda, sia 
-        // esecuzione normale che eccezioni
+        // 'finally' per rilasciare il lock qualsiasi cosa succeda 
+        // sia esecuzione normale che eccezioni
         lock.unlock();
     }
 } else {
-    // azioni alternative dove il 
-    // lock non è necessario
+    // azioni alternative dove il lock non è necessario
 }
 ```
-
----
 
 ## Executors
 
@@ -389,11 +403,9 @@ sono state introdotte le interfacce `Executor`, `ExecutorService` e `ScheduledEx
 nella classe `Executors` per istanziarne implementazioni concrete. Per esempio `Executors.newFixedThreadPool(int)`
 utilizza un numero fisso di thread a cui fare eseguire le task.
 ```java
-ExecutorService executor = 
-    Executors.newFixedThreadPool(5);
+ExecutorService executor = Executors.newFixedThreadPool(5);
 executor.submit(() -> {
-    // Questo viene eseguito 
-    // su uno dei 5 thread
+    // Questo viene eseguito su uno dei 5 thread
     System.out.println("Executed on " + 
         Thread.currentThread());
 });
