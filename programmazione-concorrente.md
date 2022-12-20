@@ -50,7 +50,7 @@ Oppure usando i paradigmi della programmazione funzionale:
 
 ```java
 Runnable r = () -> {
-    // Fai cose
+  // Fai cose
 };
 
 new Thread(r).start();
@@ -384,15 +384,15 @@ di base `Lock` che, oltre a permettere le stesse operazioni dell'intrinsic lock,
 ```java
 Lock lock = new ReentrantLock();
 if (lock.tryLock()) {
-    try {
-        // qui siamo in sezione critica
-    } finally {
-        // 'finally' per rilasciare il lock qualsiasi cosa succeda 
-        // sia esecuzione normale che eccezioni
-        lock.unlock();
-    }
+  try {
+    // qui siamo in sezione critica
+  } finally {
+    // 'finally' per rilasciare il lock qualsiasi cosa succeda 
+    // sia esecuzione normale che eccezioni
+    lock.unlock();
+  }
 } else {
-    // azioni alternative dove il lock non è necessario
+  // azioni alternative dove il lock non è necessario
 }
 ```
 
@@ -405,9 +405,9 @@ utilizza un numero fisso di thread a cui fare eseguire le task.
 ```java
 ExecutorService executor = Executors.newFixedThreadPool(5);
 executor.submit(() -> {
-    // Questo viene eseguito su uno dei 5 thread
-    System.out.println("Executed on " + 
-        Thread.currentThread());
+  // Questo viene eseguito su uno dei 5 thread
+  System.out.println("Executed on " + 
+      Thread.currentThread());
 });
 ```
 
