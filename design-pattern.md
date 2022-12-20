@@ -22,77 +22,77 @@ Supponiamo di voler creare un programma per creare dei documenti. Il programma d
 
 ```java
 public abstract class Document {
-    private String title;
+  private String title;
 
-    public abstract void
-        setTitle(String title);
-    ...
+  public abstract void
+    setTitle(String title);
+  ...
 }
 
 public class TextDocument extends Document {
-    @Override
-    public void setTitle(String title) {
-        this.title = title + ".txt";
-    }
-    ...
+  @Override
+  public void setTitle(String title) {
+    this.title = title + ".txt";
+  }
+  ...
 }
 
 public class PDFDocument extends Document {
-    @Override
-    public void setTitle(String title) {
-        this.title = title + ".pdf";
-    }
-    ...
+  @Override
+  public void setTitle(String title) {
+    this.title = title + ".pdf";
+  }
+  ...
 }
 
 public abstract class DocumentFactory {
-    public abstract Document createDocument();
+  public abstract Document createDocument();
 }
 
 public class TextDocumentFactory 
 extends DocumentFactory {
-    @Override
-    public Document createDocument() {
-        return new TextDocument();
-    }
+  @Override
+  public Document createDocument() {
+    return new TextDocument();
+  }
 }
 
 public class PDFDocumentFactory 
 extends DocumentFactory {
-    @Override
-    public Document createDocument() {
-        return new PDFDocument();
-    }
+  @Override
+  public Document createDocument() {
+    return new PDFDocument();
+  }
 }
 
 public class Main {
-    /* Crea n documenti dello stesso tipo 
-    e ne setta il titolo */
-    private Document[] createNDocuments
-    (int n, DocumentFactory factory) {
-        Document[] documents=new Documents[n];
-        for (int i = 0; i < n; i++) {
-            documents[i] 
-                = factory.createDocument();
-            documents[i]
-                .setTitle(String.valueOf(i));
-        }
+  /* Crea n documenti dello stesso tipo 
+  e ne setta il titolo */
+  private Document[] createNDocuments
+  (int n, DocumentFactory factory) {
+    Document[] documents=new Documents[n];
+    for (int i = 0; i < n; i++) {
+      documents[i] 
+        = factory.createDocument();
+        documents[i]
+          .setTitle(String.valueOf(i));
+      }
 
-        return documents;
-    }
+      return documents;
+  }
 
-    public static void main(String[] args) {
-        Document[] docs;
-        DocumentFactory factory;
+  public static void main(String[] args) {
+    Document[] docs;
+    DocumentFactory factory;
 
-        // Creazione di n documenti di testo
-        factory = new TextDocumentFactory();
-        docs = createNDocuments(10, factory);
+    // Creazione di n documenti di testo
+    factory = new TextDocumentFactory();
+    docs = createNDocuments(10, factory);
 
-        // Creazione di n documenti PDF
-        factory = new PDFDocumentFactory();
-        docs = createNDocuments(5, factory);
-    }
+    // Creazione di n documenti PDF
+    factory = new PDFDocumentFactory();
+    docs = createNDocuments(5, factory);
+  }
 }
 ```
 
@@ -121,64 +121,64 @@ public interface Button { /* ... */ }
 public interface ScrollBar { /* ... */ }
 
 public interface GUIFactory {
-    public Button createButton();
-    public ScrollBar createScrollBar();
+  public Button createButton();
+  public ScrollBar createScrollBar();
 }
 
 public class PMButton 
-    implements Button { /* ... */ }
+  implements Button { /* ... */ }
 
 public class PMScrollBar 
-    implements ScrollBar { /* ... */ }
+  implements ScrollBar { /* ... */ }
 
 public class PMGUIFactory 
-    implements GUIFactory {
-    @Override
-    public Button createButton() {
-        return new PMButton();
-    }
+  implements GUIFactory {
+  @Override
+  public Button createButton() {
+    return new PMButton();
+  }
 
-    @Override
-    public ScrollBar createScrollBar() {
-        return new PMScrollBar();
-    }
+  @Override
+  public ScrollBar createScrollBar() {
+    return new PMScrollBar();
+  }
 }
 
 public class MotifButton 
-    implements Button { /* ... */ }
+  implements Button { /* ... */ }
 
 public class MotifScrollBar 
-    implements ScrollBar { /* ... */ }
+  implements ScrollBar { /* ... */ }
 
 public class MotifGUIFactory 
-    implements GUIFactory {
-    @Override
-    public Button createButton() {
-        return new MotifButton();
-    }
+  implements GUIFactory {
+  @Override
+  public Button createButton() {
+    return new MotifButton();
+  }
 
-    @Override
-    public ScrollBar createScrollBar() {
-        return new MotifScrollBar();
-    }
+  @Override
+  public ScrollBar createScrollBar() {
+    return new MotifScrollBar();
+  }
 }
 
 public class Main {
-    public static void main(String[] args) {
-        GUIFactory factory;
-        Button button;
-        ScrollBar scrollBar;
+  public static void main(String[] args) {
+    GUIFactory factory;
+    Button button;
+    ScrollBar scrollBar;
 
-        // Creazione interfaccia grafica PM
-        factory = new PMGUIFactory();
-        button = factory.createButton();
-        scrollBar = factory.createScrollBar();
+    // Creazione interfaccia grafica PM
+    factory = new PMGUIFactory();
+    button = factory.createButton();
+    scrollBar = factory.createScrollBar();
 
-        // Creazione interfaccia grafica Motif
-        factory = new MotifGUIFactory();
-        button = factory.createButton();
-        scrollBar = factory.createScrollBar();
-    }
+    // Creazione interfaccia grafica Motif
+    factory = new MotifGUIFactory();
+    button = factory.createButton();
+    scrollBar = factory.createScrollBar();
+  }
 }
 ```
 
@@ -208,26 +208,26 @@ Per prima cosa, definiamo l'interfaccia `Target`, in questo esempio la chiamiamo
 
 ```java
 public class TextFile {
-    private String name;
-    private String path;
-    private int size;
+  private String name;
+  private String path;
+  private int size;
 
-    public TextFile
-    (String name, String path, int size) {
-        this.name = name;
-        this.path = path;
-        this.size = size;
-    }
+  public TextFile
+  (String name, String path, int size) {
+    this.name = name;
+    this.path = path;
+    this.size = size;
+  }
 
-    public String getPath() {
-        return path;
-    }
-    
-    ...
+  public String getPath() {
+    return path;
+  }
+  
+  ...
 }
 
 public interface TextPrinter {
-    public void printText(TextFile textFile);
+  public void printText(TextFile textFile);
 }
 ```
 
@@ -235,24 +235,24 @@ Definiamo anche l'interfaccia `Adaptee` (la libreria esterna), in questo esempio
 
 ```java
 public class File {
-    private String path;
+  private String path;
 
-    public File(String path) {
-        this.path = path;
-    }
+  public File(String path) {
+    this.path = path;
+  }
 
-    public String getPath() {
-        return path;
-    }
+  public String getPath() {
+    return path;
+  }
 
-    ...
+  ...
 }
 
 public class FilePrinterLibrary {
-    public void printFile(File file) {
-        System.out.println(
-            "Printing file " + file.getPath());
-    }
+  public void printFile(File file) {
+    System.out.println(
+      "Printing file " + file.getPath());
+  }
 }
 ```
 
@@ -261,15 +261,15 @@ public class FilePrinterLibrary {
 ```java
 public class FilePrinterLibraryAdapter
 implements TextPrinter {
-    FilePrinterLibrary filePrinterLibrary =
-        new FilePrinterLibrary();
+  FilePrinterLibrary filePrinterLibrary =
+    new FilePrinterLibrary();
 
-    @Override
-    public void printText(TextFile textFile) {
-        File file=new File(textFile.getPath());
+  @Override
+  public void printText(TextFile textFile) {
+    File file=new File(textFile.getPath());
 
-        filePrinterLibrary.printFile(file);
-    }
+    filePrinterLibrary.printFile(file);
+  }
 }
 ```
 
@@ -277,16 +277,16 @@ implements TextPrinter {
 
 ```java
 public class Main {
-    public static void main(String[] args) {
-        TextFile textFile = new TextFile(
-            "test.txt", "/home/user", 100
-        );
+  public static void main(String[] args) {
+    TextFile textFile = new TextFile(
+      "test.txt", "/home/user", 100
+    );
 
-        TextPrinter textPrinter = 
-            new FilePrinterLibraryAdapter();
+    TextPrinter textPrinter = 
+      new FilePrinterLibraryAdapter();
 
-        textPrinter.printText(textFile);
-    }
+    textPrinter.printText(textFile);
+  }
 }
 ```
 
@@ -316,7 +316,7 @@ Per prima cosa, definiamo l'interfaccia `Component`, in questo esempio la chiami
 
 ```java
 public interface TextView {
-    public void draw();
+  public void draw();
 }
 ```
 
@@ -324,16 +324,16 @@ Definiamo anche la classe `ConcreteComponent`, in questo esempio la chiamiamo `S
 
 ```java
 public class SimpleTextView implements TextView {
-    private String text;
+  private String text;
 
-    public SimpleTextView(String text) {
-        this.text = text;
-    }
+  public SimpleTextView(String text) {
+    this.text = text;
+  }
 
-    @Override
-    public void draw() {
-        System.out.println(text);
-    }
+  @Override
+  public void draw() {
+    System.out.println(text);
+  }
 }
 ```
 
@@ -341,16 +341,16 @@ Definiamo la classe astratta `Decorator`, in questo esempio la chiamiamo `TextVi
 
 ```java
 public abstract class TextViewDecorator implements TextView {
-    private TextView textView;
+  private TextView textView;
 
-    public TextViewDecorator(TextView textView) {
-        this.textView = textView;
-    }
+  public TextViewDecorator(TextView textView) {
+    this.textView = textView;
+  }
 
-    @Override
-    public void draw() {
-        textView.draw();
-    }
+  @Override
+  public void draw() {
+    textView.draw();
+  }
 }
 ```
 
@@ -364,36 +364,36 @@ Definiamo le classi `ConcreteDecoratorA`, in questo esempio la chiamiamo `Colore
 
 ```java
 public class ColoredTextView extends TextViewDecorator {
-    private String color;
+  private String color;
 
-    public ColoredTextView(TextView textView, String color) {
-        super(textView);
-        this.color = color;
-    }
+  public ColoredTextView(TextView textView, String color) {
+    super(textView);
+    this.color = color;
+  }
 
-    // Stampa il testo colorato
-    @Override
-    public void draw() {
-        System.out.print(color);
-        super.draw();
-        System.out.print("\u001B[0m");
-    }
+  // Stampa il testo colorato
+  @Override
+  public void draw() {
+    System.out.print(color);
+    super.draw();
+    System.out.print("\u001B[0m");
+  }
 }
 ```
 
 ```java
 public class BoldTextView extends TextViewDecorator {
-    public BoldTextView(TextView textView) {
-        super(textView);
-    }
+  public BoldTextView(TextView textView) {
+    super(textView);
+  }
 
-    // Stampa il testo in grassetto
-    @Override
-    public void draw() {
-        System.out.print("\u001B[1m");
-        super.draw();
-        System.out.print("\u001B[0m");
-    }
+  // Stampa il testo in grassetto
+  @Override
+  public void draw() {
+    System.out.print("\u001B[1m");
+    super.draw();
+    System.out.print("\u001B[0m");
+  }
 }
 ```
 
@@ -401,30 +401,30 @@ Si noti che `ColoredTextView` e `BoldTextView` hanno nel loro costruttore l'istr
 
 ```java
 public class Main {
-    public static void main(String[] args) {
-        // Stampa "Hello World!" normale
-        TextView textView = new SimpleTextView("Hello World!");
-        textView.draw();
+  public static void main(String[] args) {
+    // Stampa "Hello World!" normale
+    TextView textView = new SimpleTextView("Hello World!");
+    textView.draw();
 
-        // Stampa "Hello World!" in rosso
-        TextView coloredTextView = new ColoredTextView(
-            new SimpleTextView("Hello World!"), "\u001B[31m");
-        coloredTextView.draw();
+    // Stampa "Hello World!" in rosso
+    TextView coloredTextView = new ColoredTextView(
+      new SimpleTextView("Hello World!"), "\u001B[31m");
+    coloredTextView.draw();
 
-        // Stampa "Hello World!" in grassetto
-        TextView boldTextView = new BoldTextView(
-            new SimpleTextView("Hello World!"));
-        boldTextView.draw();
+    // Stampa "Hello World!" in grassetto
+    TextView boldTextView = new BoldTextView(
+      new SimpleTextView("Hello World!"));
+    boldTextView.draw();
 
-        // Stampa "Hello World!" in rosso e in grassetto
-        TextView coloredBoldTextView = new ColoredTextView(
-            new BoldTextView(
-                new SimpleTextView("Hello World!")
-            ), 
-            "\u001B[31m"
-        );
-        coloredBoldTextView.draw();
-    }
+    // Stampa "Hello World!" in rosso e in grassetto
+    TextView coloredBoldTextView = new ColoredTextView(
+      new BoldTextView(
+        new SimpleTextView("Hello World!")
+      ), 
+      "\u001B[31m"
+    );
+    coloredBoldTextView.draw();
+  }
 }
 ```
 
