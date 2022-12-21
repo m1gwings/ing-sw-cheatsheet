@@ -96,14 +96,15 @@ Java fornisce delle `<interfacce funzionali / il corrispondente metodo per esegu
 - **`Predicate<T>` / `.test(T t)`**: funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
 - **`BiFunction<T, U, R>` / `.apply(T t, U u)`**: funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
 
-E le corrispondenti per i tipi primitivi:
+E le corrispondenti per i tipi primitivi `int`, `double` e `long`:
 
-- **`IntFunction<R>`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
-- **`IntConsumer`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
-- **`IntSupplier`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
-- **`IntPredicate`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
+- **`IntFunction<R>` / `.apply(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
+- **`IntConsumer` / `.accept(int v)`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
+- **`IntSupplier` / `.getAsInt()`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
+- **`IntPredicate` / `.test(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
 ---
-- **`DoubleToIntFunction`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
+- **`ToIntFunction<T>` / `.applyAsInt(T v)`**: funzione che prende un parametro di tipo `T` e restituisce un primitivo di tipo `int`: `int applyAsInt(T value)`;
+- **`DoubleToIntFunction` / `.applyAsInt(double v)`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
 
 ## Composizione di funzioni (`Stream<T>`)
 
@@ -198,8 +199,6 @@ Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le et
 
 ---
 
-<!-- _class: due -->
-
 ### `collect`
 
 Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo **`Collection<T> collect(<funzione che restituisce una Collezione>)`**. Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
@@ -287,6 +286,42 @@ Otterremo in output:
   ciao mondo
   vuoto
   vuoto
+```
+
+## Closures
+
+Viene detta closure la combinazione di una funzione insieme a una referenza allo stato che
+la circonda. 
+
+Detto in maniera diversa, data una funzione lambda, si dice che questa "si chiuda attorno"
+(ovvero catturi) le variabili all'interno del suo scope di definizione, permettendo di 
+utilizzarle all'interno della lambda stessa.
+
+Con un esempio:
+```java
+final String prefix = "Z";
+Predicate<String> pred = s -> 
+    s.startsWith(prefix);
+```
+la lambda `pred` cattura la variabile prefix, utilizzandola al suo interno, prendendo
+quindi il nome di closure.
+
+Per evitare effetti collaterali (*side effects*), viene consentito di catturare solo variabili
+`final` oppure **effectively final**, ovvero non dichiarata final ma usata come se fosse tale.
+```java
+String prefix = "Z";
+// Altre istruzioni che fanno cose
+String nonFinalPrefix = prefix + "aaaa";
+System.out.println(nonFinalPrefix);
+nonFinalPrefix = "";
+// prefix non è dichiarata final, ma non è 
+// mai modificata: è effectively final
+Predicate<String> pred = s -> 
+    s.startsWith(prefix);
+// Errore di compilazione: nonFinalPrefix é 
+// modificata, quindi non è effectively final
+Predicate<String> pred2 = s -> 
+    s.startsWith(nonFinalPrefix);
 ```
 
 ---
