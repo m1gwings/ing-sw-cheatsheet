@@ -124,3 +124,76 @@ Nel caso in cui la postcondizione sia `true` il metodo non garantisce nessun "ef
 <!-- TODO:
  - I metodi puri non hanno bisogno che nella specifica si espliciti che l'oggetto non cambia
  - assertions (di secondaria importanza)  -->
+
+ ## Astrazione procedurale
+
+Si dice **astrazione procedurale** la specifica di un'operazione (anche complessa) definita su un dominio di dati generici (parametri).
+In Java coincide con la specifica di un metodo statico.
+Infatti un metodo statico rappresenta proprio un'operazione priva di stato: il suo comportamento non dipende dai valori di attributi non statici, ma è determinato unicamente dai parametri.
+
+## ADT: Abstract Data Type
+
+Si dice **abstract data type** (o **ADT**) un tipo di dato per cui tutti gli stati ammissibili e le operazioni che vi si possono effettuare (includendo il modo in cui quest'ultime permettono di passare da uno stato all'altro) sono descritti attraverso una specifica.
+La specifica di un ADT si compone di una sintassi e di una semantica.
+La sintassi coincide con l'interfaccia del tipo di dato in questione (l'insieme di metodi pubblici che espone). Per definire la semantica in maniera esaustiva occorre utilizzare un linguaggio di specifica formale come JML.
+A differenza dell'astrazione procedurale, nello specificare un ADT con JML, dobbiamo trattare anche le transizioni di stato dell'oggetto dovute alle varie operazioni (cioè dire ciò che cambia, come cambia e cosa invece rimane invariato tra i valori che rappresentano lo stato dell'oggetto a seguito dell'esecuzione di un certo metodo).
+
+### Metodi puri
+
+Un metodo **di un ADT** si dice **puro** se:
+ - vale `//@ assignable \nothing;`
+ - gli unici metodi che invoca sono anche essi puri
+ - non modifica nessun attributo (pubblico o privato) dell'ADT
+
+I metodi puri si indicano in JML con la keyword `/* @ pure @ */`.
+Ad esempio: `public int /* @ pure @ */ dimensione();`.
+
+Anche un costruttore può essere **puro** se si limita ad inizializzare gli attributi dell'oggetto senza apportare altre modifiche.
+
+I metodi puri si dicono anche **observers** in quanto permettono di "osservare" lo stato di un ADT in un determinato momento.
+
+### Specifica di un'operazione di un ADT in JML
+
+Valgono le regole sintattiche e semantiche già introdotte per JML.
+La struttura della specifica rimane quella usuale.
+
+**Attenzione**: quando specifichiamo un'operazione di un ADT in JML, nella specifica possono comparire solo gli altri metodi e attributi **pubblici** e **puri** (dell'ADT), i parametri formali dell'operazione e `\result` per fare riferimento al risultato restituito.
+
+---
+
+### Esempio
+
+Vediamo un esempio di ADT.
+
+Vogliamo descrivere attraverso la specifica un _insieme (mutabile) di interi_ su cui sono definite le seguenti operazioni:
+- _costruzione_: crea ed inizializza l'insieme come un insieme vuoto
+- _rimuovi(x)_: rimuove l'elemento x dall'insieme
+- _appartiene(x)_: restituisce _vero_ se x appartiene all'insieme, _falso_ altrimenti
+- _cardinalità_: resituisce la cardinalità dell'insieme
+- _scagli_: restituisce uno tra gli elementi dell'insieme
+
+Alcuni valori ammissibili per l'insieme sono: _{1, 10, 35}_, _{7}_, ...
+
+```java
+public class InsiemeDiInteri {
+  // OVERVIEW: Insieme di interi illimitato
+  //  e mutabile
+  
+  //@ ensures (* \result è vero sse x
+  //@ appartiene all'insieme *);
+  public /* @ pure @ */
+    boolean appartiene(int x);
+
+  //@ ensures (* \result è la cardinalità
+  //@ dell'insieme *);
+  public /* @ pure @ */ int cardinalita();
+
+  //@ ensures appartiene(\result) &&
+  //@ cardinalita() > 0;
+  //@ signals (EccezioneInsiemeVuoto e)
+  //@ cardinalita() == 0;
+  public /* @ pure @ */ int scegli()
+    throws EccezioneInsiemeVuoto;
+}
+
+```
