@@ -282,7 +282,7 @@ System.out.println(
 ```
 
 Otterremo in output:
-```
+```bash
   ciao
   ciao
   ciao mondo
