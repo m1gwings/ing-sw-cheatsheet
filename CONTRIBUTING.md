@@ -275,7 +275,8 @@ Nessun problema. Sarà sufficiente aggiungere una nuova pagina al capitolo con
 ---
 
 ```
-Lasciate una riga bianca sopra e sotto come indicato.
+Lasciate una riga bianca sopra e sotto come indicato. 
+È importante, prima di committare, controllare che tutto il testo che avete scritto sia effettivamente presente nel pdf e, nel caso, utilizzare il comando sopra citato.
 
 Questa funzionalità è un'aggiunta al Markdown standard (che non prevede la divisione in pagine) dovuta ad un plugin esterno.
 
