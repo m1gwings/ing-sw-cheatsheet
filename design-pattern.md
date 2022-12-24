@@ -429,3 +429,123 @@ public class Main {
 ```
 
 Con questa _catena_ di **Decorator** è possibile aggiungere dinamicamente più funzionalità al `SimpleTextView` _base_.
+
+---
+
+## Pattern comportamentali
+
+### Strategy
+
+**Strategy** è un pattern che permette di cambiare dinamicamente il comportamento di un sistema.
+
+#### UML
+
+![](./immagini/strategy.svg)
+
+In questo diagramma, troviamo `Strategy che definisce un comportamento che le varie `ConcreteStrategy` implementano, ognuno in modo diverso. `Context` usa una `Strategy` _generica_, che verrà assegnata dinamicamente dal client assegnando una `ConcreteStrategy` a quella _generica_.
+
+Si noti che `Strategy` e `ConcreteStrategy` sono classi che hanno un solo metodo, sono quindi **interfacce funzionali**. Possiamo quindi usare le **espressioni lambda** per definire le `ConcreteStrategy` senza doverle creare esplicitamente.
+
+#### Esempio (senza interfacce funzionali)
+
+Supponiamo di voler gestire un sistema di apertura di casse in un gioco. le casse possono dare, una volta aperte, degli effetti al giocatore che le apre; ad esempio, una cassa può curare il giocatore, un'altra può avvelenarlo, ecc. 
+Usiamo uno **Strategy**.
+
+Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `Cassa`, che definisce il metodo `apri()`:
+
+```java
+public interface Cassa {
+  public void apri();
+}
+```
+
+Definiamo le varie classi `ConcreteStrategy`, in questo esempio le chiamiamo `CassaCurativa`, `CassaAvvelenata`, ecc., che implementano `Cassa`:
+
+```java
+public class CassaCurativa implements Cassa {
+  @Override
+  public void apri() {
+    System.out.println("Sei stato curato!");
+  }
+}
+```
+
+```java
+public class CassaAvvelenata implements Cassa {
+  @Override
+  public void apri() {
+    System.out.println("Sei avvelenato!");
+  }
+}
+```
+
+Definiamo la classe `Context`, in questo esempio la chiamiamo `ApriCassa`, che usa la `Cassa` _generica_ e chiama il metodo `apri()`:
+
+```java
+public class ApriCassa {
+  private Cassa cassa;
+
+  public ApriCassa(Cassa cassa) {
+    this.cassa = cassa;
+  }
+
+  public void apri() {
+    cassa.apri();
+  }
+}
+```
+
+Il Main poi assegnerà una `ConcreteStrategy` (`CassaCurativa`, `CassaAvvelenata`, ecc.) a quella _generica_ (`Cassa`) nel costruttore di `ApriCassa`.
+
+#### Esempio (con interfacce funzionali)
+
+Usando le interfacce funzionali, possiamo definire `Cassa` direttamente in `ApriCassa`:
+
+```java
+public class ApriCassa {
+  Runnable cassa;
+
+  public ApriCassa(Runnable cassa) {
+    this.cassa = cassa;
+  }
+
+  public void apri() {
+    cassa.run();
+  }
+}
+```
+
+Per il nostro uso, definiamo una `Runnable`, che è un'interfaccia funzionale che ha un solo metodo: `run()` per eseguire il codice. A seconda dei tipi dei parametri e del tipo del valore restituito, possiamo usare anche le altre interfacce funzionali spiegate nel capitolo "Programmazione funzionale".
+
+Il `Main` può quindi definire le `Runnable` _concrete_ tramite espressioni lambda e, richiamando il costruttore di `ApriCassa`, assegnarle a quella _generica_ per eseguire il giusto comportamento:
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    // Crea una cassa curativa
+    ApriCassa cassaCurativa = 
+    new ApriCassa(() -> {
+      System.out.println("Sei stato curato!");
+    });
+    /* equivalente a:
+    Runnable cassaCurativa = () -> {
+      System.out.println("Sei stato curato!");
+    };
+    ApriCassa cassaCurativa = 
+      new ApriCassa(cassaCurativa);
+    */
+
+    // Crea una cassa avvelenata
+    ApriCassa cassaAvvelenata = 
+    new ApriCassa(() -> {
+      System.out.println("Sei avvelenato!");
+    });
+
+    // Apri le casse curativa e avvelenata
+    cassaCurativa.apri();
+    cassaAvvelenata.apri();
+  }
+}
+```
+
+---
