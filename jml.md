@@ -150,7 +150,7 @@ Ad esempio, supponiamo che il metodo `dimensione` restituisca la cardinalità di
 
 Anche un costruttore può essere **puro** se si limita ad inizializzare gli attributi dell'oggetto senza apportare altre modifiche.
 
-I metodi puri si dicono anche **observers** in quanto permettono di "osservare" lo stato di un ADT in un determinato momento.
+I metodi puri si dicono anche **observer** in quanto permettono di "osservare" lo stato di un ADT in un determinato momento.
 
 ### Classi pure
 
@@ -189,7 +189,7 @@ public class InsiemeDiInteri {
   // OVERVIEW: Insieme di interi illimitato
   //  e mutabile
   
-  // Observers:
+  // Observer:
 
   //@ ensures (* \result equivale a
   //@ "x appartiene all'insieme" *);
@@ -212,7 +212,7 @@ public class InsiemeDiInteri {
   //@ ensures cardinalita() == 0;
   public InsiemeDiInteri();
 
-  // Modifiers:
+  // Mutator:
 
   //@ ensures appartiene(x) &&
   //@ cardinalita() == \old(cardinalita() +
@@ -243,7 +243,7 @@ public static InsiemeDiInteri daArray(int[] a)
   }
 
   InsiemeDiInteri s = new InsiemeDiInteri();
-  // Dalla specifica s è vuoto.
+  // Dalla specifica s è vuoto
 
   for (int x : a) {
     s.inserisci(x);
@@ -258,14 +258,14 @@ public static InsiemeDiInteri daArray(int[] a)
 ### Categorie di operazioni
 
 Possiamo classificare le operazioni (i metodi pubblici) definite su un ADT nelle seguenti categorie:
-- **_Creators_**: creano un nuovo oggetto del tipo definito dall'ADT prendendo in input parametri che **NON** sono altri oggetti del tipo definito dall'ADT
-- **_Producers_**: creano un nuovo oggetto del tipo definito dall'ADT prendendo in input un oggetto del tipo definito dall'ADT
-- **_Mutators_**: modificano lo stato dell'oggetto
-- **_Observers_**: restituiscono un risultato di un tipo diverso da quello definito dall'ADT; solitamente non modificano l'oggetto e quindi sono dichiarati come puri
+- **_Creator_**: creano un nuovo oggetto del tipo definito dall'ADT prendendo in input parametri che **NON** sono altri oggetti del tipo definito dall'ADT
+- **_Producer_**: creano un nuovo oggetto del tipo definito dall'ADT prendendo in input un oggetto del tipo definito dall'ADT
+- **_Mutator_**: modificano lo stato dell'oggetto
+- **_Observer_**: restituiscono un risultato di un tipo diverso da quello definito dall'ADT; solitamente non modificano l'oggetto e quindi sono dichiarati come puri
 
-Un tipo _mutabile_ "adeguato" dovrebbe disporre di _creators_, _observers_ e _mutators_.
+Un tipo _mutabile_ "adeguato" dovrebbe disporre di _creator_, _observer_ e _mutator_.
 
-Un tipo _immutabile_ "adeguato" dovrebbe disporre di _crators_, _observers_ e _producers_.
+Un tipo _immutabile_ "adeguato" dovrebbe disporre di _crator_, _observer_ e _producer_.
 
 ### Proprietà astratte (evolutive e invarianti)
 
@@ -292,7 +292,7 @@ Le proprietà astratte permettono agli utenti dell'ADT di fare assunzioni che ne
 #### Dimostrare la validità di un invariante pubblico
 
 Dichiarare un invariante pubblico non è sufficiente per garantirne la validità.
-Dobbiamo assicurarci, attraverso la specifica, che l'invariante sia valido per tutti gli stati "iniziali" delle istanze dell'ADT: ovvero gli oggetti ottenuti invocando i creators. Successivamente è necessario verificare che, a partire da un generico stato ammissibile dell'oggetto, applicando una qualsiasi delle operazioni definite e assumendo vere le rispettive precondizioni, la proprietà sia ancora valida.
+Dobbiamo assicurarci, attraverso la specifica, che l'invariante sia valido per tutti gli stati "iniziali" delle istanze dell'ADT: ovvero gli oggetti ottenuti invocando i creator. Successivamente è necessario verificare che, a partire da un generico stato ammissibile dell'oggetto, applicando una qualsiasi delle operazioni definite e assumendo vere le rispettive precondizioni, la proprietà sia ancora valida.
 In particolare uno stato si considera "ammissibile" se è raggiungibile applicando un nunmero finito di volte le operazioni dell'ADT ad uno degli stati iniziali.
 Non è necessario dimostrare che gli observer soddisfino l'invariante, dato che non modificano lo stato dell'oggetto.
 
@@ -394,7 +394,7 @@ public class InsiemeDiInteri {
 }
 ```
 
-Notiamo che siamo finalmente riusciti a specificare formalmente il metodo `appartiene` che, prima dell'introduzione de `rep`, era semplicemente descritto attraverso un commento in JML.
+Notiamo che siamo finalmente riusciti a specificare formalmente il metodo `appartiene` che, prima dell'introduzione del `rep`, era semplicemente descritto attraverso un commento in JML.
 
 #### Come implementare l'AF
 
@@ -417,10 +417,110 @@ Osserviamo che l'ordinamento della lista di interi prima della stampa fa in modo
 ### Invariante di rappresentazione
 
 **NON** tutti gli stati concreti assunti dal `rep` sono rappresentanti ammissibili di uno stato astratto.
-Nell'esempio `InsiemeDiInteri` risulta evidente che i seguenti valori per il `rep` non costituiscno degli stati ammissibili:
+Nell'esempio `InsiemeDiInteri` risulta evidente che i seguenti valori per il `rep` **NON** costituiscano degli stati ammissibili:
 - `null`
 - `[1, null, 3]`
 
 Ci sono però altre assunzioni (implicite) che facciamo nell'implementazione di `InsiemeDiInteri` che rendono inammissibili anche altri stati concreti che potrebbero sembrare validi.
-Ad esempio, quando rimuoviamo un elemento dall'insieme, rimuoviamo dal `rep` al più un elemento all'indice `iX` (in particolare rimuoviamo l'elemento che vale `x` con indice minimo, se esiste). Quindi, perché l'implementazione funzioni correttamente, è imperativo che nel `rep` non compaiano duplicati (altrimenti la rimozione non rimuoverebbe tutti gli elementi uguali ad `x`). Dunque, ad esempio, anche `[1, 1, 2]` è uno stato concreto inammissibile.
+Ad esempio, quando rimuoviamo un elemento dall'insieme, rimuoviamo dal `rep` al più un elemento (in particolare rimuoviamo l'elemento che vale `x` con indice minimo, se esiste). Quindi, perché l'implementazione funzioni correttamente, è imperativo che nel `rep` non compaiano duplicati (altrimenti la rimozione non rimuoverebbe tutti gli elementi uguali ad `x`). Dunque, ad esempio, anche `[1, 1, 2]` è uno stato concreto inammissibile.
 
+L'**invariante di rappresentazione** (o **RI**) è una proprietà invariante, che quindi deve essere verificata in **tutti** gli stati osservabili dell'istanza dell'ADT (questo punto in particolare sarà chiarito in _Validità e conservazione dell'RI_), privata, cioè che fa riferimento **esclusivamente** agli attributi privati della classe, in particolare a quelli che costituiscono il `rep`, che deve essere soddisfatta perchè lo stato concreto rappresentato dal `rep` sia ammissibile.
+Analogamente si può definire l'RI come la proprietà che permette di discernere tra i valori del `rep` che appartengono al dominio della funzione di astrazione (gli stati concreti ammissibili, per cui esiste uno stato astratto corrispondente) da quelli che non vi appartengono (gli stati concreti inammissibili, per cui non esiste uno stato astratto corrispondente e per cui, di conseguenza, la funzione di astrazione risulta indefinita).
+Ovviamente l'RI dipende fortemente dalle scelte implementative.
+
+Per dichiarare l'invariante di rappresentazione in JML si usa la seguente sintassi:
+```java
+public class ClasseADT {
+  ...
+  // RI:
+  //@ private invariant
+  //@ <condizione-sul-rep>;
+  ...
+}
+```
+Nella condizione in JML sul `rep` compariranno appunto **solo gli attributi** (privati) **che costituiscono il `rep`**. La condizione risulterà vera _sse_ il `rep` rappresenta uno stato concreto ammissibile.
+
+Dichiariamo l'RI di `InsiemeDiInteri`:
+```java
+public class InsiemeDiInteri {
+  ...
+  // RI:
+  //@ private invariant
+  //@ rep != null && !rep.contains(null) &&
+  //@ (\forall int i; 0 <= i &&
+  //@   i < rep.size() - 1;
+  //@   (\forall int j; i < j &&
+  //@     j < rep.size();
+  //@     !rep.get(i).equals(rep.get(j))));
+  ...
+}
+```
+
+#### Validità e conservazione dell'RI
+
+Gli _stati osservabili_, cioè quelli per cui si verifica la validità dell'RI, sono gli stati in cui si trova il `rep` quando nessun metodo **pubblico** è **in esecuzione**. Questo perché, durante l'esecuzione di un metodo, l'invariante di rappresentazione potrebbe essere temporaneamente violato per motivi implementativi per poi essere ripristinato prima della fine dell'esecuzione.
+
+Ad esempio, consideriamo un'implementazione **alternativa** inefficiente di `inserisci` in `InsiemeDiInteri`:
+
+---
+
+```java
+public class InsiemeDiInteri {
+  ...
+  public void inserisciIneff(int x) {
+    int iX = trova(x);
+    rep.add(x);
+    if (iX != -1) { rep.remove(x); }
+  }
+  ...
+}
+```
+`inserisciIneff` controlla se `x` sia già un elemento dell'insieme, in caso affermativo lo inserisce in fondo (con `add`) e rimuove il duplicato (con `remove`), altrimenti effettua solo l'inserimento.
+Nonostante nel primo scenario, tra la chiamata ad `add` e quella a `remove`, l'RI risulti temporaneamente violato, dato che avremo un elemento `x` duplicato in `rep`; l'implementazione è comunque valida perché ripristina l'invariante prima del termine dell'esecuzione del metodo.
+
+Per verificare che l'RI sia valido e si conservi durante il ciclo di vita dell'oggetto dobbiamo innanzitutto verificare che valga dopo l'esecuzione di tutti i costruttori pubblici (in tutti gli stati concreti iniziali). Poi dobbiamo dimostrare che, supponendo che l'RI sia valido per un certo valore del `rep` (quindi supponendo di trovarci in uno stato concreto ammissibile), per ogni metodo pubblico della classe, al termine dell'esecuzione di tale metodo, l'invariante sia ancora rispettato.
+
+### Esposizione del `rep`
+
+Si parla di **esposizione del `rep`** quando si fornisce all'esterno un riferimento al `rep` dell'ADT.
+Si tratta di una pessima pratica di programmazione perché consente agli utilizzatori dell'ADT di violare l'invariante di rappresentazione, agendo direttamente sul riferimento al `rep` di cui dispongono.
+Avviene principalmente in due modalità (che appaiono innocue):
+- Restituire il `rep` attraverso un metodo pubblico.
+Consideriamo l'esempio `InsiemeDiInteri` e supponiamo di voler implementare il metodo `comeArrayList` che restituisce una rappresentazione dell'insieme sotto forma di `ArrayList<Integer>`. Un'implementazione che potrebbe risultare naturale è:
+```java
+public class InsiemeDiInteri {
+  ...
+  public ArrayList<Integer> comeArrayList() {
+    return rep;
+  }
+  ...
+}
+```
+**Sbagliato!** Stiamo esponendo il `rep`.
+- Assegnare un riferimento ricevuto come parametro al `rep`.
+Supponiamo ora di voler implementare il metodo _statico_ `daArrayList` che riceve un `ArrayList<Integer>` e restituisce il corrispondente `InsiemeDiInteri`. Una possibile implementazione è:
+```java
+public class InsiemeDiInteri {
+  ...
+  public static InsiemeDiInteri
+    daArrayList(ArrayList<Integer> lista) {
+    InsiemeDiInteri s = new InsiemeDiInteri();
+    s.rep = lista;
+    return s;
+  }
+  ...
+}
+```
+Anche in questo caso l'implementazione è **sbagliata!** Non solo stiamo esponendo il `rep`, non stiamo nenche controllando che `lista` soddisfi l'RI.
+
+Per ovviare a questi problemi di solito si ricorre ai _copy constructor_.
+Ad esempio, per evitare l'esposizione del `rep` in `comeArrayList`:
+```java
+public class InsiemeDiInteri {
+  ...
+  public ArrayList<Integer> comeArrayList() {
+    return new ArrayList<Integer>(rep);
+  }
+  ...
+}
+```
