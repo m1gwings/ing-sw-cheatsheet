@@ -303,7 +303,7 @@ In Java questo si traduce in un insieme di attributi **privati**.
 Ricordiamo che l'utente deve poter utilizzare l'ADT conoscendo esclusivamente la sua specifica, quindi non è necessario (anzi vedremo essere una pratica scorretta) esporre il rappresentante dello stato concreto (magari dichiarandolo pubblico).
 
 Nell'esempio `InsiemeDiInteri` un rappresentante molto semplice, ma efficace, è un `ArrayList<Integer>` che contiene gli elementi dell'insieme.
-Assumiamo che il `rep` non contenga duplicati, mostreremo in seguito come esplicitarlo in JML attraverso gli invarianti privati.
+Vediamo una possibile implementazione:
 ```java
 public class InsiemeDiInteri {
   private ArrayList<Integer> rep;
@@ -351,3 +351,76 @@ public class InsiemeDiInteri {
   }
 }
 ```
+
+### Funzione di astrazione
+
+Si dice **funzione di astrazione** (o **AF**) una funzione (in senso matematico) che associa ad ogni stato concreto ammissibile, rappresentato dal `rep`, lo stato astratto (dell'ADT) che vi corrisponde.
+Nell'esempio `InsiemeDiInteri` lo stato concreto è un `ArrayList<Integer>` come ad esempio `[4, 1, 2, 3]`. L'AF associa `[4, 1, 2, 3]` all'insieme `{1, 2, 3, 4}` che è proprio lo stato astratto dell'ADT corrispondente a tale `ArrayList`.
+Le funzioni di astrazione possono risultare più o meno complicate e **dipendono** dall'implementazione scelta.
+Solitamente sono **NON** iniettive: più stati concreti corrispondono allo stesso stato astratto. Nell'esempio `[4, 1, 2, 3]` e `[1, 2, 3, 4]` corrispondono entrambi all'insieme `{1, 2, 3, 4}`.
+
+#### Come dichiarare l'AF in JML
+
+In JML è possibile **dichiarare** (**NON** implementare) la funzione di astrazione attraverso la seguente sintassi:
+```java
+public class ClasseADT {
+  ...
+  // AF:
+  //@ private invariant
+  //@ <condizione>;
+  ...
+}
+```
+L'AF viene dichiarata all'interno del blocco JML **private invariant**, che ci consente di accedere, oltre che agli attributi e metodi pubblici della classe, **anche a quelli privati**.
+Nella condizione JML siamo interessati ad esplicitare la **relazione** (logica) che sussiste tra lo stato concreto e lo stato astratto corrispondente dell'ADT. Cioè non vogliamo spiegare cosa la funzione fa (la sua implementazione) ma solo le proprietà che devono valere perchè uno stato concreto ed uno astratto siano corrispondenti.
+Nell'esempio `InsiemeDiInteri` con un'`ArrayList` come `rep`, a prescindere da come l'AF venga realizzata, vale che _"un elemento `x` appartiene all'insieme s (stato astratto) sse esiste un indice i compreso tra 0 e `rep.size()` tale che `rep.get(i) == x` (stato concreto)"_.
+Lo stato concreto è rappresentato dal `rep`, a cui possiamo accedere dato che è costituito da un insieme di attributi privati (ricordiamo che siamo nel private invariant). 
+Lo stato astratto invece non è realmente memorizzato da nessuna parte, è possibile accedervi solo attraverso gli _observer_.
+
+---
+
+Quindi nella condizione JML compariranno gli attributi **privati** che costituiscono il `rep` ed gli _observer_ che permettono di osservare lo stato astratto dell'ADT, legati tra loro attraverso delle formule logiche che risultano vere solo quando i valori assunti dagli attributi **privati** corrispondono con lo stato astratto osservato.
+Dichiariamo l'AF nell'esempio `InsiemeDiInteri`:
+```java
+public class InsiemeDiInteri {
+  ...
+  // AF:
+  //@ private invariant
+  //@ (\forall int x; ;
+  //@   appartiene(x) <==>
+  //@   (\exists int i; 0 <= i &&
+  //@     i < rep.size(); rep.get(i) == x));
+  ...
+}
+```
+
+Notiamo che siamo finalmente riusciti a specificare formalmente il metodo `appartiene` che, prima dell'introduzione de `rep`, era semplicemente descritto attraverso un commento in JML.
+
+#### Come implementare l'AF
+
+Per **implementare** l'AF solitamente si ricorre ad una rappresentazione testuale (tramite una stringa) degli stati astratti, quindi si ridefinisce `toString`.
+Nell'esempio `InsiemeDiInteri` una possibile implementazione dell'AF (attraverso i paradigmi della programmazione funzionale) è quella che segue:
+```java
+public class InsiemeDiInteri {
+  ...
+  @Override
+  public String toString() {
+    return rep.stream().sorted()
+      .map(x -> x.toString())
+      .collect(Collectors
+        .joining(", ", "{", "}"));
+  }
+}
+```
+Osserviamo che l'ordinamento della lista di interi prima della stampa fa in modo che gli stati astratti corrispondenti a `[1, 2, 3, 4]` e `[4, 3, 2, 1]`, **che sono uguali**, siano rappresentati da un'unica stringa `"{1, 2, 3, 4}"`.
+
+### Invariante di rappresentazione
+
+**NON** tutti gli stati concreti assunti dal `rep` sono rappresentanti ammissibili di uno stato astratto.
+Nell'esempio `InsiemeDiInteri` risulta evidente che i seguenti valori per il `rep` non costituiscno degli stati ammissibili:
+- `null`
+- `[1, null, 3]`
+
+Ci sono però altre assunzioni (implicite) che facciamo nell'implementazione di `InsiemeDiInteri` che rendono inammissibili anche altri stati concreti che potrebbero sembrare validi.
+Ad esempio, quando rimuoviamo un elemento dall'insieme, rimuoviamo dal `rep` al più un elemento all'indice `iX` (in particolare rimuoviamo l'elemento che vale `x` con indice minimo, se esiste). Quindi, perché l'implementazione funzioni correttamente, è imperativo che nel `rep` non compaiano duplicati (altrimenti la rimozione non rimuoverebbe tutti gli elementi uguali ad `x`). Dunque, ad esempio, anche `[1, 1, 2]` è uno stato concreto inammissibile.
+
