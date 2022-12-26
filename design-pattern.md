@@ -505,7 +505,7 @@ Usando le interfacce funzionali, possiamo usare una sola classe `Cassa`:
 public class Cassa {
   Runnable cassa;
 
-  public ApriCassa(Runnable cassa) {
+  public Cassa(Runnable cassa) {
     this.cassa = cassa;
   }
 
