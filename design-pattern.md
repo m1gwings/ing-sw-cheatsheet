@@ -443,14 +443,12 @@ Con questa _catena_ di **Decorator** è possibile aggiungere dinamicamente più 
 ![](./immagini/strategy.svg)
 
 In questo diagramma, troviamo `Strategy` che definisce un comportamento che le varie `ConcreteStrategy` implementano, ognuno in modo diverso. `Context` usa una `Strategy` _generica_, che verrà assegnata dinamicamente dal client attraverso una `ConcreteStrategy`.
-
 Si noti che `Strategy` e `ConcreteStrategy` sono classi che hanno un solo metodo, sono quindi **interfacce funzionali**. Possiamo quindi usare le **espressioni lambda** per definire le `ConcreteStrategy` senza doverle creare esplicitamente.
 
 #### Esempio (senza interfacce funzionali)
 
 Supponiamo di voler gestire un sistema di apertura di casse in un gioco. le casse possono dare, una volta aperte, degli effetti al giocatore che le apre; ad esempio, una cassa può curare il giocatore, un'altra può avvelenarlo, ecc. 
 Usiamo uno **Strategy**.
-
 Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `EffettoCassa`, che definisce il metodo `apri()`:
 
 ```java
@@ -462,7 +460,8 @@ public interface EffettoCassa {
 Definiamo le varie classi `ConcreteStrategy`, in questo esempio le chiamiamo `EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc., che implementano `EffettoCassa`:
 
 ```java
-public class EffettoCassaCurativa implements EffettoCassa {
+public class EffettoCassaCurativa 
+implements EffettoCassa {
   @Override
   public void applicaEffetto() {
     System.out.println("Sei stato curato!");
@@ -471,7 +470,8 @@ public class EffettoCassaCurativa implements EffettoCassa {
 ```
 
 ```java
-public class EffettoCassaAvvelenata implements EffettoCassa {
+public class EffettoCassaAvvelenata 
+implements EffettoCassa {
   @Override
   public void applicaEffetto() {
     System.out.println("Sei avvelenato!");
@@ -516,7 +516,6 @@ public class Cassa {
 ```
 
 Per il nostro uso, definiamo una `Runnable`, che è un'interfaccia funzionale che ha un solo metodo: `run()` per eseguire il codice. A seconda dei tipi dei parametri e del tipo del valore restituito, possiamo usare anche le altre interfacce funzionali spiegate nel capitolo "Programmazione funzionale".
-
 Il `Main` può quindi definire le `Runnable` _concrete_ tramite espressioni lambda e, richiamando il costruttore di `Cassa`, assegnarle a quella _generica_ per eseguire il giusto comportamento:
 
 ```java
@@ -549,3 +548,100 @@ public class Main {
 ```
 
 ---
+
+### Observer
+
+**Observer** è un pattern che permette di notificare un oggetto quando un altro oggetto cambia.
+
+#### UML
+
+![](./immagini/observer.svg)
+
+In questo diagramma, troviamo `Subject` che è l'oggetto che cambia e notifica gli `Observer`; gli `Observer` che ricevono la notifica e si comportano conseguentemente. Infine abbiamo i `ConcreteObserver` che implementano `Observer` e definiscono il comportamento che si attiva quando `Subject` cambia. Inoltre `Subject` può essere astratta ed avere una `ConcreteSubject` che la estende.
+
+#### Esempio
+
+Supponiamo di voler costruire un sistema di gestione di dati di un'azienda. L'azienda ha un database che contiene i dati dei dipendenti, e un sistema che permette di visualizzare questi dati. Il sistema di visualizzazione deve essere aggiornato ogni volta che il database cambia. Usiamo un **Observer**.
+
+Per prima cosa, definiamo l'interfaccia `Observer`, in questo esempio la chiamiamo `Visualizzazione`, che definisce il metodo `aggiorna()`:
+
+```java
+public interface Visualizzazione {
+  public void aggiorna();
+}
+```
+
+Definiamo le varie classi `ConcreteObserver`, in questo esempio le chiamiamo `VisualizzazioneConsole`, `VisualizzazioneGUI`, ecc., che implementano `Visualizzazione`:
+
+```java
+public class VisualizzazioneConsole 
+implements Visualizzazione {
+  @Override
+  public void aggiorna() {
+    System.out.println(
+      "Aggiornamento della 
+      visualizzazione console");
+  }
+}
+```
+
+```java
+public class VisualizzazioneGUI 
+implements Visualizzazione {
+  @Override
+  public void aggiorna() {
+    System.out.println(
+      "Aggiornamento della 
+      visualizzazione GUI");
+  }
+}
+```
+
+Definiamo la classe `Subject`, in questo esempio la chiamiamo `Database`, che ha un `ArrayList` di `Visualizzazione` e un metodo `aggiornaVisualizzazioni()` che chiama il metodo `aggiorna()` di ogni `Visualizzazione`:
+
+```java
+public class Database {
+  private ArrayList<Visualizzazione> 
+    visualizzazioni;
+
+  public Database() {
+    visualizzazioni = new ArrayList<>();
+  }
+
+  public void aggiungiVisualizzazione
+  (Visualizzazione visualizzazione) {
+    visualizzazioni.add(visualizzazione);
+  }
+
+  public void rimuoviVisualizzazione
+  (Visualizzazione visualizzazione) {
+    visualizzazioni.remove(visualizzazione);
+  }
+
+  public void aggiornaVisualizzazioni() {
+    for(Visualizzazione visualizzazione
+    : visualizzazioni) {
+      visualizzazione.aggiorna();
+    }
+  }
+}
+```
+
+Si noti che nei metodi per aggiungere o rimuovere una `Visualizzazione`, abbiamo l'interfaccia `Visualizzazione` come tipo di parametro. Questo ci permette di aggiungere dinamicamente qualsiasi tipo di `Visualizzazione` che implementa l'interfaccia `Visualizzazione`.
+
+Il `Main` può quindi creare un `Database` e aggiungere le varie `Visualizzazione`:
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    Database database = new Database();
+
+    database.aggiungiVisualizzazione(
+      new VisualizzazioneConsole());
+    database.aggiungiVisualizzazione(
+      new VisualizzazioneGUI());
+
+    database.aggiornaVisualizzazioni();
+  }
+}
+```
