@@ -442,7 +442,7 @@ Con questa _catena_ di **Decorator** è possibile aggiungere dinamicamente più 
 
 ![](./immagini/strategy.svg)
 
-In questo diagramma, troviamo `Strategy che definisce un comportamento che le varie `ConcreteStrategy` implementano, ognuno in modo diverso. `Context` usa una `Strategy` _generica_, che verrà assegnata dinamicamente dal client assegnando una `ConcreteStrategy` a quella _generica_.
+In questo diagramma, troviamo `Strategy` che definisce un comportamento che le varie `ConcreteStrategy` implementano, ognuno in modo diverso. `Context` usa una `Strategy` _generica_, che verrà assegnata dinamicamente dal client attraverso una `ConcreteStrategy`.
 
 Si noti che `Strategy` e `ConcreteStrategy` sono classi che hanno un solo metodo, sono quindi **interfacce funzionali**. Possiamo quindi usare le **espressioni lambda** per definire le `ConcreteStrategy` senza doverle creare esplicitamente.
 
@@ -451,58 +451,58 @@ Si noti che `Strategy` e `ConcreteStrategy` sono classi che hanno un solo metodo
 Supponiamo di voler gestire un sistema di apertura di casse in un gioco. le casse possono dare, una volta aperte, degli effetti al giocatore che le apre; ad esempio, una cassa può curare il giocatore, un'altra può avvelenarlo, ecc. 
 Usiamo uno **Strategy**.
 
-Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `Cassa`, che definisce il metodo `apri()`:
+Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `EffettoCassa`, che definisce il metodo `apri()`:
 
 ```java
-public interface Cassa {
-  public void apri();
+public interface EffettoCassa {
+  public void applicaEffetto();
 }
 ```
 
-Definiamo le varie classi `ConcreteStrategy`, in questo esempio le chiamiamo `CassaCurativa`, `CassaAvvelenata`, ecc., che implementano `Cassa`:
+Definiamo le varie classi `ConcreteStrategy`, in questo esempio le chiamiamo `EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc., che implementano `EffettoCassa`:
 
 ```java
-public class CassaCurativa implements Cassa {
+public class EffettoCassaCurativa implements EffettoCassa {
   @Override
-  public void apri() {
+  public void applicaEffetto() {
     System.out.println("Sei stato curato!");
   }
 }
 ```
 
 ```java
-public class CassaAvvelenata implements Cassa {
+public class EffettoCassaAvvelenata implements EffettoCassa {
   @Override
-  public void apri() {
+  public void applicaEffetto() {
     System.out.println("Sei avvelenato!");
   }
 }
 ```
 
-Definiamo la classe `Context`, in questo esempio la chiamiamo `ApriCassa`, che usa la `Cassa` _generica_ e chiama il metodo `apri()`:
+Definiamo la classe `Context`, in questo esempio la chiamiamo `ApriCassa`, che usa un `EffettoCassa` _generico_ e chiama il metodo `apri()`:
 
 ```java
 public class ApriCassa {
-  private Cassa cassa;
+  private EffettoCassa effettoCassa;
 
-  public ApriCassa(Cassa cassa) {
-    this.cassa = cassa;
+  public ApriCassa(EffettoCassa effettoCassa) {
+    this.effettoCassa = effettoCassa;
   }
 
   public void apri() {
-    cassa.apri();
+    effettoCassa.applicaEffetto();
   }
 }
 ```
 
-Il Main poi assegnerà una `ConcreteStrategy` (`CassaCurativa`, `CassaAvvelenata`, ecc.) a quella _generica_ (`Cassa`) nel costruttore di `ApriCassa`.
+Il Main poi assegnerà una `ConcreteStrategy` (`EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc.) a quella _generica_ (`EffettoCassa`) nel costruttore di `ApriCassa`.
 
 #### Esempio (con interfacce funzionali)
 
 Usando le interfacce funzionali, possiamo definire `Cassa` direttamente in `ApriCassa`:
 
 ```java
-public class ApriCassa {
+public class Cassa {
   Runnable cassa;
 
   public ApriCassa(Runnable cassa) {
@@ -517,27 +517,27 @@ public class ApriCassa {
 
 Per il nostro uso, definiamo una `Runnable`, che è un'interfaccia funzionale che ha un solo metodo: `run()` per eseguire il codice. A seconda dei tipi dei parametri e del tipo del valore restituito, possiamo usare anche le altre interfacce funzionali spiegate nel capitolo "Programmazione funzionale".
 
-Il `Main` può quindi definire le `Runnable` _concrete_ tramite espressioni lambda e, richiamando il costruttore di `ApriCassa`, assegnarle a quella _generica_ per eseguire il giusto comportamento:
+Il `Main` può quindi definire le `Runnable` _concrete_ tramite espressioni lambda e, richiamando il costruttore di `Cassa`, assegnarle a quella _generica_ per eseguire il giusto comportamento:
 
 ```java
 public class Main {
   public static void main(String[] args) {
     // Crea una cassa curativa
-    ApriCassa cassaCurativa = 
-    new ApriCassa(() -> {
+    Cassa cassaCurativa = 
+    new Cassa(() -> {
       System.out.println("Sei stato curato!");
     });
     /* equivalente a:
     Runnable cassaCurativa = () -> {
       System.out.println("Sei stato curato!");
     };
-    ApriCassa cassaCurativa = 
-      new ApriCassa(cassaCurativa);
+    Cassa cassaCurativa = 
+      new Cassa(cassaCurativa);
     */
 
     // Crea una cassa avvelenata
-    ApriCassa cassaAvvelenata = 
-    new ApriCassa(() -> {
+    Cassa cassaAvvelenata = 
+    new Cassa(() -> {
       System.out.println("Sei avvelenato!");
     });
 
