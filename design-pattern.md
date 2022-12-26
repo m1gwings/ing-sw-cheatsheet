@@ -645,72 +645,73 @@ In questo diagramma, troviamo `State` che è l'interfaccia che definisce uno sta
 
 #### Esempio
 
-Supponiamo di implementare il comportamento di un telefono. Il telefono può essere nello stato di _bloccato_ (può solo ricevere chiamate), _sbloccato_ (può ricevere e fare chiamate) o _in chiamata_ (non può fare o ricevere chiamate). Usiamo uno **State**.
+Supponiamo di voler implementare il TCP. La sequenza di azione da compiere è rappresentabile con un automa a stati finiti. La classe TCPConnection deve gestire l'apertura della connessione, la chiusura e le varie fasi intermedie. Usiamo uno **State**.
 
-Per prima cosa, definiamo l'interfaccia `State`, in questo esempio la chiamiamo `StatoTelefono`, che definisce il metodo `comportamento()`:
+Definiamo la classe astratta `State`, in questo esempio la chiamiamo `TCPState`, che definisce i metodi `open()`, `close()`, `acknowledge()` e `transition()`:
 
 ```java
-public interface StatoTelefono {
-  public void comportamento();
+public abstract class TCPState {
+  protected TCPConnection connection;
+
+  public TCPState(TCPConnection connection) {
+    this.connection = connection;
+  }
+
+  public abstract void open();
+  public abstract void close();
+  public abstract void acknowledge();
+
+  public void transition(TCPState state) {
+    connection.setState(state);
+  }
 }
 ```
 
-Definiamo le varie classi `ConcreteState`, in questo esempio le chiamiamo `StatoBloccato`, `StatoSbloccato` e `StatoInChiamata`, che estendono `StatoTelefono` e definiscono il comportamento in quello specifico stato:
+Definiamo le varie classi `ConcreteState`, in questo esempio le chiamiamo `TCPListen`, ecc., che estendono `TCPState`:
 
 ```java
-public class StatoBloccato implements StatoTelefono {
+public class TCPListen extends TCPState {
+  public TCPListen(TCPConnection connection) {
+    super(connection);
+  }
+
   @Override
-  public void comportamento() {
-    System.out.println("Il telefono è bloccato");
-    System.out.println("Può solo ricevere chiamate");
+  public void open() {
+    // open connection
+    this.transition(new TCPEstablished(connection));
   }
-}
-```
-
-```java
-public class StatoSbloccato implements StatoTelefono {
   @Override
-  public void comportamento() {
-    System.out.println("Il telefono è sbloccato");
-    System.out.println("Può ricevere e fare chiamate");
-  }
-}
-```
-
-```java
-public class StatoInChiamata implements StatoTelefono {
+  public void close() { ... }
   @Override
-  public void comportamento() {
-    System.out.println("Il telefono è in chiamata");
-    System.out.println("Non può fare o ricevere chiamate");
-  }
+  public void acknowledge() { ... }
 }
 ```
 
-Definiamo la classe `Context`, in questo esempio la chiamiamo `Telefono`, che ha un `StatoTelefono` e un metodo `comportamento()` che chiama il metodo `comportamento()` dello stato:
+Definiaamo la classe `Context`, in questo esempio la chiamiamo `TCPConnection`, che ha un campo `state` di tipo `TCPState` e i metodi `open()`, `close()`, `acknowledge()` e `setState()`:
 
 ```java
-public class Telefono {
-  private StatoTelefono stato;
+public class TCPConnection {
+  private TCPState state;
 
-  // il telefono parte nello stato di bloccato
-  public Telefono() {
-    stato = new StatoBloccato();
+  public TCPConnection() {
+    state = new TCPListen(this);
   }
 
-  // cambia lo stato del telefono
-  public void setStato(StatoTelefono stato) {
-    this.stato = stato;
+  public void open() {
+    state.open();
+  }
+  public void close() {
+    state.close();
+  }
+  public void acknowledge() {
+    state.acknowledge();
   }
 
-  // comportamento del telefono in base allo stato
-  public void comportamento() {
-    stato.comportamento();
+  public void setState(TCPState newState) {
+    this.state = newState;
   }
 }
 ```
-
-Il `Main` può quindi creare un `Telefono` e cambiarne lo stato.
 
 ---
 
