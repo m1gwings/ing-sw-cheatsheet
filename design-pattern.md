@@ -713,3 +713,75 @@ public class Telefono {
 Il `Main` può quindi creare un `Telefono` e cambiarne lo stato.
 
 ---
+
+<!-- _class: due -->
+
+### Command
+
+Il pattern **Command**  permette di isolare la porzione di codice che effettua un'azione (eventualmente molto complessa) dal codice che ne richiede l'esecuzione; l'azione è incapsulata nell'oggetto Command.
+L'obiettivo è rendere variabile l'azione del client senza però conoscere i dettagli dell'operazione stessa. Altro aspetto importante è che il destinatario della richiesta può non essere deciso staticamente all'atto dell'istanziazione del command ma ricavato a runtime.
+
+#### UML
+
+![](./immagini/command.png)
+
+La classe `Invoker` non implementa la richiesta direttamente ma la delega ad un oggetto `Command` che la esegue. Il `ConcreteCommand` implementa `Command` e performa l'azione sul `Receiver`.
+
+#### Esempio
+
+Supponiamo di creare una classe Menu per eseguire operazioni all'interno di una applicazione. Un'istanza di Menu contiene un insieme di MenuItem, uno per ciascuna azione da eseguire. Una istanza di Menu non deve conoscere i dettagli dell'applicazione associata, né delle azioni associate ai MenuItem. Usiamo il pattern **Command**.
+
+Definiamo l'interfaccia `Command` che definisce il metodo `esegui()`:
+
+```java
+interface Command {
+  void esegui();
+}
+```
+
+Definiamo la classe `PasteCommand` che implementa `Command`:
+
+```java
+class PasteCommand implements Command {
+  private Document doc;
+
+  public PasteCommand(Document doc) {
+    this.doc = doc;
+  }
+
+  @Override
+  public void esegui() {
+    ...
+  }
+}
+```
+
+Definiamo la classe `Menu` che contiene un insieme di `MenuItem`:
+
+```java
+class Menu {
+  List<MenuItem> items = new ArrayList<>();
+
+  public void addMenuItem(MenuItem item) {
+    ...
+  }
+}
+```
+
+Definiamo la classe `MenuItem` che contiene un `Command`:
+
+```java
+class MenuItem {
+  Command command;
+
+  public void setCommand(Command command) {
+    this.command = command;
+  }
+
+  public void click() {
+    command.esegui();
+  }
+}
+```
+
+Si noti che l'azione da compiere è slegata dagli oggetti che la usano.
