@@ -499,7 +499,7 @@ Il Main poi assegnerà una `ConcreteStrategy` (`EffettoCassaCurativa`, `EffettoC
 
 #### Esempio (con interfacce funzionali)
 
-Usando le interfacce funzionali, possiamo definire `Cassa` direttamente in `ApriCassa`:
+Usando le interfacce funzionali, possiamo usare una sola classe `Cassa`:
 
 ```java
 public class Cassa {
