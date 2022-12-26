@@ -551,7 +551,7 @@ public class Main {
 
 ### Observer
 
-**Observer** è un pattern che permette di notificare un oggetto quando un altro oggetto cambia.
+**Observer** è un pattern che permette di notificare ad un oggetto quando un altro oggetto cambia.
 
 #### UML
 
@@ -618,7 +618,7 @@ public class Database {
     visualizzazioni.remove(visualizzazione);
   }
 
-  public void aggiornaVisualizzazioni() {
+  protected void aggiornaVisualizzazioni() {
     for(Visualizzazione visualizzazione
     : visualizzazioni) {
       visualizzazione.aggiorna();
@@ -629,19 +629,87 @@ public class Database {
 
 Si noti che nei metodi per aggiungere o rimuovere una `Visualizzazione`, abbiamo l'interfaccia `Visualizzazione` come tipo di parametro. Questo ci permette di aggiungere dinamicamente qualsiasi tipo di `Visualizzazione` che implementa l'interfaccia `Visualizzazione`.
 
-Il `Main` può quindi creare un `Database` e aggiungere le varie `Visualizzazione`:
+---
+
+<!-- _class: due -->
+
+### State
+
+**State** è un pattern che permette di cambiare il comportamento di un oggetto in base allo stato in cui si trova. È molto simile a **Strategy**.
+
+#### UML
+
+![](./immagini/state.svg)
+
+In questo diagramma, troviamo `State` che è l'interfaccia che definisce uno stato _generico_, `ConcreteState` che estende `State` e definisce il comportamento in quello specifico stato e `Context` che è l'oggetto che cambia stato.
+
+#### Esempio
+
+Supponiamo di implementare il comportamento di un telefono. Il telefono può essere nello stato di _bloccato_ (può solo ricevere chiamate), _sbloccato_ (può ricevere e fare chiamate) o _in chiamata_ (non può fare o ricevere chiamate). Usiamo uno **State**.
+
+Per prima cosa, definiamo l'interfaccia `State`, in questo esempio la chiamiamo `StatoTelefono`, che definisce il metodo `comportamento()`:
 
 ```java
-public class Main {
-  public static void main(String[] args) {
-    Database database = new Database();
+public interface StatoTelefono {
+  public void comportamento();
+}
+```
 
-    database.aggiungiVisualizzazione(
-      new VisualizzazioneConsole());
-    database.aggiungiVisualizzazione(
-      new VisualizzazioneGUI());
+Definiamo le varie classi `ConcreteState`, in questo esempio le chiamiamo `StatoBloccato`, `StatoSbloccato` e `StatoInChiamata`, che estendono `StatoTelefono` e definiscono il comportamento in quello specifico stato:
 
-    database.aggiornaVisualizzazioni();
+```java
+public class StatoBloccato implements StatoTelefono {
+  @Override
+  public void comportamento() {
+    System.out.println("Il telefono è bloccato");
+    System.out.println("Può solo ricevere chiamate");
   }
 }
 ```
+
+```java
+public class StatoSbloccato implements StatoTelefono {
+  @Override
+  public void comportamento() {
+    System.out.println("Il telefono è sbloccato");
+    System.out.println("Può ricevere e fare chiamate");
+  }
+}
+```
+
+```java
+public class StatoInChiamata implements StatoTelefono {
+  @Override
+  public void comportamento() {
+    System.out.println("Il telefono è in chiamata");
+    System.out.println("Non può fare o ricevere chiamate");
+  }
+}
+```
+
+Definiamo la classe `Context`, in questo esempio la chiamiamo `Telefono`, che ha un `StatoTelefono` e un metodo `comportamento()` che chiama il metodo `comportamento()` dello stato:
+
+```java
+public class Telefono {
+  private StatoTelefono stato;
+
+  // il telefono parte nello stato di bloccato
+  public Telefono() {
+    stato = new StatoBloccato();
+  }
+
+  // cambia lo stato del telefono
+  public void setStato(StatoTelefono stato) {
+    this.stato = stato;
+  }
+
+  // comportamento del telefono in base allo stato
+  public void comportamento() {
+    stato.comportamento();
+  }
+}
+```
+
+Il `Main` può quindi creare un `Telefono` e cambiarne lo stato.
+
+---
