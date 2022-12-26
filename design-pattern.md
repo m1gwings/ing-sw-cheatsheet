@@ -447,9 +447,9 @@ Si noti che `Strategy` e `ConcreteStrategy` sono classi che hanno un solo metodo
 
 #### Esempio (senza interfacce funzionali)
 
-Supponiamo di voler gestire un sistema di apertura di casse in un gioco. le casse possono dare, una volta aperte, degli effetti al giocatore che le apre; ad esempio, una cassa può curare il giocatore, un'altra può avvelenarlo, ecc. 
+Supponiamo di voler gestire un sistema di apertura di casse in un gioco. Le casse possono dare, una volta aperte, degli effetti al giocatore che le apre; ad esempio, una cassa può curare il giocatore, un'altra può avvelenarlo, ecc. 
 Usiamo uno **Strategy**.
-Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `EffettoCassa`, che definisce il metodo `apri()`:
+Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `EffettoCassa`, che definisce il metodo `applicaEffetto()`:
 
 ```java
 public interface EffettoCassa {
@@ -479,13 +479,13 @@ implements EffettoCassa {
 }
 ```
 
-Definiamo la classe `Context`, in questo esempio la chiamiamo `ApriCassa`, che usa un `EffettoCassa` _generico_ e chiama il metodo `apri()`:
+Definiamo la classe `Context`, in questo esempio la chiamiamo `Cassa`, che usa un `EffettoCassa` _generico_ e chiama il metodo `apri()`:
 
 ```java
-public class ApriCassa {
+public class Cassa {
   private EffettoCassa effettoCassa;
 
-  public ApriCassa(EffettoCassa effettoCassa) {
+  public Cassa(EffettoCassa effettoCassa) {
     this.effettoCassa = effettoCassa;
   }
 
@@ -495,7 +495,7 @@ public class ApriCassa {
 }
 ```
 
-Il Main poi assegnerà una `ConcreteStrategy` (`EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc.) a quella _generica_ (`EffettoCassa`) nel costruttore di `ApriCassa`.
+Il Main poi assegnerà una `ConcreteStrategy` (`EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc.) a quella _generica_ (`EffettoCassa`) nel costruttore di `Cassa`.
 
 #### Esempio (con interfacce funzionali)
 
@@ -503,14 +503,14 @@ Usando le interfacce funzionali, possiamo usare una sola classe `Cassa`:
 
 ```java
 public class Cassa {
-  Runnable cassa;
+  Runnable effettoCassa;
 
-  public Cassa(Runnable cassa) {
-    this.cassa = cassa;
+  public Cassa(Runnable effettoCassa) {
+    this.effettoCassa = effettoCassa;
   }
 
   public void apri() {
-    cassa.run();
+    effettoCassa.run();
   }
 }
 ```
@@ -527,7 +527,7 @@ public class Main {
       System.out.println("Sei stato curato!");
     });
     /* equivalente a:
-    Runnable cassaCurativa = () -> {
+    Runnable effettoCassaCurativa = () -> {
       System.out.println("Sei stato curato!");
     };
     Cassa cassaCurativa = 
