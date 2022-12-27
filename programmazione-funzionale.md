@@ -152,9 +152,6 @@ Stream<String> stream = persone.stream()
     return p.getNome() + ": " + 
     p.getEta().toString();
   });
-  /* return implicito 
-  (valido solo per funzioni 
-  con una sola riga) */
 ```
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto: 50".
@@ -250,8 +247,6 @@ Nel nostro esempio, vogliamo ottenere la somma delle età delle persone (filtrat
 ```java
 Integer sommaEta = persone.stream()
   .filter(p -> p.getEta() >= 30)
-  /* mapToInt è uguale alla map, 
-  ma restituisce uno stream di interi */
   .mapToInt(p -> p.getEta())  
   .reduce(
     0, 
