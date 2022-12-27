@@ -171,6 +171,42 @@ Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto:
 - [**`Stream<T> sorted(Comparator<? super T> c)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#sorted-java.util.Comparator-) 
   ordina gli elementi dello `stream` in base a quanto definito dal `Comparator` dato.
 
+Per facilitare la creazione di `Comparator` esistono anche una serie di metodi, che permettono di mappare oggetti a dei loro campi
+per il quale un ordine naturale è già definito (come ad esempio per stringhe e primitivi):
+- [**`static <T,U extends Comparable<? super U>> Comparator<T> comparing(Function<? super T,? extends U> keyExtractor)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#comparing-java.util.function.Function-):
+  accetta una funzione che estrae un campo dall'oggetto dato e costruisce un comparatore che compara su tale campo.
+  Per esempio, il comparatore definito precedentemente (che utilizza l'età delle persone), può essere scritto come:
+```java
+Comparator<Persona> comparator = 
+  Comparator.comparing(p -> p.getEta())
+```
+- [**`Comparator<T> reversed()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#reversed--):
+  Restituisce un comparatore che impone l'ordine inverso di quello corrente. Per esempio, per ordinare una lista di persone
+  per età in ordine decrescente:
+```java
+List<Persona> persone = new ArrayList<>();
+persone.add(new Persona("Mario", 20));
+persone.add(new Persona("Luigi", 30));
+persone.add(new Persona("Pippo", 40));
+persone.add(new Persona("Pluto", 50));
+Collections.sort(persone, Comparator
+  .comparing(p -> p.getEta())
+  .reversed());
+// persone sarà [Pluto, Pippo, Luigi, Mario]
+```
+- [**`static <T extends Comparable<? super T>> Comparator<T> naturalOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#naturalOrder--)
+  e [**`static <T extends Comparable<? super T>> Comparator<T> reverseOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#reverseOrder--): restituiscono un comparatore di un oggetto T per il quale è già definito un proprio ordine naturale
+  che compara in ordine naturale/inverso. Per esempio, per ordinare una lista di interi in ordine decrescente:
+```java
+List<Integer> a = new ArrayList<>();
+a.add(20);
+a.add(30);
+a.add(40);
+a.add(50);
+Collections.sort(a, Comparator.reverseOrder());
+// a sarà [50, 40, 30, 20]
+```
+
 ### `flatMap`
 
 [**`Stream<U> flatMap(<funzione da T a Stream<U>>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMap-java.util.function.Function-) prende in input una funzione (`Function<T, Stream<U>>`), la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
@@ -251,13 +287,7 @@ Optional<Persona> piuAnziano = Arrays.asList(
   new Persona("Pippo", 40),
   new Persona("Pluto", 50))
   .stream()
-  .max((p1, p2) -> {
-    if(p1.getEta() > p2.getEta()) {
-      return 1; }
-    else if(p1.getEta() < p2.getEta()) {
-      return -1; }
-    else return 0;
-  });
+  .max(Comparator.comparing(p -> p.getEta()));
 ```
 
 ### `forEach`
