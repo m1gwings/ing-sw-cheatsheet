@@ -164,8 +164,12 @@ Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto:
 - [**`Stream<T> distinct()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#distinct--) 
   elimina gli elementi duplicati dello `stream`.
 
-- [**`Stream<T> sort()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#sorted--) 
-  ordina gli elementi dello `stream`. Ha bisogno di un `Comparator` per oggetti diversi da `Integer` e `String`.
+- [**`Stream<T> sorted()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#sorted--) 
+  ordina gli elementi dello `stream` secondo il loro ordinamento naturale. Funziona solo su tipi che implementano
+  già l'interfaccia [`Comparable`](https://docs.oracle.com/javase/8/docs/api/java/lang/Comparable.html) (come ad esempio `Integer` e `String`).
+
+- [**`Stream<T> sorted(Comparator<? super T> c)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#sorted-java.util.Comparator-) 
+  ordina gli elementi dello `stream` in base a quanto definito dal `Comparator` dato.
 
 ### `flatMap`
 
