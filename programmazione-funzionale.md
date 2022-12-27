@@ -290,6 +290,33 @@ Optional<Persona> piuAnziano = Arrays.asList(
   .max(Comparator.comparing(p -> p.getEta()));
 ```
 
+### `anyMatch`, `allMatch` e `noneMatch`
+
+[**`boolean anyMatch(<predicato>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#anyMatch-java.util.function.Predicate-),
+[**`Optional<T> allMatch(<predicato>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#allMatch-java.util.function.Predicate-)
+e [**`Optional<T> noneMatch(<predicato>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#noneMatch-java.util.function.Predicate-) 
+restituiscono rispettivamente se almeno uno, tutti o nessuno degli elementi dello stream rispetta il predicato;
+
+```java
+List<Persona> persone = Arrays.asList(
+  new Persona("Mario", 20),
+  new Persona("Luigi", 30),
+  new Persona("Pippo", 40),
+  new Persona("Pluto", 50));
+// Restituisce vero, 
+// Pippo e Pluto sono abbastanza anziani
+boolean any = persone.stream()
+  .anyMatch(p -> p.getEta() > 35);
+// Restituisce falso, 
+// Mario e Luigi sono più giovani
+boolean all = persone.stream()
+  .allMatch(p -> p.getEta() > 35);
+// Restituisce falso, 
+// Pippo e Pluto sono più anziani
+boolean all = persone.stream()
+  .noneMatch(p -> p.getEta() > 35);
+```
+
 ### `forEach`
 
 Possiamo usare il metodo [**`forEach(<funzione da T a void>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#forEach-java.util.function.Consumer-) per eseguire una funzione per ogni elemento dello stream. Nel nostro esempio, vogliamo stampare il nome e l'età di ogni persona (filtrata con età >= 30):
