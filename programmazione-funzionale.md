@@ -37,7 +37,7 @@ persone.add(new Persona("Pippo", 40));
 persone.add(new Persona("Pluto", 50));
 ```
 
-Possiamo, ad esempio, ordinare la lista di persone per età, usando il metodo `sort` della classe `Collections`: 
+Possiamo, ad esempio, ordinare la lista di persone per età, usando il metodo [`sort`](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#sort-java.util.List-java.util.Comparator-) della classe `Collections`: 
 ```java
 public static <T> void sort(
   List<T> list, Comparator<? super T> c
@@ -90,23 +90,34 @@ Comparator<Persona> comparator = (p1, p2) -> {
 
 Java fornisce delle `<interfacce funzionali / il corrispondente metodo per eseguire la funzione>` nel package `java.util.function` quali:
 
-- **`Function<T, R>` / `.apply(T t)`**: funzione che prende un parametro di tipo `T` e restituisce un oggetto di tipo `R`;
-- **`Consumer<T>` / `.accept(T t)`**: funzione che prende un parametro di tipo `T` e non restituisce nulla;
-- **`Supplier<T>` / `.get()`**: funzione che non prende parametri e restituisce un oggetto di tipo `T`;
-- **`Predicate<T>` / `.test(T t)`**: funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
-- **`BiFunction<T, U, R>` / `.apply(T t, U u)`**: funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
+- [**`Function<T, R>` / `.apply(T t)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html#apply-T-): 
+  funzione che prende un parametro di tipo `T` e restituisce un oggetto di tipo `R`;
+- [**`Consumer<T>` / `.accept(T t)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html#accept-T-): 
+  funzione che prende un parametro di tipo `T` e non restituisce nulla;
+- [**`Supplier<T>` / `.get()`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html#get--): 
+  funzione che non prende parametri e restituisce un oggetto di tipo `T`;
+- [**`Predicate<T>` / `.test(T t)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-): 
+  funzione che prende un parametro di tipo `T` e restituisce un booleano (true o false);
+- [**`BiFunction<T, U, R>` / `.apply(T t, U u)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html#apply-T-U-): 
+  funzione che prende due parametri di tipo `T` e `U` e restituisce un oggetto di tipo `R`.
 
 E le corrispondenti per i tipi primitivi `int`, `double` e `long`:
 
-- **`IntFunction<R>` / `.apply(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
-- **`IntConsumer` / `.accept(int v)`**: funzione che prende un parametro di tipo `int` e non restituisce nulla;
-- **`IntSupplier` / `.getAsInt()`**: funzione che non prende parametri e restituisce un oggetto di tipo `int`;
+- [**`IntFunction<R>` / `.apply(int v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntFunction.html#apply-int-): 
+  funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
+- [**`IntConsumer` / `.accept(int v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntConsumer.html#accept-int-): 
+  funzione che prende un parametro di tipo `int` e non restituisce nulla;
+- [**`IntSupplier` / `.getAsInt()`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntSupplier.html#getAsInt--): 
+  funzione che non prende parametri e restituisce un oggetto di tipo `int`;
 
 ---
 
-- **`IntPredicate` / `.test(int v)`**: funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
-- **`ToIntFunction<T>` / `.applyAsInt(T v)`**: funzione che prende un parametro di tipo `T` e restituisce un primitivo di tipo `int`: `int applyAsInt(T value)`;
-- **`DoubleToIntFunction` / `.applyAsInt(double v)`**: funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
+- [**`IntPredicate` / `.test(int v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntPredicate.html#test-int-): 
+  funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
+- [**`ToIntFunction<T>` / `.applyAsInt(T v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/ToIntFunction.html#applyAsInt-T-): 
+  funzione che prende un parametro di tipo `T` e restituisce un primitivo di tipo `int`: `int applyAsInt(T value)`;
+- [**`DoubleToIntFunction` / `.applyAsInt(double v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/DoubleToIntFunction.html#applyAsInt-double-): 
+  funzione che prende un parametro di tipo `double` e restituisce un oggetto di tipo `int`...
 
 ## Composizione di funzioni (`Stream<T>`)
 
@@ -121,7 +132,7 @@ Stream<Persona> stream = persone.stream();
 ### `filter`
 
 Possiamo filtrare lo `stream` per far si che tutti gli elementi della collezione soddisfino un certo `Predicate<T>`.
-Per farlo, usiamo il metodo **`Stream<T> filter(<predicato>)`**. Nel nostro esempio, vogliamo filtrare le persone che hanno più di 30 anni:
+Per farlo, usiamo il metodo [**`Stream<T> filter(<predicato>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#filter-java.util.function.Predicate-). Nel nostro esempio, vogliamo filtrare le persone che hanno più di 30 anni:
 
 ```java
 Stream<Persona> stream = persone.stream()
@@ -132,7 +143,7 @@ La funzione lambda nel metodo `filter` sarà `true` per tre persone: Luigi, Pipp
 
 ### `map`
 
-**`Stream<U> map(<funzione da T a U>)`** prende in input una funzione (`Function<T, U>`) e la applica ad ogni elemento dello `stream`. Si usa per trasformare gli elementi dello `stream` in altri elementi. Nel nostro esempio, vogliamo trasformare le persone (già filtrate) in stringhe contenenti il nome e l'età:
+[**`Stream<U> map(<funzione da T a U>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#map-java.util.function.Function-) prende in input una funzione (`Function<T, U>`) e la applica ad ogni elemento dello `stream`. Si usa per trasformare gli elementi dello `stream` in altri elementi. Nel nostro esempio, vogliamo trasformare le persone (già filtrate) in stringhe contenenti il nome e l'età:
 
 ```java
 Stream<String> stream = persone.stream()
@@ -150,13 +161,15 @@ Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto:
 
 ### `distinct` e `sort`
 
-- **`Stream<T> distinct()`** elimina gli elementi duplicati dello `stream`.
+- [**`Stream<T> distinct()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#distinct--) 
+  elimina gli elementi duplicati dello `stream`.
 
-- **`Stream<T> sort()`** ordina gli elementi dello `stream`. Ha bisogno di un `Comparator` per oggetti diversi da `Integer` e `String`.
+- [**`Stream<T> sort()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#sorted--) 
+  ordina gli elementi dello `stream`. Ha bisogno di un `Comparator` per oggetti diversi da `Integer` e `String`.
 
 ### `flatMap`
 
-**`Stream<U> flatMap(<funzione da T a Stream<U>>)`** prende in input una funzione (`Function<T, Stream<U>>`), la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
+[**`Stream<U> flatMap(<funzione da T a Stream<U>>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMap-java.util.function.Function-) prende in input una funzione (`Function<T, Stream<U>>`), la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
 
 Nel nostro esempio, vogliamo trasformare ogni persona (sempre filtrata con età >= 30) in una lista di stringhe contenenti il nome e l'età, e poi concatenare tutti gli `stream` in un unico `stream`:
 
@@ -176,7 +189,7 @@ Otterrò uno `stream`, contenente le stringhe: "Luigi", "30", "Pippo", "40", "Pl
 
 ### `reduce`
 
-La **`T reduce(Identità, <funzione binaria>)`** è un'operazione di aggregazione che restituisce un singolo valore a partire da uno `stream`. 
+La [**`T reduce(Identità, <funzione binaria>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#reduce-T-java.util.function.BinaryOperator-) è un'operazione di aggregazione che restituisce un singolo valore a partire da uno `stream`. 
 
 Si ha come primo parametro un valore iniziale (identità), e come secondo parametro una funzione binaria che prende in input due elementi dello `stream` e restituisce un altro elemento (dello stesso tipo) ottenuto a partire dai due. La funzione verrà applicata induttivamente ad ogni elemento dello `stream`, fino ad ottenere un solo elemento.
 
@@ -203,7 +216,7 @@ Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le et
 
 ### `collect`
 
-Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo **`Collection<T> collect(<funzione che restituisce una Collezione>)`**. Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
+Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo [**`Collection<T> collect(<funzione che restituisce una Collezione>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#collect-java.util.stream.Collector-). Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
 
 ```java
 List<String> lista = persone.stream()
@@ -217,7 +230,7 @@ List<String> lista = persone.stream()
 
 ### `forEach`
 
-Possiamo usare il metodo **`forEach(<funzione da T a void>)`** per eseguire una funzione per ogni elemento dello stream. Nel nostro esempio, vogliamo stampare il nome e l'età di ogni persona (filtrata con età >= 30):
+Possiamo usare il metodo [**`forEach(<funzione da T a void>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#forEach-java.util.function.Consumer-) per eseguire una funzione per ogni elemento dello stream. Nel nostro esempio, vogliamo stampare il nome e l'età di ogni persona (filtrata con età >= 30):
 
 ```java
 persone.stream()
@@ -229,17 +242,17 @@ persone.stream()
 
 ## `Optional<T>`
 
-L'oggetto **`Optional`** è un contenitore per un valore che può essere nullo. È usato per evitare di avere eccezioni di tipo `NullPointerException`.
+L'oggetto [**`Optional`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) è un contenitore per un valore che può essere nullo. È usato per evitare di avere eccezioni di tipo `NullPointerException`.
 
 Possiamo creare un `Optional` con il valore `val` con il metodo `Optional.of(val)`. Oppure con il metodo `Optional.empty()` per creare un `Optional` vuoto (sostituisce il null).
 
 Sono poi disponibili i metodi per lavorare con gli Optional:
 
-- **`ifPresent(<funzione>)`** che applica la funzione in input solo se l'Optional non è vuoto.
+- [**`ifPresent(<funzione>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent-java.util.function.Consumer-) che applica la funzione in input solo se l'Optional non è vuoto.
 
-- **`orElse(<val>)`** che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
+- [**`orElse(<val>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElse-T-) che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
 
-- **`Optional<U> flatMap(<funzione da T a Optional<U>)`** restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto; altrimenti ritorna un `Optional` vuoto.
+- [**`Optional<U> flatMap(<funzione da T a Optional<U>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#flatMap-java.util.function.Function-) restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto; altrimenti ritorna un `Optional` vuoto.
 
 Facciamo un esempio usando gli `Optional` e i tre metodi visti in precendenza:
 
