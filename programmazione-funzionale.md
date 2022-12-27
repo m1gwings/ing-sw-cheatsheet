@@ -159,7 +159,7 @@ Stream<String> stream = persone.stream()
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto: 50".
 
-### `distinct` e `sort`
+### `distinct` e `sorted`
 
 - [**`Stream<T> distinct()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#distinct--) 
   elimina gli elementi duplicati dello `stream`.
@@ -235,6 +235,29 @@ List<String> lista = persone.stream()
     p.getEta().toString()
   );
   .collect(Collectors.toList());
+```
+
+### `min` e `max`
+
+[**`Optional<T> max(Comparator<? super T> c)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#max-java.util.Comparator-)
+e [**`Optional<T> min(Comparator<? super T> c)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#min-java.util.Comparator-)
+restituiscono rispettivamente l'oggetto massimo o minimo all'interno dello stream (se presente), secondo l'ordine definito dal `Comparator` dato.
+
+```java
+// Restituisce la persona più anziana, Pluto
+Optional<Persona> piuAnziano = Arrays.asList(
+  new Persona("Mario", 20),
+  new Persona("Luigi", 30),
+  new Persona("Pippo", 40),
+  new Persona("Pluto", 50))
+  .stream()
+  .max((p1, p2) -> {
+    if(p1.getEta() > p2.getEta()) {
+      return 1; }
+    else if(p1.getEta() < p2.getEta()) {
+      return -1; }
+    else return 0;
+  });
 ```
 
 ### `forEach`
