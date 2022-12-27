@@ -531,7 +531,7 @@ public class Main {
       System.out.println("Sei stato curato!");
     };
     Cassa cassaCurativa = 
-      new Cassa(cassaCurativa);
+      new Cassa(effettoCassaCurativa);
     */
 
     // Crea una cassa avvelenata
@@ -631,8 +631,6 @@ Si noti che nei metodi per aggiungere o rimuovere una `Visualizzazione`, abbiamo
 
 ---
 
-<!-- _class: due -->
-
 ### State
 
 **State** è un pattern che permette di cambiare il comportamento di un oggetto in base allo stato in cui si trova. È molto simile a **Strategy**.
@@ -645,7 +643,7 @@ In questo diagramma, troviamo `State` che è l'interfaccia che definisce uno sta
 
 #### Esempio
 
-Supponiamo di voler implementare il TCP. La sequenza di azione da compiere è rappresentabile con un automa a stati finiti. La classe TCPConnection deve gestire l'apertura della connessione, la chiusura e le varie fasi intermedie. Usiamo uno **State**.
+Supponiamo di voler implementare il TCP. La sequenza di azioni da compiere è rappresentabile con un automa a stati finiti. La classe TCPConnection deve gestire l'apertura della connessione, la chiusura e le varie fasi intermedie. Usiamo uno **State**.
 
 Definiamo la classe astratta `State`, in questo esempio la chiamiamo `TCPState`, che definisce i metodi `open()`, `close()`, `acknowledge()` e `transition()`:
 
@@ -678,7 +676,8 @@ public class TCPListen extends TCPState {
   @Override
   public void open() {
     // open connection
-    this.transition(new TCPEstablished(connection));
+    this.transition(
+      new TCPEstablished(connection));
   }
   @Override
   public void close() { ... }
@@ -687,7 +686,9 @@ public class TCPListen extends TCPState {
 }
 ```
 
-Definiaamo la classe `Context`, in questo esempio la chiamiamo `TCPConnection`, che ha un campo `state` di tipo `TCPState` e i metodi `open()`, `close()`, `acknowledge()` e `setState()`:
+Osserviamo la differenza **fondamentale** tra _Strategy_ e _State_. Alla fine dell'esecuzione del metodo open, avviene una transizione dello stato da `TCPListen` a `TCPEstablished`. Infatti sia in _Strategy_ che in _State_ il comportamento della classe cambia a runtime, la differenza tra i due è che nel primo caso è l'utente che decide quando cambiare il comportamento, nel secondo caso il comportamento cambia perchè avviene una transizione di stato che è completamente trasparente all'utente della classe e dipende solo dallo stato di partenza e dal metodo invocato.
+
+Definiamo la classe `Context`, in questo esempio la chiamiamo `TCPConnection`, che ha un campo `state` di tipo `TCPState` e i metodi `open()`, `close()`, `acknowledge()` e `setState()`:
 
 ```java
 public class TCPConnection {
@@ -785,4 +786,4 @@ class MenuItem {
 }
 ```
 
-Si noti che l'azione da compiere è slegata dagli oggetti che la usano.
+Si noti che l'azione da compiere è slegata dagli oggetti che la invocano.
