@@ -290,8 +290,10 @@ Esistono diversi tipi di collettori già definiti:
   per avere una lista o un set
 - [**`toCollection(Supplier<C> collectionFactory)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#toCollection-java.util.function.Supplier-)
   per avere un altro tipo di `Collection` o per avere una specifica implementazione di `List` o `Set`
+- [**`joining()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#joining--)
+- [**`joining(CharSequence delimiter)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#joining-java.lang.CharSequence-)
 - [**`joining(CharSequence delimiter, CharSequence prefix, CharSequence suffix)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#joining-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-)
-  per concatenare un insieme di stringhe in una stringa unica. Esistono anche un overload senza prefisso e suffisso e un overload senza alcun parametro.
+  per concatenare un insieme di stringhe in una stringa unica
 
 ---
 <!-- _class: due -->
