@@ -22,6 +22,9 @@ import exporter from "./exporter.js"
         };
     })();
 
+    // Export the cheatsheet once right at the start
+    await exportCheatsheet();
+
     // Start browserSync server
     const bs = browserSync.create();
     bs.init({
