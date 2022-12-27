@@ -28,7 +28,7 @@ import exporter from "./exporter.js"
     // Start browserSync server
     const bs = browserSync.create();
     bs.init({
-        files: ["dev.html", "cheatsheet.pdf"],
+        files: ["dev.html"],
         server: {
             baseDir: "./",
             index: "dev.html"
