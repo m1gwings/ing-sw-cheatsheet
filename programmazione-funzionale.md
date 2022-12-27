@@ -353,9 +353,11 @@ Queste interfacce definiscono metodi aggiuntivi per facilitare le operazioni di 
 
 Per convenienza questi sono scritti solo per IntStream, ma sono uguali per gli altri, basta semplicemente sostituire `int` con `double`/`long` e `OptionalInt` con `OptionalDouble`/`OptionalLong`
 
-## `Optional<T>`
+## `Optional<T>`, `OptionalInt`, `OptionalDouble` e `OptionalLong`
 
 L'oggetto [**`Optional`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) è un contenitore per un valore che può essere nullo. È usato per evitare di avere eccezioni di tipo `NullPointerException`.
+
+Esistono anche le specializzazioni per tipi primitivi `OptionalInt`, `OptionalDouble` e `OptionalLong`. Il loro utilizzo è pressoché identico alla normale classe `Optional`.
 
 Possiamo creare un `Optional` con il valore `val` con il metodo `Optional.of(val)`. Oppure con il metodo `Optional.empty()` per creare un `Optional` vuoto (sostituisce il null).
 
