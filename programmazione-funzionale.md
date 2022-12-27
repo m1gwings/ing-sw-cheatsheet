@@ -159,6 +159,12 @@ Stream<String> stream = persone.stream()
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto: 50".
 
+Esistono anche metodi simili per mappare a valori primitivi:
+[**`IntStream mapToInt(<funzione da T a int>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToInt-java.util.function.ToIntFunction-), 
+[**`DoubleStream mapToDouble(<funzione da T a double>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToDouble-java.util.function.ToDoubleFunction-) 
+e [**`LongStream mapToLong(<funzione da T a long>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToLong-java.util.function.ToLongFunction-).
+Questi ritornano un'istanza di uno stream di valori primitivi, permettendo di chiamare metodi aggiuntivi che possono essere utili (vedi sotto). 
+
 ### `distinct` e `sorted`
 
 - [**`Stream<T> distinct()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#distinct--) 
@@ -226,6 +232,12 @@ Stream<String> stream = persone.stream()
 ```
 
 Otterrò uno `stream`, contenente le stringhe: "Luigi", "30", "Pippo", "40", "Pluto", "50".
+
+Esistono anche metodi simili per flat-mappare a valori primitivi:
+[**`IntStream flatMapToInt(<funzione da T a IntStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToInt-java.util.function.Function-), 
+[**`DoubleStream flatMapToDouble(<funzione da T a DoubleStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToDouble-java.util.function.Function-) 
+e [**`LongStream flatMapToLong(<funzione da T a LongStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToLong-java.util.function.Function-).
+Questi ritornano un'istanza di uno stream di valori primitivi, permettendo di chiamare metodi aggiuntivi che possono essere utili (vedi sotto). 
 
 ### `reduce`
 
@@ -328,6 +340,18 @@ persone.stream()
     System.out.println(p.getNome() + ": "
     + p.getEta().toString()));
 ```
+
+## `IntStream`, `DoubleStream` e `LongStream`
+
+Esistono delle specializzazioni della classe Stream per i valori primitivi, ottenibili mediante opportune chiamate a un normale stream con `mapToInt`, `flatMapToInt`, etc.
+
+Queste interfacce definiscono metodi aggiuntivi per facilitare le operazioni di aggregazione, quali:
+- [**`OptionalDouble average()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/IntStream.html#average--)
+- [**`OptionalInt max()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/IntStream.html#max--)
+- [**`OptionalInt min()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/IntStream.html#min--)
+- [**`int sum()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/IntStream.html#sum--)
+
+Per convenienza questi sono scritti solo per IntStream, ma sono uguali per gli altri, basta semplicemente sostituire `int` con `double`/`long` e `OptionalInt` con `OptionalDouble`/`OptionalLong`
 
 ## `Optional<T>`
 
