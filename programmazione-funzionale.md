@@ -216,6 +216,11 @@ Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le et
 - 30 (risultato parziale della iterazione precedente) + 40 (secondo elemento dello stream) = 70, 
 - 70 + 50 = 120.
 
+Esiste in aggiunta anche un overload che non richiede un'identità [**`Optional<T> reduce(<funzione binaria>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#reduce-java.util.function.BinaryOperator-). Questo permette di effettuare la medesima operazione di riduzione, sapendo però in aggiunta se lo stream fosse vuoto o contenesse degli elementi:
+- Una riduzione come la precedente su `[30, 40, 50]` restituisce ancora 120
+- Una riduzione come la precedente su `[0]` restituisce ancora 0
+- Una riduzione come la precedente su `[]` restituisce `Optional.empty()` invece di 0
+
 ---
 
 ### `collect`
