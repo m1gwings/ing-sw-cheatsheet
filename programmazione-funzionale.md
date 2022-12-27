@@ -157,9 +157,10 @@ Stream<String> stream = persone.stream()
 Otterrò uno `stream`, contenente le stringhe: "Luigi: 30", "Pippo: 40", "Pluto: 50".
 
 Esistono anche metodi simili per mappare a valori primitivi:
-[**`IntStream mapToInt(<funzione da T a int>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToInt-java.util.function.ToIntFunction-), 
-[**`DoubleStream mapToDouble(<funzione da T a double>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToDouble-java.util.function.ToDoubleFunction-) 
-e [**`LongStream mapToLong(<funzione da T a long>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToLong-java.util.function.ToLongFunction-).
+- [**`IntStream mapToInt(<funzione da T a int>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToInt-java.util.function.ToIntFunction-), 
+- [**`DoubleStream mapToDouble(<funzione da T a double>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToDouble-java.util.function.ToDoubleFunction-) 
+- [**`LongStream mapToLong(<funzione da T a long>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#mapToLong-java.util.function.ToLongFunction-).
+
 Questi ritornano un'istanza di uno stream di valori primitivi, permettendo di chiamare metodi aggiuntivi che possono essere utili (vedi sotto). 
 
 ### `distinct` e `sorted`
@@ -197,8 +198,8 @@ Collections.sort(persone, Comparator
   .reversed());
 // persone sarà [Pluto, Pippo, Luigi, Mario]
 ```
-- [**`static <T extends Comparable<? super T>> Comparator<T> naturalOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#naturalOrder--)
-  e [**`static <T extends Comparable<? super T>> Comparator<T> reverseOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#reverseOrder--): restituiscono un comparatore di un oggetto T per il quale è già definito un proprio ordine naturale
+- [**`static <T extends Comparable<? super T>> Comparator<T> naturalOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#naturalOrder--) e
+- [**`static <T extends Comparable<? super T>> Comparator<T> reverseOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#reverseOrder--): restituiscono un comparatore di un oggetto T per il quale è già definito un proprio ordine naturale
   che compara in ordine naturale/inverso. Per esempio, per ordinare una lista di interi in ordine decrescente:
 ```java
 List<Integer> a = new ArrayList<>();
@@ -209,6 +210,8 @@ a.add(50);
 Collections.sort(a, Comparator.reverseOrder());
 // a sarà [50, 40, 30, 20]
 ```
+
+---
 
 ### `flatMap`
 
@@ -231,10 +234,13 @@ Stream<String> stream = persone.stream()
 Otterrò uno `stream`, contenente le stringhe: "Luigi", "30", "Pippo", "40", "Pluto", "50".
 
 Esistono anche metodi simili per flat-mappare a valori primitivi:
-[**`IntStream flatMapToInt(<funzione da T a IntStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToInt-java.util.function.Function-), 
-[**`DoubleStream flatMapToDouble(<funzione da T a DoubleStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToDouble-java.util.function.Function-) 
-e [**`LongStream flatMapToLong(<funzione da T a LongStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToLong-java.util.function.Function-).
+- [**`IntStream flatMapToInt(<funzione da T a IntStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToInt-java.util.function.Function-), 
+- [**`DoubleStream flatMapToDouble(<funzione da T a DoubleStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToDouble-java.util.function.Function-) 
+- [**`LongStream flatMapToLong(<funzione da T a LongStream)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMapToLong-java.util.function.Function-).
+
 Questi ritornano un'istanza di uno stream di valori primitivi, permettendo di chiamare metodi aggiuntivi che possono essere utili (vedi sotto). 
+
+&nbsp;  
 
 ### `reduce`
 
@@ -264,8 +270,6 @@ Esiste in aggiunta anche un overload che non richiede un'identità [**`Optional<
 - Una riduzione come la precedente su `[0]` restituisce ancora 0
 - Una riduzione come la precedente su `[]` restituisce `Optional.empty()` invece di 0
 
----
-
 ### `collect`
 
 Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo [**`Collection<T> collect(<funzione che restituisce una Collettore>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#collect-java.util.stream.Collector-). Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
@@ -288,6 +292,9 @@ Esistono diversi tipi di collettori già definiti:
   per avere un altro tipo di `Collection` o per avere una specifica implementazione di `List` o `Set`
 - [**`joining(CharSequence delimiter, CharSequence prefix, CharSequence suffix)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#joining-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-)
   per concatenare un insieme di stringhe in una stringa unica. Esistono anche un overload senza prefisso e suffisso e un overload senza alcun parametro.
+
+---
+<!-- _class: due -->
 
 ### `min` e `max`
 
@@ -370,6 +377,9 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 - [**`ifPresent(<funzione>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent-java.util.function.Consumer-) che applica la funzione in input solo se l'Optional non è vuoto.
 
 - [**`orElse(<val>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElse-T-) che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
+
+---
+<!-- _class: due -->
 
 - [**`Optional<U> flatMap(<funzione da T a Optional<U>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#flatMap-java.util.function.Function-) restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto; altrimenti ritorna un `Optional` vuoto.
 
