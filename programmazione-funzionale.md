@@ -273,7 +273,7 @@ Esiste in aggiunta anche un overload che non richiede un'identità [**`Optional<
 
 ### `collect`
 
-Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo [**`Collection<T> collect(<funzione che restituisce una Collezione>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#collect-java.util.stream.Collector-). Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
+Siamo ora interessati ad avere una Collezione (List, Set, ...) invece che uno stream. Per fare ciò, possiamo usare il metodo [**`Collection<T> collect(<funzione che restituisce una Collettore>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#collect-java.util.stream.Collector-). Nel nostro esempio, vogliamo ottenere una lista di stringhe contenente nome: età delle persone (filtrate con età >= 30):
 
 ```java
 List<String> lista = persone.stream()
@@ -284,6 +284,15 @@ List<String> lista = persone.stream()
   );
   .collect(Collectors.toList());
 ```
+
+Esistono diversi tipi di collettori già definiti:
+- [**`toList()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#toList--) 
+  e [**`toSet()`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#toSet--)
+  per avere una lista o un set
+- [**`toCollection(Supplier<C> collectionFactory)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#toCollection-java.util.function.Supplier-)
+  per avere un altro tipo di `Collection` o per avere una specifica implementazione di `List` o `Set`
+- [**`joining(CharSequence delimiter, CharSequence prefix, CharSequence suffix)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#joining-java.lang.CharSequence-java.lang.CharSequence-java.lang.CharSequence-)
+  per concatenare un insieme di stringhe in una stringa unica. Esistono anche un overload senza prefisso e suffisso e un overload senza alcun parametro.
 
 ### `min` e `max`
 
