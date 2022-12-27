@@ -429,3 +429,360 @@ public class Main {
 ```
 
 Con questa _catena_ di **Decorator** è possibile aggiungere dinamicamente più funzionalità al `SimpleTextView` _base_.
+
+---
+
+## Pattern comportamentali
+
+### Strategy
+
+**Strategy** è un pattern che permette di cambiare dinamicamente il comportamento di un sistema.
+
+#### UML
+
+![](./immagini/strategy.svg)
+
+In questo diagramma, troviamo `Strategy` che definisce un comportamento che le varie `ConcreteStrategy` implementano, ognuno in modo diverso. `Context` usa una `Strategy` _generica_, che verrà assegnata dinamicamente dal client attraverso una `ConcreteStrategy`.
+Si noti che `Strategy` e `ConcreteStrategy` sono classi che hanno un solo metodo, sono quindi **interfacce funzionali**. Possiamo quindi usare le **espressioni lambda** per definire le `ConcreteStrategy` senza doverle creare esplicitamente.
+
+#### Esempio (senza interfacce funzionali)
+
+Supponiamo di voler gestire un sistema di apertura di casse in un gioco. Le casse possono dare, una volta aperte, degli effetti al giocatore che le apre; ad esempio, una cassa può curare il giocatore, un'altra può avvelenarlo, ecc. 
+Usiamo uno **Strategy**.
+Per prima cosa, definiamo l'interfaccia `Strategy`, in questo esempio la chiamiamo `EffettoCassa`, che definisce il metodo `applicaEffetto()`:
+
+```java
+public interface EffettoCassa {
+  public void applicaEffetto();
+}
+```
+
+Definiamo le varie classi `ConcreteStrategy`, in questo esempio le chiamiamo `EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc., che implementano `EffettoCassa`:
+
+```java
+public class EffettoCassaCurativa 
+implements EffettoCassa {
+  @Override
+  public void applicaEffetto() {
+    System.out.println("Sei stato curato!");
+  }
+}
+```
+
+```java
+public class EffettoCassaAvvelenata 
+implements EffettoCassa {
+  @Override
+  public void applicaEffetto() {
+    System.out.println("Sei avvelenato!");
+  }
+}
+```
+
+Definiamo la classe `Context`, in questo esempio la chiamiamo `Cassa`, che usa un `EffettoCassa` _generico_ e chiama il metodo `apri()`:
+
+```java
+public class Cassa {
+  private EffettoCassa effettoCassa;
+
+  public Cassa(EffettoCassa effettoCassa) {
+    this.effettoCassa = effettoCassa;
+  }
+
+  public void apri() {
+    effettoCassa.applicaEffetto();
+  }
+}
+```
+
+Il Main poi assegnerà una `ConcreteStrategy` (`EffettoCassaCurativa`, `EffettoCassaAvvelenata`, ecc.) a quella _generica_ (`EffettoCassa`) nel costruttore di `Cassa`.
+
+#### Esempio (con interfacce funzionali)
+
+Usando le interfacce funzionali, possiamo usare una sola classe `Cassa`:
+
+```java
+public class Cassa {
+  Runnable effettoCassa;
+
+  public Cassa(Runnable effettoCassa) {
+    this.effettoCassa = effettoCassa;
+  }
+
+  public void apri() {
+    effettoCassa.run();
+  }
+}
+```
+
+Per il nostro uso, definiamo una `Runnable`, che è un'interfaccia funzionale che ha un solo metodo: `run()` per eseguire il codice. A seconda dei tipi dei parametri e del tipo del valore restituito, possiamo usare anche le altre interfacce funzionali spiegate nel capitolo "Programmazione funzionale".
+Il `Main` può quindi definire le `Runnable` _concrete_ tramite espressioni lambda e, richiamando il costruttore di `Cassa`, assegnarle a quella _generica_ per eseguire il giusto comportamento:
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    // Crea una cassa curativa
+    Cassa cassaCurativa = 
+    new Cassa(() -> {
+      System.out.println("Sei stato curato!");
+    });
+    /* equivalente a:
+    Runnable effettoCassaCurativa = () -> {
+      System.out.println("Sei stato curato!");
+    };
+    Cassa cassaCurativa = 
+      new Cassa(cassaCurativa);
+    */
+
+    // Crea una cassa avvelenata
+    Cassa cassaAvvelenata = 
+    new Cassa(() -> {
+      System.out.println("Sei avvelenato!");
+    });
+
+    // Apri le casse curativa e avvelenata
+    cassaCurativa.apri();
+    cassaAvvelenata.apri();
+  }
+}
+```
+
+---
+
+### Observer
+
+**Observer** è un pattern che permette di notificare ad un oggetto quando un altro oggetto cambia.
+
+#### UML
+
+![](./immagini/observer.svg)
+
+In questo diagramma, troviamo `Subject` che è l'oggetto che cambia e notifica gli `Observer`; gli `Observer` che ricevono la notifica e si comportano conseguentemente. Infine abbiamo i `ConcreteObserver` che implementano `Observer` e definiscono il comportamento che si attiva quando `Subject` cambia. Inoltre `Subject` può essere astratta ed avere una `ConcreteSubject` che la estende.
+
+#### Esempio
+
+Supponiamo di voler costruire un sistema di gestione di dati di un'azienda. L'azienda ha un database che contiene i dati dei dipendenti, e un sistema che permette di visualizzare questi dati. Il sistema di visualizzazione deve essere aggiornato ogni volta che il database cambia. Usiamo un **Observer**.
+
+Per prima cosa, definiamo l'interfaccia `Observer`, in questo esempio la chiamiamo `Visualizzazione`, che definisce il metodo `aggiorna()`:
+
+```java
+public interface Visualizzazione {
+  public void aggiorna();
+}
+```
+
+Definiamo le varie classi `ConcreteObserver`, in questo esempio le chiamiamo `VisualizzazioneConsole`, `VisualizzazioneGUI`, ecc., che implementano `Visualizzazione`:
+
+```java
+public class VisualizzazioneConsole 
+implements Visualizzazione {
+  @Override
+  public void aggiorna() {
+    System.out.println(
+      "Aggiornamento della 
+      visualizzazione console");
+  }
+}
+```
+
+```java
+public class VisualizzazioneGUI 
+implements Visualizzazione {
+  @Override
+  public void aggiorna() {
+    System.out.println(
+      "Aggiornamento della 
+      visualizzazione GUI");
+  }
+}
+```
+
+Definiamo la classe `Subject`, in questo esempio la chiamiamo `Database`, che ha un `ArrayList` di `Visualizzazione` e un metodo `aggiornaVisualizzazioni()` che chiama il metodo `aggiorna()` di ogni `Visualizzazione`:
+
+```java
+public class Database {
+  private ArrayList<Visualizzazione> 
+    visualizzazioni;
+
+  public Database() {
+    visualizzazioni = new ArrayList<>();
+  }
+
+  public void aggiungiVisualizzazione
+  (Visualizzazione visualizzazione) {
+    visualizzazioni.add(visualizzazione);
+  }
+
+  public void rimuoviVisualizzazione
+  (Visualizzazione visualizzazione) {
+    visualizzazioni.remove(visualizzazione);
+  }
+
+  protected void aggiornaVisualizzazioni() {
+    for(Visualizzazione visualizzazione
+    : visualizzazioni) {
+      visualizzazione.aggiorna();
+    }
+  }
+}
+```
+
+Si noti che nei metodi per aggiungere o rimuovere una `Visualizzazione`, abbiamo l'interfaccia `Visualizzazione` come tipo di parametro. Questo ci permette di aggiungere dinamicamente qualsiasi tipo di `Visualizzazione` che implementa l'interfaccia `Visualizzazione`.
+
+---
+
+<!-- _class: due -->
+
+### State
+
+**State** è un pattern che permette di cambiare il comportamento di un oggetto in base allo stato in cui si trova. È molto simile a **Strategy**.
+
+#### UML
+
+![](./immagini/state.svg)
+
+In questo diagramma, troviamo `State` che è l'interfaccia che definisce uno stato _generico_, `ConcreteState` che estende `State` e definisce il comportamento in quello specifico stato e `Context` che è l'oggetto che cambia stato.
+
+#### Esempio
+
+Supponiamo di voler implementare il TCP. La sequenza di azione da compiere è rappresentabile con un automa a stati finiti. La classe TCPConnection deve gestire l'apertura della connessione, la chiusura e le varie fasi intermedie. Usiamo uno **State**.
+
+Definiamo la classe astratta `State`, in questo esempio la chiamiamo `TCPState`, che definisce i metodi `open()`, `close()`, `acknowledge()` e `transition()`:
+
+```java
+public abstract class TCPState {
+  protected TCPConnection connection;
+
+  public TCPState(TCPConnection connection) {
+    this.connection = connection;
+  }
+
+  public abstract void open();
+  public abstract void close();
+  public abstract void acknowledge();
+
+  public void transition(TCPState state) {
+    connection.setState(state);
+  }
+}
+```
+
+Definiamo le varie classi `ConcreteState`, in questo esempio le chiamiamo `TCPListen`, ecc., che estendono `TCPState`:
+
+```java
+public class TCPListen extends TCPState {
+  public TCPListen(TCPConnection connection) {
+    super(connection);
+  }
+
+  @Override
+  public void open() {
+    // open connection
+    this.transition(new TCPEstablished(connection));
+  }
+  @Override
+  public void close() { ... }
+  @Override
+  public void acknowledge() { ... }
+}
+```
+
+Definiaamo la classe `Context`, in questo esempio la chiamiamo `TCPConnection`, che ha un campo `state` di tipo `TCPState` e i metodi `open()`, `close()`, `acknowledge()` e `setState()`:
+
+```java
+public class TCPConnection {
+  private TCPState state;
+
+  public TCPConnection() {
+    state = new TCPListen(this);
+  }
+
+  public void open() {
+    state.open();
+  }
+  public void close() {
+    state.close();
+  }
+  public void acknowledge() {
+    state.acknowledge();
+  }
+
+  public void setState(TCPState newState) {
+    this.state = newState;
+  }
+}
+```
+
+---
+
+<!-- _class: due -->
+
+### Command
+
+Il pattern **Command**  permette di isolare la porzione di codice che effettua un'azione (eventualmente molto complessa) dal codice che ne richiede l'esecuzione; l'azione è incapsulata nell'oggetto Command.
+L'obiettivo è rendere variabile l'azione del client senza però conoscere i dettagli dell'operazione stessa. Altro aspetto importante è che il destinatario della richiesta può non essere deciso staticamente all'atto dell'istanziazione del command ma ricavato a runtime.
+
+#### UML
+
+![](./immagini/command.png)
+
+La classe `Invoker` non implementa la richiesta direttamente ma la delega ad un oggetto `Command` che la esegue. Il `ConcreteCommand` implementa `Command` e performa l'azione sul `Receiver`.
+
+#### Esempio
+
+Supponiamo di creare una classe Menu per eseguire operazioni all'interno di una applicazione. Un'istanza di Menu contiene un insieme di MenuItem, uno per ciascuna azione da eseguire. Una istanza di Menu non deve conoscere i dettagli dell'applicazione associata, né delle azioni associate ai MenuItem. Usiamo il pattern **Command**.
+
+Definiamo l'interfaccia `Command` che definisce il metodo `esegui()`:
+
+```java
+interface Command {
+  void esegui();
+}
+```
+
+Definiamo la classe `PasteCommand` che implementa `Command`:
+
+```java
+class PasteCommand implements Command {
+  private Document doc;
+
+  public PasteCommand(Document doc) {
+    this.doc = doc;
+  }
+
+  @Override
+  public void esegui() {
+    ...
+  }
+}
+```
+
+Definiamo la classe `Menu` che contiene un insieme di `MenuItem`:
+
+```java
+class Menu {
+  List<MenuItem> items = new ArrayList<>();
+
+  public void addMenuItem(MenuItem item) {
+    ...
+  }
+}
+```
+
+Definiamo la classe `MenuItem` che contiene un `Command`:
+
+```java
+class MenuItem {
+  Command command;
+
+  public void setCommand(Command command) {
+    this.command = command;
+  }
+
+  public void click() {
+    command.esegui();
+  }
+}
+```
+
+Si noti che l'azione da compiere è slegata dagli oggetti che la usano.
