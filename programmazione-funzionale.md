@@ -107,11 +107,11 @@ E le corrispondenti per i tipi primitivi `int`, `double` e `long`:
   funzione che prende un parametro di tipo `int` e restituisce un oggetto di tipo `R`;
 - [**`IntConsumer` / `.accept(int v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntConsumer.html#accept-int-): 
   funzione che prende un parametro di tipo `int` e non restituisce nulla;
-- [**`IntSupplier` / `.getAsInt()`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntSupplier.html#getAsInt--): 
-  funzione che non prende parametri e restituisce un oggetto di tipo `int`;
 
 ---
 
+- [**`IntSupplier` / `.getAsInt()`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntSupplier.html#getAsInt--): 
+  funzione che non prende parametri e restituisce un oggetto di tipo `int`;
 - [**`IntPredicate` / `.test(int v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/IntPredicate.html#test-int-): 
   funzione che prende un parametro di tipo `int` e restituisce un booleano (true o false);
 - [**`ToIntFunction<T>` / `.applyAsInt(T v)`**](https://docs.oracle.com/javase/8/docs/api/java/util/function/ToIntFunction.html#applyAsInt-T-): 
@@ -200,7 +200,10 @@ Collections.sort(persone, Comparator
 ```
 - [**`static <T extends Comparable<? super T>> Comparator<T> naturalOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#naturalOrder--) e
 - [**`static <T extends Comparable<? super T>> Comparator<T> reverseOrder()`**](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#reverseOrder--): restituiscono un comparatore di un oggetto T per il quale è già definito un proprio ordine naturale
-  che compara in ordine naturale/inverso. Per esempio, per ordinare una lista di interi in ordine decrescente:
+  che compara in ordine naturale/inverso. Per esempio, per ordinare una lista di interi in ordine decrescente: (_l'esempio è nella facciata seguente_)
+
+---
+
 ```java
 List<Integer> a = new ArrayList<>();
 a.add(20);
@@ -210,8 +213,6 @@ a.add(50);
 Collections.sort(a, Comparator.reverseOrder());
 // a sarà [50, 40, 30, 20]
 ```
-
----
 
 ### `flatMap`
 
@@ -296,6 +297,7 @@ Esistono diversi tipi di collettori già definiti:
   per concatenare un insieme di stringhe in una stringa unica
 
 ---
+
 <!-- _class: due -->
 
 ### `min` e `max`
@@ -381,6 +383,7 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 - [**`orElse(<val>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElse-T-) che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
 
 ---
+
 <!-- _class: due -->
 
 - [**`Optional<U> flatMap(<funzione da T a Optional<U>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#flatMap-java.util.function.Function-) restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto; altrimenti ritorna un `Optional` vuoto.

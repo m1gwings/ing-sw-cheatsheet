@@ -68,3 +68,9 @@ a {
     color: inherit;
     text-decoration: inherit; /* rimuove la sottolineatura */
 }
+
+ul {
+    margin: 5mm;
+    margin-left: 10mm;
+    padding: 0mm;
+}

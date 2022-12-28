@@ -87,10 +87,11 @@ public static void metodo(S s, T t, U u) {
     ...
 }
 ```
-Per specificare che `s` e `t` vengono modificati, ma non `u`, possiamo aggiungere nella specifica:
-`//@ assignable s, t;`
 
 ---
+
+Per specificare che `s` e `t` vengono modificati, ma non `u`, possiamo aggiungere nella specifica:
+`//@ assignable s, t;`
 
 Supponiamo di voler specificare che un array `a[]` venga modificato da un metodo di cui stiamo scrivendo la specifica:
 
@@ -166,9 +167,9 @@ Questo risulterà utile in seguito per alleggerire la specifica in JML dei metod
 Valgono le regole sintattiche e semantiche già introdotte per JML.
 La struttura della specifica rimane quella usuale.
 
-**Attenzione**: quando specifichiamo un'operazione di un ADT in JML, nella specifica possono comparire solo gli altri metodi (e attributi) **pubblici** e **puri** (dell'ADT), i parametri formali dell'operazione (su cui possiamo invocare i rispettivi metodi **pubblici** e **puri**) e `\result` per fare riferimento al risultato restituito.
-
 ---
+
+**Attenzione**: quando specifichiamo un'operazione di un ADT in JML, nella specifica possono comparire solo gli altri metodi (e attributi) **pubblici** e **puri** (dell'ADT), i parametri formali dell'operazione (su cui possiamo invocare i rispettivi metodi **pubblici** e **puri**) e `\result` per fare riferimento al risultato restituito.
 
 ### Esempio
 
@@ -272,11 +273,12 @@ Un tipo _immutabile_ "adeguato" dovrebbe disporre di _crator_, _observer_ e _pro
 Si dicono proprietà **astratte** di un ADT tutte le proprietà di cui esso gode, che sono deducibili dalla specifica dei suoi metodi pubblici.
 Si distinguono in:
 - Proprietà **evolutive**: specificano la relazione tra uno stato osservabile ed il successivo (ovvero specificano come l'oggetto evolve). Un esempio di proprietà evolutiva è l'immutabilità, che può essere espressa attraverso il concetto di stato corrente e successivo come segue: "Per ogni stato corrente dell'oggetto, per ogni operazione, detto stato successivo lo stato in cui si trova l'oggetto dopo aver eseguito l'operazione, lo stato corrente coincide con lo stato successivo"
+
+---
+
 - Properità **invarianti**: si tratta di proprietà che sono valide per qualunque stato ammissibile dell'oggetto. Nell'esempio `InsiemeDiInteri`, una proprietà invariante è: `cardinalita() >= 0`.
 
 Le proprietà **evolutive** **NON** sono **rappresentabili direttamente in JML**: non esiste una sintassi per dichiararle esplicitamente, ma seguono dalle specifiche dei singoli metodi.
-
----
 
 Al contrario, per **rappresentare in JML** una proprietà **invariante**, anche detta **invariante pubblico**, si usa la seguente sintassi:
 ```java
@@ -373,12 +375,12 @@ public class ClasseADT {
 ```
 L'AF viene dichiarata all'interno del blocco JML **private invariant**, che ci consente di accedere, oltre che agli attributi e metodi pubblici della classe, **anche a quelli privati**.
 Nella condizione JML siamo interessati ad esplicitare la **relazione** (logica) che sussiste tra lo stato concreto e lo stato astratto corrispondente dell'ADT. Cioè non vogliamo spiegare cosa la funzione fa (la sua implementazione) ma solo le proprietà che devono valere perchè uno stato concreto ed uno astratto siano corrispondenti.
-Nell'esempio `InsiemeDiInteri` con un'`ArrayList` come `rep`, a prescindere da come l'AF venga realizzata, vale che _"un elemento `x` appartiene all'insieme s (stato astratto) sse esiste un indice i compreso tra 0 e `rep.size()` tale che `rep.get(i) == x` (stato concreto)"_.
-Lo stato concreto è rappresentato dal `rep`, a cui possiamo accedere dato che è costituito da un insieme di attributi privati (ricordiamo che siamo nel private invariant). 
-Lo stato astratto invece non è realmente memorizzato da nessuna parte, è possibile accedervi solo attraverso gli _observer_.
 
 ---
 
+Nell'esempio `InsiemeDiInteri` con un'`ArrayList` come `rep`, a prescindere da come l'AF venga realizzata, vale che _"un elemento `x` appartiene all'insieme s (stato astratto) sse esiste un indice i compreso tra 0 e `rep.size()` tale che `rep.get(i) == x` (stato concreto)"_.
+Lo stato concreto è rappresentato dal `rep`, a cui possiamo accedere dato che è costituito da un insieme di attributi privati (ricordiamo che siamo nel private invariant). 
+Lo stato astratto invece non è realmente memorizzato da nessuna parte, è possibile accedervi solo attraverso gli _observer_.
 Quindi nella condizione JML compariranno gli attributi **privati** che costituiscono il `rep` ed gli _observer_ che permettono di osservare lo stato astratto dell'ADT, legati tra loro attraverso delle formule logiche che risultano vere solo quando i valori assunti dagli attributi **privati** corrispondono con lo stato astratto osservato.
 Dichiariamo l'AF nell'esempio `InsiemeDiInteri`:
 ```java
@@ -456,13 +458,13 @@ public class InsiemeDiInteri {
 }
 ```
 
+---
+
 #### Validità e conservazione dell'RI
 
 Gli _stati osservabili_, cioè quelli per cui si verifica la validità dell'RI, sono gli stati in cui si trova il `rep` quando nessun metodo **pubblico** è **in esecuzione**. Questo perché, durante l'esecuzione di un metodo, l'invariante di rappresentazione potrebbe essere temporaneamente violato per motivi implementativi per poi essere ripristinato prima della fine dell'esecuzione.
 
 Ad esempio, consideriamo un'implementazione **alternativa** inefficiente di `inserisci` in `InsiemeDiInteri`:
-
----
 
 ```java
 public class InsiemeDiInteri {
