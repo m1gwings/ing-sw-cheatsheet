@@ -64,6 +64,7 @@ export default async (baseUrl, browser) => {
             .map(capitolo => capitolo.nome)
             .map(nomeCapitolo => '- ' + nomeCapitolo)
             .join('\n') +
+        '\n\n' + 
         (await Promise.all([...indice.capitoli]
             .map(capitolo => capitolo.file + '.md')
             .map(pathCapitolo => new Promise((resolve, reject) =>
