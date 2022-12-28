@@ -2,8 +2,8 @@
 
 ## Testing strutturale (white-box)
 
-Il **testing strutturale** tiene conto della struttura interna del programma con l'obiettivo di sollecitare tutte le parti del programma e, quindi, molto costoso da implementare.
 
+Il **testing strutturale** tiene conto della struttura interna del programma con l'obiettivo di sollecitare tutte le parti del programma.
 ### Criterio di copertura delle istruzioni (statement coverage)
 
 Si vuole fare in modo che ogni istruzione del programma venga eseguita almeno una volta.
