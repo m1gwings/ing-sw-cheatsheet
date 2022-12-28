@@ -121,3 +121,45 @@ Vediamo l'**effetto degli operatori logici** sulla `forza` delle condizioni:
 - se _rafforziamo_ la premessa _indeboliamo_ l'implicazione:
 supponiamo che `c` sia _più forte_ di `a`, allora è sempre vero `c ==> a`.
 Allora, se `a ==> b` è vero, per transitività `c ==> b` è vero, cioè abbiamo dimostrato che `(a ==> b) ==> (c ==> b)` e cioè che `a ==> b` è _più forte_ di `c ==> b`.
+
+#### Precondizione _più debole_
+
+Se la precondizione del metodo _ereditato_ è più debole di quella del metodo _originale_ allora se è vera la precondizione del metodo _originale_ è anche vera quella del metodo _ereditato_ e cioè possiamo richiamare il metodo _ereditato_ in tutti i casi in cui potevano richiamare quello _originale_; proprio come ci aspetteremmo!
+Quindi condizione **necessaria** perchè valaga la _methods rule_ è la **_precondition rule_**: detta `pre_sub` la precondizione del metodo _ereditato_ e `pre_super` la precondizione di quello _originale_, `pre_sub` è _più debole_ di `pre_super` e cioè `pre_super ==> pre_sub` è sempre vera.
+
+Se `pre_sub` non fosse _più debole_ di `pre_super` esisterebbe un caso in cui _pre_sub_ è falsa e _pre_super_ è vera. L'utente richiamando il metodo in quel caso (che soddisfa la precondizione del metodo _originale_ e quindi risulta un caso valido di input) otterrebbe un risultato inaspettato (dato che tale caso viola la precondizione del metodo _ereditato_ che è quello che viene effettivamente invocato).
+
+#### Postcondizione _più forte_
+
+Alla fine dell'esecuzione del metodo _ereditato_ ci aspettiamo che la postcondizione del metodo _originale_, detta `post_super` sia soddisfatta. L'utente, nella sua implementazione, infatti fa riferimento solo alla postcondizione del metodo _originale_ e non deve preoccuparsi se in realtà ad essere invocato è il metodo _ereditato_. Quindi, detta `post_sub` la postcondizione del metodo _ereditato_, una condizione **sufficiente** (assumendo che la _precondition rule_ sia stata rispettata) perchè valga la _methods rule_ è che `post_sub` sia più forte di `post_super`, ovvero `post_sub ==> post_super`. In questo modo, dato che il metodo _ereditato_ deve soddisfare la sua postcondizione, soddisferà automaticamente anche le postcondizione del metodo _originale_.
+
+---
+
+In realtà questa condizione è più stringente del necessario. L'utente invocherà il metodo solo nei casi che soddisfano la precondizone del metodo **_originale_** ed abbiamo visto che in generale la precondizione del metodo _ereditato_ può "ammettere più casi". Quindi ci basta che valga la **_full postcondition rule_** cioè che `post_sub` implichi che `post_super` sia vera se `pre_super` era vera al momento della chiamata del metodo, che in formule diventa: `post_sub ==> (\old(pre_super) ==> post_super)`.
+Sulle slide la _full postcondition rule_ è espressa come `(\old(pre_super) && post_sub) ==> post_super` (in realtà senza `\old` ma è più corretto aggiungerlo); le due formule sono equivalenti, infatti `post_sub ==> (\old(pre_super) ==> post_super) = !post_sub || (!\old(pre_super) || post_super) = (!\old(pre_super) || !post_sub) || post_super = !(!\old(pre_super) || !post_sub) ==> post_super = (\old(pre_super) && post_sub) ==> post_super`.
+
+#### Specificare metodi che ne estendono altri in JML
+
+Per specificare un metodo che ne estende un altro in JML si utilizza la keyword `also` che si inserisce nella specifica in questo modo:
+```java
+//@ also
+//@ requires pre_ext;
+//@ ensures post_ext;
+```
+
+Notiamo che in `requires` ed `ensures` compaiono `pre_ext` e `post_ext` invece di `pre_sub` e `post_sub`. Questo perchè la semantica della specifica con `also` si traduce in:
+```java
+//@ requires pre_super || pre_ext;
+//@ ensures (\old(pre_super) ==> post_super)
+//@   && (\old(pre_ext) ==> post_ext);
+```
+
+Quindi `pre_sub = pre_super || pre_ext` e `post_sub = (\old(pre_super) ==> post_super) && (\old(pre_ext) ==> post_ext)`.
+
+Notiamo che `pre_sub` è più debole di `pre_super` e che, dato che `&&` refforza, `post_sub ==> (\old(pre_super) ==> post_super)`. Quindi i metodi ottenuti per estensione, se specificati attraverso JML, **soddisfano sempre la _methods rule_** dato che valgono la _**precondition rule**_ e la _**full postcondition rule**_.
+
+Osserviamo che specificando i metodi con `also`:
+- **Non possiamo _rafforzare_ la precondizione**: supponiamo `pre_ext` _più forte_ di `pre_super`, allora `pre_ext ==> pre_super` è sempre vera, allora `!pre_ext || pre_super = true`, allora `pre_ext && !pre_super = false`, allora `pre_sub = pre_super || pre_ext = pre_super || pre_ext && true = pre_super || pre_ext && (pre_super || !pre_super) = pre_super || pre_ext && pre_super || pre_ext && !pre_super = pre_super && true || pre_super && pre_ext || false = pre_super && (true || pre_ext) = pre_super && true = pre_super`
+- **Non possiamo _indebolire_ la postcondizione**: supponiamo `post_ext` _più debole_ di `post_super`, allora `post_super ==> post_ext` è sempre vera, allora, nell'ipotesi che `\old(pre_super)` sia verificata, `post_sub = (true ==> post_super) && (\old(pre_ext) ==> post_ext) = post_super && (\old(pre_ext) ==> post_ext) = post_super` (se `post_super` vale `false` allora `post_sub = post_super && ...` vale `false`, se `post_super` vale `true`, allora `post_ext` vale `true`, allora anche `\old(pre_ext) ==> post_ext` vale `true`, allora `post_sub` vale `true`).
+- **Se volessimo semplicemente _rafforzare_ la postcondizione è sufficiente che `pre_ext = pre_super` e che `post_ext` sia _più forte_  di `post_super`**: `pre_sub = pre_super || pre_ext = pre_super || pre_super = pre_super` e, supponendo che `\old(pre_super) = \old(pre_ext)` sia verificata, `post_sub = (\old(pre_super) ==> post_super) && (\old(pre_ext) ==> post_ext) = (true ==> post_super) && (true ==> post_ext) = post_super && post_ext = post_ext` (se `post_ext` vale `false` allora `post_sub = ... && post_ext` vale `false`, se `post_ext` vale `true` allora anche `post_super` vale `true`, allora `post_sub` vale `true`)
+<!-- Continua da fare attenzione all'eliminare le eccezioni... -->
