@@ -81,11 +81,43 @@ La _signature rule_ è verificabile **staticamente** dal compilatore di Java.
 ---
 
 In particolare la _signature rule_ "implementata" in Java è: una sottoclasse deve avere tutti i metodi della superclasse e la firma dei metodi della sottoclasse deve essere **identica** a quella dei metodi corrispondenti della superclasse. Un metodo della sottoclasse può però avere meno eccezioni di quello della superclasse (ricordiamo che in Java la firma di un metodo è costituita dal suo nome e dalla lista dei parametri, ma non include il tipo restituito, quindi non possiamo dichiarare nella stessa classe due metodi che hanno lo stesso nome e la stessa lista di parametri anche se restituiscono un tipo diverso).
-Notiamo che la _signature rule_ in Java è **più restrittiva** di quella enunciata nel caso generale, infatti esistono metodi che hanno firma **compatibile** ma **NON identica**.
+Notiamo che la _signature rule_ in Java è **più restrittiva** di quella enunciata nel caso generale, infatti esistono metodi che hanno firma **compatibile** ma **NON identica**. Per dimostrarlo occorre introdurre i concetti di controvarianza e covarianza.
 
 #### Controvarianza e covarianza
 
-L'esempio che segue non è valido in Java, dato che ci serve per illustrare i concetti di **controvarianza** e **covarianza** che non sono entrambi validi in Java.
+L'esempio che segue non è valido in Java, dato che ci serve per illustrare i concetti di **controvarianza** e **covarianza** che non sono entrambi validi nel linguaggio.
 Consideriamo una superclasse `A` che definisce il metodo `f : PA -> RA` (dove `PA` è la classe dei parametri di `f` e `RA` è la classe degli oggetti restituiti da `f`).
-Sia `D` una sottoclasse di `A` che definisce il metodo `f : PD -> RD`.
+Sia `D` una sottoclasse di `A` che **ridefinisce** il metodo `f` come `f : PD -> RD`.
+Consideriamo uno snippet di codice che utilizza un oggetto della classe `A` (dato che non facciamo riferimento ad un linguaggio in particolare useremo una sintassi inventata):
+```
+method void usaA(A a) {
+  ...
+  RA rA = a.f(pA);
+  ...
+}
+```
+Supponiamo di passare come parametro in `usaA` un oggetto `d` della classe `D`.
+Perchè la _signature rule_ sia verificata, l'oggetto `pA`, che ha tipo dinamico `PA` deve poter essere accettato come parametro anche da `D.f`, che si aspetta un parametro di tipo `PD`. Quindi la classe `PD` può coincidere con la classe `PA` o può essere un **supertipo** della classe `PA`. Il fatto che se `PD` è una superclasse di `PA`, la _signature rule_ è ancora soddisfatta, si dice **controvarianza dei parametri di input**. La controvarianza dei parametri di input **NON** è supportata in Java, dove, per fare un override, è necessario che `PD` **coincida** con `PA`.
 
+Consideriamo ora il valore restituito da `a.f` (sempre nel caso in cui abbiamo passato ad `usaA` un oggetto `d` della classe `D`).
+`a.f` restituirà un oggetto della classe `RD`, che, perché la _signature rule_ sia verificata, deve poter essere assegnato ad un oggetto di tipo `RA` come l'utente si aspetta. Quindi `RD` può coincidere con `RA` oppure può essere una sottoclasse di `RA`. Il fatto che se `RD` è una sottoclasse di `RA`, la _signature rule_ è ancora soddisfatta, si dice **covarianza dei risultati**. La covarianza dei risultati è ammissibile in Java a partire da Java 5.
+
+### _Methods rule_
+
+Perché la chiamata di un metodo di una sottoclasse abbia lo stesso effetto della chiamata del metodo della classe originale, è sufficiente che il metodo _ereditato_ soddisfi la specifica del metodo _originale_.
+Questo **NON** è verificabile staticamente dal compilatore.
+In termini non formali un metodo _ereditato_ soddisfa la specifica del metodo _originale_ se ha una precondizione più _debole_ (richiede meno) ed una postcondizione più _forte_ (promette di più). Formalizziamolo.
+
+#### Condizioni _forti_ e _deboli_
+
+Una condizione è _più forte_ di un altra se è _vera "in meno casi"_.
+Questo concetto si formalizza in logica attraverso l'implicazione: una condizione `a` è **_più forte_**  di una condizione `b` se è sempre vera la condizione `a ==> b`.
+Questo introduce un ordinamento (non totale) delle formule logiche dalla _più forte_ alla _più debole_. In particolare `false` è la condizione _più forte_ in assoluto e `true` la _più debole_ in assoluto.
+
+Vediamo l'**effetto degli operatori logici** sulla `forza` delle condizioni:
+- `||` _indebolisce_: `a ==> a || b` (cioè `a || b` è _più debole_ di `a`)
+- `&&` _rafforza_: `a && b ==> a` (cioè `a && b` è _più forte_ di `a`)
+- `==>` _indebolice_: `a ==> (b ==> a)`, si deduce ricordando che `b ==> a` equivale ad `!b || a`
+- se _rafforziamo_ la premessa _indeboliamo_ l'implicazione:
+supponiamo che `c` sia _più forte_ di `a`, allora è sempre vero `c ==> a`.
+Allora, se `a ==> b` è vero, per transitività `c ==> b` è vero, cioè abbiamo dimostrato che `(a ==> b) ==> (c ==> b)` e cioè che `a ==> b` è _più forte_ di `c ==> b`.
