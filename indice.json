@@ -31,10 +31,6 @@
         {
             "file": "uml",
             "nome": "UML"
-        },
-        {
-            "file": "metriche",
-            "nome": "Metriche"
         }
     ]
 }
