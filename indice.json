@@ -5,8 +5,12 @@
             "nome": "Java"
         },
         {
-            "file": "uml",
-            "nome": "UML"
+            "file": "jml",
+            "nome": "JML"
+        },
+        {
+            "file": "principio-sostituzione",
+            "nome": "Principio di sostituzione"
         },
         {
             "file": "programmazione-concorrente",
@@ -17,24 +21,20 @@
             "nome": "Programmazione funzionale"
         },
         {
-            "file": "metriche",
-            "nome": "Metriche"
-        },
-        {
             "file": "design-pattern",
             "nome": "Design pattern"
         },
         {
-            "file": "jml",
-            "nome": "JML"
-        },
-        {
-            "file": "principio-sostituzione",
-            "nome": "Principio di sostituzione"
-        },
-        {
             "file": "testing",
             "nome": "Testing"
+        },
+        {
+            "file": "uml",
+            "nome": "UML"
+        },
+        {
+            "file": "metriche",
+            "nome": "Metriche"
         }
     ]
 }
