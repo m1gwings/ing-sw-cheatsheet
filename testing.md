@@ -2,7 +2,7 @@
 
 ## Testing strutturale (white-box)
 
-Il **testing strutturale** tiene conto della struttura interna del programma con l'obiettivo di sollecitare tutte le parti del programma.
+Il **testing strutturale** tiene conto della struttura interna del programma con l'obiettivo di sollecitarne tutte le parti.
 
 ### Criterio di copertura delle istruzioni (statement coverage)
 
@@ -22,7 +22,7 @@ int sqrt(int n) {
 }
 ```
 
-Dobbiamo selezionare dei casi di testi in modo che ogni istruzione venga eseguita almeno una volta.
+Dobbiamo selezionare dei casi di test in modo che ogni istruzione venga eseguita almeno una volta.
 possiamo scegliere i seguenti casi di test:
 
 - `n = -1` per eseguire il corpo dell'`if`
@@ -32,21 +32,21 @@ _Osservazione_: se una funzione ha n `return` allora avremo per forza **almeno n
 
 ### Criterio di copertura delle decisioni (edge coverage)
 
-Si vuole coprire tutte le possibili _diramazioni_ del programma. per fare ciò è utile costruire il **control flow graph** (o **CFG**) del programma in cui si evidenziono proprio tutte le diramazioni.
+Si vuole coprire tutte le possibili _diramazioni_ del programma. Per fare ciò è utile costruire il **control flow graph** (o **CFG**) del programma in cui si evidenziono proprio tutte le diramazioni.
 Nella figura seguente è riportato il CFG della funzione `sqrt` (esempio precedente):
 
 ![](./immagini/cfg.svg)
 
-Ogni arco rappresenta una possibile diramazione. Si noti che ogni `if` e `while` sono rappresentati da due archi, uno per il caso `true` e uno per il caso `false` (anche se ad esempio il ramo `else` non è esplicitamente presente nel codice).
+Ogni arco rappresenta una possibile diramazione. Si noti che ogni `if` e `while` è rappresentato da due archi, uno per il caso `true` e uno per il caso `false` (anche se ad esempio il ramo `else` non è esplicitamente presente nel codice).
 
-Il criterio **edge coverage** vuole che ogni arco del CFG venga eseguito almeno una volta. Per fare ciò possiamo scegliere i seguenti casi di test:
+Il criterio **edge coverage** richiede che ogni arco del CFG venga eseguito almeno una volta. Per fare ciò possiamo scegliere i seguenti casi di test:
 
-- `n = -1` per eseguire solo l'arco `n < 0` (e finire il programma)
+- `n = -1` per eseguire solo l'arco `n < 0` (e giungere alla terminazione del programma)
 - `n = 1` per eseguire il ramo else del primo `if` e per entrare nel `while` (e quindi eseguire tutti e due gli archi del `while`)
 
 ### Criterio di copertura delle decisioni e delle condizioni (edge and condition coverage)
 
-L’insieme dei casi di test deve essere definito in modo che ogni ramo del CFG venga attraversato almeno una volta e con **tutti i possibili valori** nelle sottoespressioni che compaiono nelle condizioni composte.
+L’insieme dei casi di test deve essere definito in modo che ogni ramo del CFG venga attraversato almeno una volta e sollecitando tutti i valori di verità delle sottoespressioni che compaiono nelle condizioni composte, tenendo conto della _short circuit evaluation_.
 
 Per esempio, consideriamo la seguente funzione:
 
@@ -59,7 +59,7 @@ void p(int x, int y) {
 }
 ```
 
-Si può entrare nel ramo `if` nei seguenti modi: `x = 0, y <= 0` e `x != 0, y > 0`
+Si può entrare nel ramo `if` nei seguenti modi: `x = 0, y qualsiasi` e `x != 0, y > 0`
 
 e nel ramo `else`: `x != 0` e `y <= 0`.
 
@@ -69,9 +69,9 @@ Sono quindi sufficienti 3 casi di test: `x = 0, y = -1`, `x = 1, y = 1` e `x = 1
 
 ### Criterio di copertura dei cammini (path coverage)
 
-L’insieme dei casi di test deve garantire che ogni possibile cammino (o percorso) che porti dal nodo iniziale al nodo finale del CFG sia percorso almeno una volta.
+L’insieme dei casi di test deve garantire che ogni possibile cammino (o percorso) che porti dal nodo iniziale al nodo finale del CFG sia attraversato almeno una volta.
 
-_Attenzione_: il numero di volte in qui si esegue un ciclo (un autoanello nel CFG) è rilevante. Perciò, se un ciclo può essere eseguito "infinite" volte, allora il criterio di copertura dei cammini non è applicabile. Ad esempio considerando la funzione di prima `int sqrt(int n)`, `n` può essere grande "quanto vogliamo" (in realtà non è così, dato che è un intero a 32 bit, ma supponiamo che sia così), pertanto il ciclo `while` può essere eseguito "infinite volte". Il criterio non è quindi applicabile.
+_Attenzione_: il numero di volte in cui si esegue un ciclo (un autoanello nel CFG) è rilevante. Perciò, se un ciclo può essere eseguito "infinite" volte, allora il criterio di copertura dei cammini non è applicabile. Ad esempio considerando la funzione di prima `int sqrt(int n)`, `n` può essere grande "quanto vogliamo" (in realtà non è così, dato che è un intero a 32 bit, ma supponiamo che sia così), pertanto il ciclo `while` può essere eseguito "infinite volte". Il criterio non è quindi applicabile.
 
 Consideriamo, per esempio, la seguente funzione:
 
