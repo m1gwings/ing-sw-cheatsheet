@@ -298,8 +298,6 @@ Esistono diversi tipi di collettori già definiti:
 
 ---
 
-<!-- _class: due -->
-
 ### `min` e `max`
 
 [**`Optional<T> max(Comparator<? super T> c)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#max-java.util.Comparator-)
@@ -382,11 +380,9 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 
 - [**`orElse(<val>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#orElse-T-) che restituisce il valore dell'Optional se non è vuoto, altrimenti restituisce il valore `val` in input.
 
----
-
-<!-- _class: due -->
-
 - [**`Optional<U> flatMap(<funzione da T a Optional<U>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#flatMap-java.util.function.Function-) restituisce un `Optional<U>`, applicando la funzione in input solo se l'`Optional` non è vuoto; altrimenti ritorna un `Optional` vuoto.
+
+---
 
 Facciamo un esempio usando gli `Optional` e i tre metodi visti in precendenza:
 
@@ -473,10 +469,6 @@ Predicate<String> pred2 = s ->
     s.startsWith(nonFinalPrefix);
 ```
 
----
-
-<!-- _class: una -->
-
 ## Esercizio sulla programmazione funzionale (TdE del 2019-02-18, esercizio 4 - punto c)
 
 ### Testo dell'esercizio
@@ -484,7 +476,8 @@ Predicate<String> pred2 = s ->
 Si consideri il seguente metodo statico, che ha la precondizione che ciascun elemento di nums è una stringa corrispondente a una rappresenatazione testuale di un numero intero
 
 ```java
-public static List<Integer> addX(List<String> nums, int x) {
+public static List<Integer> addX
+(List<String> nums, int x) {
   List<Integer> plusX = new LinkedList<>();
   for(String numString : nums) {
     number = Integer.valueOf(numString);
@@ -508,9 +501,11 @@ Quindi possiamo:
 - sommare `x` a ciascuno di essi.
 
 ```java
-public static List<Integer> addX(List<String> nums, int x) {
+public static List<Integer> addX
+(List<String> nums, int x) {
   return nums.stream()
-    .map(numString -> Integer.valueOf(numString))
+    .map(numString -> 
+      Integer.valueOf(numString))
     .filter(number -> number > 0)
     .map(number -> number + x)
     .collect(Collectors.toList());
