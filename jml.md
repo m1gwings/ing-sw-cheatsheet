@@ -529,3 +529,117 @@ public class InsiemeDiInteri {
 
 ## Trucchi per l'esame
 
+_**Attenzione!**: I seguenti "trucchi" sono stati ricavati analizzando pattern ricorrenti nella risoluzione degli esercizi sul JML. **NON** sono algoritmi per risolvere gli esercizi e **NON** garantiscono di trovare la soluzione corretta._
+
+Prima di procedere alla specifica di un metodo in particolare risulta utile analizzare la classe nel suo complesso.
+
+### Individuare gli _observer "indipendenti"_
+
+Definiamo (è una definizione inventata dagli autori del cheatsheet) **indipendenti** gli _observer_ la cui specifica non può essere espressa in funzione di altri _observer_ della classe.
+Gli _observer indipendenti_ possono essere completamente specificati solo attraverso la funzione di astrazione, facendo riferimento al `rep` della classe.
+Per poter applicare le _tecniche_ che seguono è necessario individuare quali sono gli _observer indipendenti_ della classe in analisi: solitamente, nei TdE, si tratta di _observer_ che restituiscono collezioni (`List` o `Set` nella maggior parte dei casi).
+
+Dopo aver letto **attentamente** la specifica informale in linguaggio naturale, procediamo alla specifica del metodo in JML:
+
+### Ricavare la precondizione (`requires`)
+
+- Solitamente nella precondizione si richiede che tutti i parametri in input di tipo riferimento **NON** siano `null`
+
+---
+
+- Nel caso di parametri di tipo numerico, se rappresentano quantità positive o non negative può essere necessario specificarlo nella precondizione
+
+- Nel caso in cui la classe rappresenta una collezione di oggetti, uno dei parametri potrebbe essere un oggetto della collezione ed, a volte, è necessario specificare che vi faccia parte
+
+Vediamo un esempio **per quest'ultimo caso**: l'esercizio 1 del TdE del 2022-06-18.
+
+_Si consideri la classe Java `HotelDB` per gestire la prenotazione di stanze di hotel._
+```java
+public class HotelDB {
+  // Ritorna l’elenco di tutti gli hotel
+  // contenuti.
+  public /*@ pure @*/ Set<Hotel> getHotels();
+
+  // Ritorna la lista di tutte le stanze che
+  // (i) possono ospitare almeno people
+  // persone, (ii) si trovano vicino a
+  // location, (iii) sono libere il giorno
+  // day. La lista e’ in ordine crescente di
+  // prezzo (dalla stanza meno costosa alla
+  // piu’ costosa).
+  public /*@ pure @*/ List<Room>
+    findRooms(int people, Location location,
+    Day day);
+
+  // Prenota la stanza room per il giorno day.
+  // Solleva una AlreadyBookedException se la
+  // stanza non e’ disponibile il giorno
+  // specificato.
+  public void book(Room room, Day day)
+    throws AlreadyBookedException;
+}
+
+public class Hotel {
+  // Ritorna tutte le stanze presenti
+  // nell’hotel.
+  public /*@ pure @*/ Set<Room> getRooms();
+  
+  // Ritorna true sse l’hotel e’ vicino a
+  // location.
+  public /*@ pure @*/ boolean
+    isCloseTo(Location location);
+}
+
+public class Room {
+  // Ritorna true sse la stanza e’ disponibile
+  // il giorno day.
+  public /*@ pure @*/ boolean
+    isAvailable(Day day);
+    
+  // Ritorna il numero massimo di persone che
+  // la stanza puo’ ospitare.
+  public /*@ pure @*/ int getMaxPeople();
+
+  // Ritorna il prezzo della stanza.
+  public /*@ pure @*/ float getPrice();
+
+  // Permette di prenotare la stanza nel
+  // giorno precisato. Richiede che la stanza
+  // non sia gia’ prenotata per lo stesso
+  // giorno.
+  public void book(Day day);
+}
+```
+Nel punto _b_ dell'esercizio viene chiesto di specificare il metodo `book` di `HotelDB`.
+Il metodo `book` ha tra i suoi parametri `room` ovvero la stanza da prenotare; nella precondizione dobbiamo specificare che la stanza in questione si trovi in uno degli hotel nel nostro database:
+```java
+//@ requires room != null && day != null &&
+//@ (\exists Hotel h; getHotels()
+//@   .contains(h); h.getRooms()
+//@   .contains(room));
+//@ ...
+public void book(Room room, Day day)
+  throws AlreadyBookedException;
+```
+
+**Attenzione!**: a volte il metodo restituisce delle eccezioni quando uno dei parametri ha dei valori non ammessi (può succedere per tutti i casi elencati); in tal caso **NON** bisogna specificare nella precondizione che il parametro abbia un valore ammissibile: ce ne occuperemo nei blocchi `ensures` e `signals`.
+
+Ricordarsi sempre di leggere **attentamente** la specifica informale in linguaggio naturale, dove potrebbero essere segnalate altre precondizioni particolari, specifiche per il metodo in questione. 
+
+### Classificare il metodo
+
+Per semplificare la stesura della specifica in JML risulta conveniente differenziare il tipo di metodo che dobbiamo specificare (vedi il paragrafo _Categorie di operazioni_) nelle seguenti categorie:
+- _Mutator che non restituiscono nulla_
+- _Observer puri_
+- _Mutator che restituiscono qualcosa_
+- _Creator_
+- _Producer in classi pure_
+
+### Ricavare la postcondizione normale (`ensures`)
+
+**Oltre** a ciò che è espresso nella specifica informale in linguaggio naturale, nella specifica formale in JML dobbiamo esplicitare ulteriori condizioni che dipendono dalla categorie del metodo individuata nel punto precedente.
+Nel caso di
+- _Mutator che non restituiscno nulla_:
+dobbiamo 
+
+### Ricavare la postcondizione eccezionale (`signals`)
