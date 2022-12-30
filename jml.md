@@ -125,7 +125,7 @@ Nel caso in cui la postcondizione sia `true` il metodo non garantisce nessun "ef
 <!-- TODO:
  - assertions (di secondaria importanza)  -->
 
- ## Astrazione procedurale
+## Astrazione procedurale
 
 Si dice **astrazione procedurale** la specifica di un'operazione (anche complessa) definita su un dominio di dati generici (parametri).
 In Java coincide con la specifica (ad esempio attraverso la notazione JML) di un metodo statico.
@@ -526,3 +526,6 @@ public class InsiemeDiInteri {
   ...
 }
 ```
+
+## Trucchi per l'esame
+
