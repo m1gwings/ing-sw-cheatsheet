@@ -99,7 +99,7 @@ d.ottieniMese() + "/" d.ottieniAnno());
 
 Le **Collections** permettono di gestire insiemi di oggetti.
 
-### List
+### `List<E>`
 
 La classe **`java.util.List`** è un'interfaccia che rappresenta una lista ordinata di elementi. Ecco i metodi disponibili per questa interfaccia:
 
@@ -128,7 +128,7 @@ La classe **`java.util.List`** è un'interfaccia che rappresenta una lista ordin
 - **`Object[] toArray()`**: restituisce un array di oggetti contenente tutti gli elementi della lista.
 - **`<T> T[] toArray(T[] a)`**: restituisce un array di tipo specificato contenente tutti gli elementi della lista.
 
-### Set
+### `Set<E>`
 
 La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di elementi, ovvero una raccolta di elementi **senza duplicati**. Ecco i metodi disponibili per questa interfaccia:
 
@@ -150,5 +150,21 @@ La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di el
 
 ---
 
+### `Map<K,V>`
+
+La classe **`java.util.Map`** è un'interfaccia che rappresenta una mappa di chiavi (di tipo K) a valori (di tipo V). Ecco i metodi disponibili per questa interfaccia:
+
+- **`void clear()`**: rimuove tutte le coppie chiave-valore dalla mappa. Restituisce nulla.
+- **`boolean containsKey(Object key)`**: verifica se la chiave specificata è presente nella mappa. Restituisce true se la chiave è presente nella mappa, false altrimenti.
+- **`boolean containsValue(Object value)`**: verifica se il valore specificato è presente nella mappa. Restituisce true se il valore è presente nella mappa, false altrimenti.
+- **`Set<Map.Entry<K,V>> entrySet()`**: restituisce un insieme di tutte le coppie chiave-valore presenti nella mappa.
+- **`V get(Object key)`**: restituisce il valore associato alla chiave specificata nella mappa. Restituisce null se la chiave non è presente nella mappa.
+- **`boolean isEmpty()`**: verifica se la mappa è vuota. Restituisce true se la mappa è vuota, false altrimenti.
+- **`Set<K> keySet()`**: restituisce un insieme di tutte le chiavi presenti nella mappa.
+- **`V put(K key, V value)`**: aggiunge una coppia chiave-valore alla mappa o sostituisce il valore associato alla chiave specificata se già presente. Restituisce il valore precedentemente associato alla chiave, oppure null se la chiave non era presente nella mappa.
+- **`void putAll(Map<? extends K,? extends V> m)`**: aggiunge tutte le coppie chiave-valore di un'altra mappa alla mappa corrente. Restituisce nulla.
+- **`V remove(Object key)`**: rimuove la coppia chiave-valore associata alla chiave specificata dalla mappa. Restituisce il valore associato alla chiave, oppure null se la chiave non era presente nella mappa.
+- **`int size()`**: restituisce il numero di coppie chiave-valore presenti nella mappa.
+- **`Collection<V> values()`**: restituisce una collezione di tutti i valori presenti nella mappa.
 
 
