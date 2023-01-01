@@ -531,7 +531,7 @@ public class InsiemeDiInteri {
 
 _**Attenzione!**: I seguenti "trucchi" sono stati ricavati analizzando pattern ricorrenti nella risoluzione degli esercizi sul JML. **NON** sono algoritmi per risolvere gli esercizi e **NON** garantiscono di trovare la soluzione corretta._
 
-Prima di procedere alla specifica di un metodo in particolare risulta utile analizzare la classe nel suo complesso.
+Prima di procedere alla specifica di un metodo in particolare, risulta utile analizzare la classe nel suo complesso.
 
 ### Individuare gli _observer "indipendenti"_
 
@@ -638,15 +638,17 @@ Per semplificare la stesura della specifica in JML risulta conveniente differenz
 ### Ricavare la postcondizione normale (`ensures`)
 
 **Oltre** a ciò che è espresso nella specifica informale in linguaggio naturale, nella specifica formale in JML dobbiamo esplicitare ulteriori condizioni che dipendono dalla categoria del metodo individuata nel punto precedente.
+**Attenzione!**: se il metodo in questione lancia un'eccezione, nel blocco `ensures` dobbiamo specificare che **NON** si è verificata la condizione eccezionale.
 
-#### _Mutator che non restituiscno nulla_
-Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator_ modifica lo stato della classe. Dobbiamo assicurarci che ciò che cambia è solo la porzione di stato modificata dal _mutator_; è necessario esplicitare nella specifica che **tutto il resto rimane invariato**. Dato che si tratta di _mutator che non restituiscono nulla_ non occorre specificare il `\result`. Nello specifico **per ogni** _observer indipendente_  `obsInd` della classe:
+- #### _Mutator che non restituiscono nulla_
 
-> **se permette di osservare la modifica apportata alla classe**, dobbiamo specificare che la modifica è avvenuta correttamente (non abbiamo modificato troppo o troppo poco). Vediamo alcune porzioni di specifica ricorrenti (ricordiamo che `obsInd` è un _place holder_ per il nome del _observer indipendente_ che restituisce la collezione che stiamo specificando):
+Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator_ modifica lo stato degli oggetti. Dobbiamo assicurarci che ciò che cambia è solo la porzione di stato modificata dal _mutator_; è necessario esplicitare nella specifica che **tutto il resto rimane invariato**. Dato che si tratta di _mutator che non restituiscono nulla_ non occorre specificare il `\result`. In particolare **per ogni _observer indipendente_ `obsInd`** della classe:
 
-> **Inserire un elemento `el` di tipo `T` in una `Collection<T>`** (come `List<T>`, `Set<T>`, ...): (_Continua nella facciata successiva_)
+> **se `obsInd` permette di osservare la modifica apportata all'oggetto**, dobbiamo specificare che la modifica è avvenuta correttamente (non abbiamo modificato troppo o troppo poco). Vediamo alcune porzioni di specifica ricorrenti (ricordiamo che `obsInd` è un _place holder_ per il nome dell'_observer indipendente_ in questione): (_Continua nella facciata successiva_)
 
 ---
+
+> - **Inserire un elemento `el` di tipo `T` in una `Collection<T>`** (come `List<T>`, `Set<T>`, ...):
 
 ```java
 //@ requires el != null && ...;
@@ -657,9 +659,143 @@ Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator
 //@   && ...;
 ...
 ```
-> **Rimuovere un elemento `el` di tipo `T` da una `Collection<T>`**:
+> - **Rimuovere un elemento `el` di tipo `T` da una `Collection<T>`**:
+
+```java
+//@ requires el != null && ...;
+//@ ensures !obsInd().contains(el) &&
+//@   obsInd().size() == \old(obsInd().size()
+//@   - obsInd.contains(el) ? 1 : 0)
+//@   && \old(obsInd()).containsAll(obsInd())
+//@   && ...;
+```
+
+> - **Inserire un elemento `el` di tipo `T` in fondo ad una `List<T>`**:
+
+```java
+//@ requires el != null && ...;
+//@ ensures obsInd().size() ==
+//@   \old(obsInd().size() + 1) &&
+//@   obsInd().get(obsInd().size() - 1)
+//@     .equals(el) &&
+//@   (\forall int i; 0 <= i &&
+//@     i < \old(obsInd().size());
+//@     obsInd().get(i).equals(\old(obsInd()
+//@     .get(i)))) && ...
+```
+
+> **altrimenti, se `obsInd` non permette di osservare la modifica apportata all'oggetto**, dobbiamo specificare che la porzione di stato osservata è rimasta invariata. Vediamo alcune porzioni di specifica ricorrenti:
+
+> - **Specificare che una `Collection<T>` rimane invariata**:
+
+```java
+//@ requires ...;
+//@ ensures obsInd().size() ==
+//@   \old(obsInd().size()) && obsInd().
+//@   containsAll(\old(obsInd())) && ...;
+```
+
+- #### _Observer puri_
+
+Gli _observer_ **puri** (esplicitati attraverso la keyword `/* @ pure @ */`) per definizione non possono modificare lo stato degli oggetti, quindi non è necessario specificarlo in JML (lo si considera sottinteso).
+Dobbiamo focalizzarci sullo specificare correttamente `\result` (gli _observer_ per definizione **NON** sono `void`).
+Solitamente se il tipo restituito è un riferimento, bisogna specificare che non sia `null`: `\result != null`.
+Notiamo che, se in un TdE ci viene chiesto di specificare un _observer_, questo allora non sarà un _observer indipendente_ (in quanto può essere specificato in funzione di altri _observer_). Quindi per caratterizzare `\result` **faremo riferimento alla specifica informale** e **sfrutteremo gli _observer indipendenti_**.
+Vediamo alcune porzioni di specifica ricorrenti:
+
+> - **`\result` è un `Set<T>` di elementi che soddisfano una determinata proprietà** (che sarà necessariamente osservabile tramite gli _observer indipendenti_):
+
+```java
+//@ requires ...;
+//@ ensures \result != null &&
+//@   !\result.contains(null) &&
+//@   (\forall T t; ;
+//@     \result.contains(t) <==>
+//@     <condizione sugli
+//@      observer indipendenti>) && ...;
+```
+
+> - **`\reuslt` è una `List<T>` di elementi che soddisfano una determinata proprietà**:
+
+Come prima solo che dobbiamo specificare che nella `List` non vi sono duplicati (per i `Set` è sempre garantito)
+```java
+//@ requires ...;
+//@ ensures \result != null &&
+//@   !\result.contains(null) &&
+//@   (\forall T t; ;
+//@     \result.contains(t) <==>
+//@     <condizione sugli
+//@      observer indipendenti>) &&
+//@   (\forall int i; 0 <= i &&
+//@     i < \result.size() - 1;
+//@     (\forall int j; i < j &&
+//@       j < \result.size();
+//@       !\result.get(i).
+//@       equals(\result.get(j)))) && ...;
+```
+
+- #### _Mutator che restituiscono qualcosa_
+
+Osserviamo che per realizzare qualsiasi _mutator che restituisce qualcosa_ è sufficiente invocare prima un _observer_ che ricava il risultato da restituire (facendo riferimento allo stato dell'oggetto prima della modifica ed ai parametri in input, che costituiscono tutto il contenuto informativo a nostra disposizione), salvare ciò che restituisce, invocare un _mutator che non restituisce nulla_ che modifica l'oggetto secondo la specifica ed infine restituire il risultato salvato.
+Quindi per specificare un _mutator che restituisce qualcosa_ sarà sufficiente fare riferimento alle tecniche per la specifica relative a _mutator che non restituiscono nulla_ e _observer puri_ e mettere in `&&` le postcondizioni ottenute (facendo sempre attenzione a ciò che si ottiene).
+
+- #### _Creator_
+
+I _creator_ creano un oggetto "dal nulla" (tutti i _creator_ sono costruttori, non vale il viceversa), quindi l'oggetto creato non ha uno stato precedente all'invocazione del metodo. Per questo motivo, a differenza dei _mutator_ non dobbiamo specificare ciò che cambia o ciò che rimane invariato al termine dell'esecuzione. Ci basta che lo stato osservato sia compatibile con la specifica e con i parametri in input. Per farlo è sufficiente, **per ogni _observer indipendente_**, esplicitare che valore restituisce.
+Nell'esempio `InsiemeDiInteri`, l'unico _observer indipendente_ è `appartiene`. Da specifica il costruttore di `InsiemeDiInteri`, che è anche un _creator_, inizializza un insieme vuoto, quindi la specifica corrispondente sarà: (_Continua nella facciata successiva_)
+
+---
+
+```java
+public class InsiemeDiInteri {
+  ...
+  //@ ensures !(\exists int x; ;
+  //@   appartiene(x));
+  public InsiemeDiInteri();
+  ...
+}
+```
+In realtà in questo caso possiamo usare un _observer dipendente_ per scrivere una specifica equivalente in maniera più compatta:
+
+```java
+public class InsiemeDiInteri {
+  ...
+  //@ ensures cardinalita() == 0;
+  public InsiemeDiInteri();
+  ...
+}
+```
+
+Solitamente nei TdE non viene richiesto di specificare dei _creator_.
+
+- #### _Producer in classi pure (immutabili)_
+
+Dato che la classe che stiamo specificando è **pura** (`public /* @ pure @ */ class ...`), come nel caso degli _observer puri_ non è necessario esplicitare la relazione tra lo stato corrente e quello passato (dire ciò che cambia e ciò che non cambia); rimane sempre tutto invariato.
+Stiamo costruendo un nuovo oggetto della stessa classe che stiamo specificando, come nel caso dei _creator_ ne specificheremo lo stato iniziale esplicitando il valore restituito da **ogni _observer indipendente_**. **A differenza dei _creator_** però, **l'oggetto che si trova nello stato iniziale specificato è `\result`**, **NON** `this`. Un'ulteriore differenza è che lo stato iniziale di `\result` non dipende solo dai parametri di input del metodo, ma anche dallo stato dell'oggetto sul quale invochiamo il _producer_ (`this`).
+Solitamente nei TdE non viene richiesto di specificare dei _producer_.
 
 ### Ricavare la postcondizione eccezionale (`signals`)
 
-<!-- RI:
-Collezioni che contengono liste: liste non nulle e non vuote -->
+- #### _Mutator che non restituiscono nulla_
+
+Quando si verifica un'eccezione durante l'esecuzione di un _mutator_, ci si  aspetta che lo stato dell'oggetto su cui abbiamo invocato il metodo rimanga invariato. Quindi, nella postcondizione nel caso eccezionale, **oltre** a esplicitare cosa ha provocato l'eccezione (facendo riferimento alla specifica informale), specificheremo che lo stato dell'oggetto è rimasto invariato: **per ogni _observer indipendente_** il valore restituito da tale _observer_ è lo stesso di prima che eseguissimo il _mutator_. Possiamo sfruttare le porzioni di specifica ricorrenti introdotte nel paragrafo precedente.
+
+- #### _Observer puri_
+
+Gli _observer puri_ non modificano lo stato dell'oggetto su cui vengono invocati. Nella postcondizione eccezionale è sufficiente esplicitare cosa ha provocato l'eccezione, facendo riferimento alla specifica informale.
+
+- #### _Mutator che restituiscono qualcosa_
+
+Dato che il metodo ha lanciato un'eccezione, il fatto che restituisse qualcosa è irrilevante: ci si comporta come nel caso in cui vogliamo specificare la postcondizione eccezionale di un _mutator che non restituisce nulla_.
+
+- #### _Creator_
+
+Quando un _creator_ fallisce (lancia un'eccezione) non c'è nessuno stato che possiamo osservare: l'oggetto non è stato costruito. È sufficiente specificare cosa ha provocato l'eccezione, facendo riferimento alla specifica informale.
+
+- #### _Producer in classi pure (immutabili)_
+
+Il fatto che la classe sia **pura** implica che lo stato dell'oggetto non possa cambiare: come nel caso degli _observer puri_ è sufficiente esplicitare cosa ha provocato l'eccezione, facendo riferimento alla specifica informale.
+
+<!-- TODO: RI:
+Collezioni che contengono liste: liste non nulle e non vuote,
+AF, Esempio che usa le tecniche introdotte -->
