@@ -101,7 +101,7 @@ Le **Collections** permettono di gestire insiemi di oggetti.
 
 ### List
 
-La classe `java.util.List` è un'interfaccia che rappresenta una lista ordinata di elementi. Ecco i metodi disponibili per questa interfaccia:
+La classe **`java.util.List`** è un'interfaccia che rappresenta una lista ordinata di elementi. Ecco i metodi disponibili per questa interfaccia:
 
 - **`void add(int index, E element)`**: aggiunge un elemento alla posizione specificata nella lista. Restituisce nulla.
 - **`boolean add(E e)`**: aggiunge un elemento alla fine della lista. Restituisce true se l'elemento viene aggiunto con successo, false altrimenti.
@@ -127,4 +127,28 @@ La classe `java.util.List` è un'interfaccia che rappresenta una lista ordinata 
 - **`List<E> subList(int fromIndex, int toIndex)`**: restituisce una sottolista della lista compresa tra gli indici specificati.
 - **`Object[] toArray()`**: restituisce un array di oggetti contenente tutti gli elementi della lista.
 - **`<T> T[] toArray(T[] a)`**: restituisce un array di tipo specificato contenente tutti gli elementi della lista.
+
+### Set
+
+La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di elementi, ovvero una raccolta di elementi **senza duplicati**. Ecco i metodi disponibili per questa interfaccia:
+
+- **`boolean add(E e)`**: aggiunge un elemento all'insieme. Restituisce true se l'elemento viene aggiunto con successo, false altrimenti.
+- **`boolean addAll(Collection<? extends E> c)`**: aggiunge tutti gli elementi di una collezione all'insieme. Restituisce true se almeno un elemento viene aggiunto con successo, false altrimenti.
+- **`void clear()`**: rimuove tutti gli elementi dall'insieme. Restituisce nulla.
+- **`boolean contains(Object o)`**: verifica se l'oggetto specificato è presente nell'insieme. Restituisce true se l'oggetto è presente nell'insieme, false altrimenti.
+- **`boolean containsAll(Collection<?> c)`**: verifica se tutti gli elementi di una collezione sono presenti nell'insieme. Restituisce true se tutti gli elementi sono presenti nell'insieme, false altrimenti.
+- **`boolean equals(Object o)`**: verifica se l'insieme è uguale a un altro oggetto. Restituisce true se l'oggetto è uguale all'insieme, false altrimenti. _Attenzione_: anche qui, se l'oggetto passato è un Set, allora viene verificato se l'insieme è equivalente a quello passato per parametro.
+- **`int hashCode()`**: restituisce il codice hash per l'insieme.
+- **`boolean isEmpty()`**: verifica se l'insieme è vuoto. Restituisce true se l'insieme è vuoto, false altrimenti.
+- **`Iterator<E> iterator()`**: restituisce un iteratore per l'insieme.
+- **`boolean remove(Object o)`**: rimuove l'oggetto specificato dall'insieme. Restituisce true se l'oggetto viene rimosso con successo, false altrimenti.
+- **`boolean removeAll(Collection<?> c)`**: rimuove dall'insieme tutti gli elementi presenti in una collezione. Restituisce true se almeno un elemento viene rimosso con successo, false altrimenti.
+- **`boolean retainAll(Collection<?> c)`**: rimuove dall'insieme tutti gli elementi che non sono presenti in una collezione. Restituisce true sse almeno un elemento viene rimosso con successo.
+- **`int size()`**: restituisce il numero di elementi presenti nell'insieme.
+- **`Object[] toArray()`**: restituisce un array di oggetti contenente tutti gli elementi dell'insieme.
+- **`<T> T[] toArray(T[] a)`**: restituisce un array di tipo specificato contenente tutti gli elementi dell'insieme.
+
+---
+
+
 
