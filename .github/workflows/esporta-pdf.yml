@@ -22,3 +22,11 @@ jobs:
         with:
           name: cheatsheet
           path: cheatsheet.pdf 
+      - name: Create prerelease
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "nightly"
+          prerelease: true
+          title: "Nightly Release"
+          files: cheatsheet.pdf
