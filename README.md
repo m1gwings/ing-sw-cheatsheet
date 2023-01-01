@@ -4,7 +4,7 @@ Cheatsheet per l'esame (open book) di Ingegneria del Software del Politecnico di
 
 ## Da dove scaricare il PDF
 
-TODO: 
+La versione _nightly_ del PDF è scaricabile al seguente [link](https://github.com/m1gwings/ing-sw-cheatsheet/releases/download/nightly/cheatsheet.pdf).
 
 ## Come esportare il PDF
 
