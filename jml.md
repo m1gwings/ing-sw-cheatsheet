@@ -535,8 +535,8 @@ Prima di procedere alla specifica di un metodo in particolare risulta utile anal
 
 ### Individuare gli _observer "indipendenti"_
 
-Definiamo (è una definizione inventata dagli autori del cheatsheet) **indipendenti** gli _observer_ la cui specifica non può essere espressa in funzione di altri _observer_ della classe.
-Gli _observer indipendenti_ possono essere completamente specificati solo attraverso la funzione di astrazione, facendo riferimento al `rep` della classe.
+Definiamo (è una definizione inventata dagli autori del cheatsheet) **indipendenti** gli _observer_ la cui specifica non può essere espressa in funzione di altri _observer_ della classe (o di altre classi).
+Gli _observer indipendenti_ possono essere completamente specificati solo attraverso la funzione di astrazione, facendo riferimento al `rep`.
 Per poter applicare le _tecniche_ che seguono è necessario individuare quali sono gli _observer indipendenti_ della classe in analisi: solitamente, nei TdE, si tratta di _observer_ che restituiscono collezioni (`List` o `Set` nella maggior parte dei casi).
 
 Dopo aver letto **attentamente** la specifica informale in linguaggio naturale, procediamo alla specifica del metodo in JML:
@@ -622,9 +622,9 @@ public void book(Room room, Day day)
   throws AlreadyBookedException;
 ```
 
-**Attenzione!**: a volte il metodo restituisce delle eccezioni quando uno dei parametri ha dei valori non ammessi (può succedere per tutti i casi elencati); in tal caso **NON** bisogna specificare nella precondizione che il parametro abbia un valore ammissibile: ce ne occuperemo nei blocchi `ensures` e `signals`.
+**Attenzione!**: a volte il metodo che stiamo specificando restituisce delle eccezioni quando uno dei parametri ha dei valori non ammessi (può succedere per tutti i casi elencati); in tal caso **NON** bisogna specificare nella precondizione che il parametro abbia un valore ammissibile: ce ne occuperemo nei blocchi `ensures` e `signals`.
 
-Ricordarsi sempre di leggere **attentamente** la specifica informale in linguaggio naturale, dove potrebbero essere segnalate altre precondizioni particolari, specifiche per il metodo in questione. 
+Ricordarsi sempre di leggere **attentamente** la specifica informale in linguaggio naturale, dove potrebbero essere segnalate altre precondizioni particolari, ad hoc per il metodo in questione. 
 
 ### Classificare il metodo
 
@@ -633,13 +633,33 @@ Per semplificare la stesura della specifica in JML risulta conveniente differenz
 - _Observer puri_
 - _Mutator che restituiscono qualcosa_
 - _Creator_
-- _Producer in classi pure_
+- _Producer in classi pure (immutabili)_
 
 ### Ricavare la postcondizione normale (`ensures`)
 
-**Oltre** a ciò che è espresso nella specifica informale in linguaggio naturale, nella specifica formale in JML dobbiamo esplicitare ulteriori condizioni che dipendono dalla categorie del metodo individuata nel punto precedente.
-Nel caso di
-- _Mutator che non restituiscno nulla_:
-dobbiamo 
+**Oltre** a ciò che è espresso nella specifica informale in linguaggio naturale, nella specifica formale in JML dobbiamo esplicitare ulteriori condizioni che dipendono dalla categoria del metodo individuata nel punto precedente.
+
+#### _Mutator che non restituiscno nulla_
+Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator_ modifica lo stato della classe. Dobbiamo assicurarci che ciò che cambia è solo la porzione di stato modificata dal _mutator_; è necessario esplicitare nella specifica che **tutto il resto rimane invariato**. Dato che si tratta di _mutator che non restituiscono nulla_ non occorre specificare il `\result`. Nello specifico **per ogni** _observer indipendente_  `obsInd` della classe:
+
+> **se permette di osservare la modifica apportata alla classe**, dobbiamo specificare che la modifica è avvenuta correttamente (non abbiamo modificato troppo o troppo poco). Vediamo alcune porzioni di specifica ricorrenti (ricordiamo che `obsInd` è un _place holder_ per il nome del _observer indipendente_ che restituisce la collezione che stiamo specificando):
+
+> **Inserire un elemento `el` di tipo `T` in una `Collection<T>`** (come `List<T>`, `Set<T>`, ...): (_Continua nella facciata successiva_)
+
+---
+
+```java
+//@ requires el != null && ...;
+//@ ensures obsInd().contains(el) &&
+//@   obsInd().size() == \old(obsInd().size()
+//@   + obsInd().contains(el) ? 0 : 1)
+//@   && obsInd().containsAll(\old(obsInd()))
+//@   && ...;
+...
+```
+> **Rimuovere un elemento `el` di tipo `T` da una `Collection<T>`**:
 
 ### Ricavare la postcondizione eccezionale (`signals`)
+
+<!-- RI:
+Collezioni che contengono liste: liste non nulle e non vuote -->
