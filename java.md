@@ -150,6 +150,56 @@ La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di el
 
 ---
 
+### Iterare su un insieme
+
+Per iterare su un insieme (classe `Set`), si può utilizzare il metodo `iterator()` della classe `Set`. Questo metodo restituisce un'istanza dell'interfaccia `Iterator`, che permette di scorrere gli elementi dell'insieme uno alla volta.
+Ecco un esempio di come utilizzare l'iteratore per stampare gli elementi di un insieme:
+
+```java
+Set<String> set = new HashSet<>();
+// aggiungi elementi al set
+
+// otteniamo un iteratore per l'insieme
+Iterator<String> iterator = set.iterator();
+
+/* utilizziamo l'iteratore 
+per scorrere gli elementi dell'insieme */
+while (iterator.hasNext()) {
+  /* il metodo next() restituisce l'elemento 
+  corrente e sposta l'iteratore 
+  all'elemento successivo */
+  String element = iterator.next();
+  System.out.println(element);
+}
+```
+
+In questo esempio, viene creato un insieme di stringhe e viene inizializzato un iteratore per l'insieme utilizzando il metodo `iterator()`. Quindi, all'interno del ciclo while, il metodo `hasNext()` viene utilizzato per verificare se ci sono ancora elementi da scorrere nell'insieme. Se ci sono ancora elementi, il metodo `next()` restituisce l'elemento corrente e sposta l'iteratore all'elemento successivo, quindi viene stampato a schermo.
+
+È importante notare che il metodo `next()` può lanciare un'eccezione `NoSuchElementException` se l'iteratore è alla fine dell'insieme e non ci sono più elementi da scorrere. Per questo motivo, è consigliabile utilizzare il metodo `hasNext()` per verificare se ci sono ancora elementi prima di chiamare `next()`.
+
+Inoltre, l'interfaccia `Iterator` fornisce altri metodi utili per la gestione dell'iterazione, come ad esempio:
+
+- `remove()`: rimuove l'elemento corrente dall'insieme. Questo metodo può essere chiamato solo dopo che `next()` è stato chiamato per restituire l'elemento corrente. Lanciarà un'eccezione `IllegalStateException` se viene chiamato prima di `next()` o dopo che `hasNext()` restituisce false.
+- `forEachRemaining(Consumer<? super E> action)`: esegue un'azione specificata per ogni elemento rimanente nell'iteratore. Questo metodo è utile quando si vuole eseguire un'azione per ogni elemento dell'insieme senza dover gestire manualmente l'iterazione.
+
+Ecco un esempio di come utilizzare questi metodi per rimuovere gli elementi pari dall'insieme:
+
+```java
+Set<Integer> set = new HashSet<>(Arrays
+  .asList(1, 2, 3, 4, 5));
+
+Iterator<Integer> iterator = set.iterator();
+while (iterator.hasNext()) {
+  int element = iterator.next();
+  if (element % 2 == 0) {
+    iterator.remove();
+  }
+}
+
+/* il set ora contiene solo elementi dispari: 
+[1, 3, 5] */
+```
+
 ### `Map<K,V>`
 
 La classe **`java.util.Map`** è un'interfaccia che rappresenta una mappa di chiavi (di tipo K) a valori (di tipo V). Ecco i metodi disponibili per questa interfaccia:
