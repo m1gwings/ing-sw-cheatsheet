@@ -328,20 +328,13 @@ L'invocazione di questi metodi richiede che il thread invocante sia possessore d
 Notiamo inoltre come il metodo wait sollevi l'eccezione `InterruptedException`, che avviene se il thread corrente viene
 interrotto (ad esempio perché viene richiesta la terminazione del programma).
 
----
-
-<!-- _class: due -->
-
 Riprendendo l'esempio di un account bancario, se volessimo aspettare che l'utente abbia soldi prima di effettuare
 un'operazione di prelievo:
 ```java
 class Account {
   private final Object lock = new Object();
   private float balance;
-
-  public Account(float balanceIniz) {
-    balance = balanceIniz;
-  }
+  public Account(float b){ this.balance = b; }
   
   public void deposit(float money) { 
     synchronized(lock) {
@@ -349,7 +342,6 @@ class Account {
       lock.notifyAll();
     }
   }
-
   public void withdraw(float money) 
         throws InterruptedException {
     synchronized(lock) {
@@ -372,6 +364,8 @@ sconsigliato in quanto essendo un API molto low-level
 e non ottenere l'effetto desiderato.
 -->
 
+---
+<!-- _class: due -->
 
 ## Deadlock
 
@@ -468,6 +462,10 @@ public class Bank {
   }
 }
 ```
+
+---
+<!-- _class: due -->
+
   Quando `getBalance` chiama `accNames.wait()`, rilascia il lock su accNames, ma non quello su accBalances,
   quindi `addAccount` non potrà mai arrivare alla corrispondente `notifyAll()`. Bisogna quindi chiamarlo quando 
   abbiamo acquisito solo il primo lock:
@@ -581,6 +579,8 @@ Si introduca l'opportuno codice di sincronizzazione nei metodi `getScore` e `set
 parallelismo, consentendo a thread diversi di accedere in parallelo ai dati di studenti diversi, evitando 
 conflitti nell'accesso ai dati (voto) del medesimo studente. 
 
+&nbsp;  
+
 #### Soluzione
 
 Osserviamo per prima cosa come, non potendo cambiare né il costruttore né la definizione dei campi, possiamo 
@@ -620,6 +620,8 @@ public class ScoreBoard {
   }
 }
 ```
+
+&nbsp;  
 
 #### Domanda b)
 
