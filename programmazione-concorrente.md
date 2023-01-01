@@ -328,20 +328,13 @@ L'invocazione di questi metodi richiede che il thread invocante sia possessore d
 Notiamo inoltre come il metodo wait sollevi l'eccezione `InterruptedException`, che avviene se il thread corrente viene
 interrotto (ad esempio perché viene richiesta la terminazione del programma).
 
----
-
-<!-- _class: due -->
-
 Riprendendo l'esempio di un account bancario, se volessimo aspettare che l'utente abbia soldi prima di effettuare
 un'operazione di prelievo:
 ```java
 class Account {
   private final Object lock = new Object();
   private float balance;
-
-  public Account(float balanceIniz) {
-    balance = balanceIniz;
-  }
+  public Account(float b){ this.balance = b; }
   
   public void deposit(float money) { 
     synchronized(lock) {
@@ -349,7 +342,6 @@ class Account {
       lock.notifyAll();
     }
   }
-
   public void withdraw(float money) 
         throws InterruptedException {
     synchronized(lock) {
@@ -371,6 +363,129 @@ sconsigliato in quanto essendo un API molto low-level
 [è molto facile sbagliare](https://github.com/HugoMatilla/Effective-JAVA-Summary#69-prefer-concurrency-utilities-to-wait-and-notify)
 e non ottenere l'effetto desiderato.
 -->
+
+---
+<!-- _class: due -->
+
+## Deadlock
+
+Quando si ha a che fare con due o più lock, bisogna prestare particolare attenzione a non generare deadlock.
+Di seguito sono riportati i casi più comuni in cui questo si può verificare.
+
+<!-- Vedi ad esempio TdE 2022-08-26 - Esercizio 2, domanda (a) -->
+- Deadlock su due lock della stessa istanza della classe (acquisizione di lock alternati):
+```java
+public class SyncObject {
+  private final Object xLock = new Object();
+  private final Object yLock = new Object();
+  ...
+  public void method1() {
+    synchronized(xLock) {
+      synchronized(yLock) {
+        ...
+      } 
+    }
+  }
+  public void method2() {
+    synchronized(yLock) {
+      synchronized(xLock) {
+        ...
+      } 
+    }
+  }
+} 
+```
+  Se un thread ha acquisito xLock in method1 e un altro ha acquisito yLock in method2, 
+  entrambi devono aspettare l'altro thread per poter acquisire 
+  il lock che gli manca. Bisogna sempre acquisire i lock nel medesimo ordine.
+<!-- 
+Vedi ad esempio TdE 2021-07-13 - Esercizio 2, domanda (c) 
+         oppure TdE 2021-01-18 - Esercizio 2, domanda (b) 
+-->
+- Deadlock su lock di due istanze diverse della classe: 
+```java
+public class Vector {
+  ...
+  public synchronized void sum(Vector other) {
+    synchronized(other) {
+      this.x += other.x;
+      this.y += other.y;
+    }
+  }
+}
+```
+  Dati v1, v2, se un thread chiama v1.sum(v2) e allo stesso tempo un altro 
+  chiama v2.sum(v1), si ha ancora una volta un'acquisizione di lock alternata:
+  potenzialmente un deadlock. 
+  Bisogna acquisirne uno alla volta:
+```java
+public class Vector {
+  ...
+  public synchronized void sum(Vector other) {
+    	double otherX, otherY;
+      synchronized(other) {
+        otherX = other.x;
+        otherY = other.y;
+      }
+      
+      synchronized(this) {
+        this.x += otherX;
+        this.y += otherY;
+    }
+  }
+}
+```
+<!-- Vedi ad esempio TdE 2022-09-10 - Esercizio 2, domanda (b) -->
+- Deadlock con 2 lock e `wait()`:
+```java
+public class Bank {
+  ...
+  public double getBalance(String clientName) {
+    synchronized(accNames) {
+      synchronized(accBalances) {
+        int pos;
+        while((pos = accNames.indexOf(clientName)) == -1) 
+          accNames.wait();
+        return accBalances.get(pos);
+      }
+    }
+  }
+
+  public void addAccount(String clientName) {
+    synchronized(accNames) {
+      synchronized(accBalances) {
+        accNames.add(clientNames);
+        accBalances.add(0.0);
+        accNames.notifyAll();
+      }
+    }
+  }
+}
+```
+
+---
+<!-- _class: due -->
+
+  Quando `getBalance` chiama `accNames.wait()`, rilascia il lock su accNames, ma non quello su accBalances,
+  quindi `addAccount` non potrà mai arrivare alla corrispondente `notifyAll()`. Bisogna quindi chiamarlo quando 
+  abbiamo acquisito solo il primo lock:
+```java
+public class Bank {
+  ...
+  public double getBalance(String clientName) {
+    synchronized(accNames) {
+      int pos;
+      while((pos = accNames.indexOf(clientName)) == -1) 
+        accNames.wait();
+
+      synchronized(accBalances) {
+        return accBalances.get(pos);
+      }
+    }
+  }
+  ...
+}
+```
 
 ## Explicit lock
 
@@ -464,6 +579,8 @@ Si introduca l'opportuno codice di sincronizzazione nei metodi `getScore` e `set
 parallelismo, consentendo a thread diversi di accedere in parallelo ai dati di studenti diversi, evitando 
 conflitti nell'accesso ai dati (voto) del medesimo studente. 
 
+&nbsp;  
+
 #### Soluzione
 
 Osserviamo per prima cosa come, non potendo cambiare né il costruttore né la definizione dei campi, possiamo 
@@ -503,6 +620,8 @@ public class ScoreBoard {
   }
 }
 ```
+
+&nbsp;  
 
 #### Domanda b)
 
