@@ -31,8 +31,6 @@ Una classe può essere interpretata come un tipo definito dall'utente che specif
 
 Gli **attributi** della classe `Data` sono: `giorno`, `mese` e `anno`. I **metodi** invece sono: `ottieniGiorno`, `ottieniMese`, `ottieniAnno`.
 
-All'interno dell'implementazione di ciascun metodo (non statico) possiamo utilizzare la keyword **`this`** per fare riferimento all'oggetto su cui il metodo è stato invocato.
-
 In Java è possibile invocare i metodi tramite la **dot notation**, ad esempio:
 ```java
 Data d = new Data();
@@ -95,7 +93,7 @@ d.ottieniMese() + "/" d.ottieniAnno());
 
 ## `public`, `private`, `protected`, friendly
 
-In Java, ci sono diverse parole chiave che possono essere utilizzate per modificare il comportamento di una classe, di un attributo o di un metodo.
+In Java, ci sono diverse parole chiave che possono essere utilizzate per modificare la visibilità di una classe, di un attributo o di un metodo.
 
 - **`public`**: quando una classe, un attributo o un metodo è dichiarato come `public`, significa che esso è accessibile da qualsiasi altra classe o codice all'interno del programma.
 - **`private`**: quando una classe, un attributo o un metodo è dichiarato come `private`, significa che esso è accessibile solo all'interno della classe in cui è dichiarato.
@@ -143,11 +141,11 @@ public abstract class Animale {
   }
 }
 ```
-- **`interface`**: Un'**interfaccia** è una classe speciale che contiene solo metodi astratti (cioè, senza corpo). Una classe può implementare un'interfaccia (scrivendo `implements`, invece di `extends`), in cui **deve** implementare tutti i metodi astratti dell'interfaccia. Le interfacce sono spesso utilizzate per definire un contratto che le classi devono seguire, ad esempio per garantire che le classi abbiano determinati metodi o attributi.
+- **`interface`**: Un'**interfaccia** è una classe speciale che contiene solo metodi astratti (cioè, senza corpo). Una classe può implementare un'interfaccia (scrivendo `implements`, invece di `extends`) ; per farlo **deve** definirne tutti i metodi. Le interfacce sono spesso utilizzate per definire un contratto a cui le classi devono aderire.
 
 ## `this` e `super`
 
-- La parola chiave **`this`** si riferisce all'oggetto corrente che sta invocando il metodo o l'accesso all'attributo. Ciò può essere utile quando si vuole fare riferimento a un attributo o un metodo dell'oggetto corrente all'interno di un metodo o di un costruttore della classe. Ad esempio:
+- La parola chiave **`this`** fornisce un riferimento all'oggetto corrente su cui è stato invocato il metodo che stiamo implementando. Può risultare utile quando tale metodo acquisisce dei parametri in input che hanno lo stesso nome di alcuni attributi della classe a cui appartiene: attraverso la keyword `this` possiamo accedere a questi attributi della classe che altrimenti risulterbbero "oscurati" dai parametri. Ad esempio:
 ```java
 public class Persona {
   private String nome;
@@ -166,7 +164,7 @@ public class Persona {
 Nell'esempio sopra, `this` viene utilizzato nel costruttore per fare riferimento agli attributi dell'oggetto corrente.
 
 - La parola chiave **`super`** si riferisce alla **superclasse** di una sottoclasse. Può essere utilizzata per fare riferimento a metodi e attributi della superclasse all'interno della sottoclasse.
-Una delle principali ragioni per cui si utilizza `super` è per chiamare il costruttore della superclasse da dentro il costruttore della sottoclasse. Ciò viene fatto utilizzando la sintassi `super(arg1, arg2, ...)`, dove gli argomenti sono i parametri del costruttore della superclasse.
+Una delle principali ragioni per cui si utilizza `super` è per chiamare il costruttore della superclasse nel costruttore della sottoclasse. Ciò viene fatto utilizzando la sintassi `super(arg1, arg2, ...)`, dove gli argomenti sono i parametri del costruttore della superclasse.
 
 ---
 
