@@ -684,6 +684,9 @@ Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator
 //@     .get(i)))) && ...
 ```
 
+<!-- TODO: Rimuovere un elemento da una List -->
+<!-- TODO: Specificare che non conserva l'ordine -->
+
 > **altrimenti, se `obsInd` non permette di osservare la modifica apportata all'oggetto**, dobbiamo specificare che la porzione di stato osservata è rimasta invariata. Vediamo alcune porzioni di specifica ricorrenti:
 
 > - **Specificare che una `Collection<T>` rimane invariata**:
@@ -694,6 +697,8 @@ Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator
 //@   \old(obsInd().size()) && obsInd().
 //@   containsAll(\old(obsInd())) && ...;
 ```
+
+<!-- TODO: Specificare che una list rimane invariata e conserva l'ordine -->
 
 - #### _Observer puri_
 
