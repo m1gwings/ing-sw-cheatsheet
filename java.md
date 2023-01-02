@@ -145,9 +145,9 @@ public abstract class Animale {
 ```
 - **`interface`**: Un'**interfaccia** è una classe speciale che contiene solo metodi astratti (cioè, senza corpo). Una classe può implementare un'interfaccia (scrivendo `implements`, invece di `extends`), in cui **deve** implementare tutti i metodi astratti dell'interfaccia. Le interfacce sono spesso utilizzate per definire un contratto che le classi devono seguire, ad esempio per garantire che le classi abbiano determinati metodi o attributi.
 
-## `this`
+## `this` e `super`
 
-La parola chiave **`this`** si riferisce all'oggetto corrente che sta invocando il metodo o l'accesso all'attributo. Ciò può essere utile quando si vuole fare riferimento a un attributo o un metodo dell'oggetto corrente all'interno di un metodo o di un costruttore della classe. Ad esempio:
+- La parola chiave **`this`** si riferisce all'oggetto corrente che sta invocando il metodo o l'accesso all'attributo. Ciò può essere utile quando si vuole fare riferimento a un attributo o un metodo dell'oggetto corrente all'interno di un metodo o di un costruttore della classe. Ad esempio:
 ```java
 public class Persona {
   private String nome;
@@ -163,8 +163,10 @@ public class Persona {
   ...
 }
 ```
-
 Nell'esempio sopra, `this` viene utilizzato nel costruttore per fare riferimento agli attributi dell'oggetto corrente.
+
+- La parola chiave **`super`** si riferisce alla **superclasse** di una sottoclasse. Può essere utilizzata per fare riferimento a metodi e attributi della superclasse all'interno della sottoclasse.
+Una delle principali ragioni per cui si utilizza `super` è per chiamare il costruttore della superclasse da dentro il costruttore della sottoclasse. Ciò viene fatto utilizzando la sintassi `super(arg1, arg2, ...)`, dove gli argomenti sono i parametri del costruttore della superclasse.
 
 ---
 
