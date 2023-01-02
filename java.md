@@ -227,7 +227,7 @@ La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di el
 
 ### Iterare su un insieme
 
-Per iterare su un insieme (classe `Set`), si può utilizzare il metodo `iterator()` della classe `Set`. Questo metodo restituisce un'istanza dell'interfaccia `Iterator`, che permette di scorrere gli elementi dell'insieme uno alla volta.
+Per iterare su un insieme (classe `Set`), si può utilizzare il metodo **`iterator()`** della classe `Set`. Questo metodo restituisce un'istanza dell'interfaccia `Iterator`, che permette di scorrere gli elementi dell'insieme uno alla volta.
 Ecco un esempio di come utilizzare l'iteratore per stampare gli elementi di un insieme:
 
 ```java
