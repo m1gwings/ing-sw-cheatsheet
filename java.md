@@ -93,6 +93,79 @@ d.ottieniMese() + "/" d.ottieniAnno());
 1/12/2011
 ```
 
+## `public`, `private`, `protected`, friendly
+
+In Java, ci sono diverse parole chiave che possono essere utilizzate per modificare il comportamento di una classe, di un attributo o di un metodo.
+
+- **`public`**: quando una classe, un attributo o un metodo è dichiarato come `public`, significa che esso è accessibile da qualsiasi altra classe o codice all'interno del programma.
+- **`private`**: quando una classe, un attributo o un metodo è dichiarato come `private`, significa che esso è accessibile solo all'interno della classe in cui è dichiarato.
+- **`protected`**: quando una classe, un attributo o un metodo è dichiarato come `protected`, significa che esso è accessibile nello stesso pakage, ma solo all'interno della classe in cui è dichiarato e dalle sottoclassi di quella classe.
+- **friendly** (o **`default`**): si dichiara non scrivendo nient'altro, significa che esso è accessibile solo all'interno del package in cui è dichiarato.
+
+---
+
+## `static` e `final`
+
+- **`static`**: un attributo o un metodo dichiarato come `static` appartiene alla classe e non agli oggetti di quella classe. Ciò significa che non è necessario creare un'istanza della classe per accedere a un attributo statico o chiamare un metodo statico. Ad esempio, si può avere una classe di utilità per la conversione delle temperature, con un attributo statico per la costante del gas perfetto:
+```java
+public class ConversioneTemperature {
+  public static final double 
+    COSTANTE_GAS_PERFETTO = 8.3145;
+
+  public static double kelvinToCelsius
+  (double temperaturaInKelvin) {
+      return temperaturaInKelvin - 273.15;
+  }
+}
+
+/* Si può quindi accedere all'attributo 
+COSTANTE_GAS_PERFETTO e chiamare il metodo 
+kelvinToCelsius() senza creare un'istanza 
+della classe ConversioneTemperature */
+```
+- **`final`**: quando una classe è dichiarata come `final`, significa che non può essere estesa (cioè, non può avere sottoclassi).<br> Quando un attributo è dichiarato come `final`, significa che ha un valore costante e non può essere modificato una volta assegnato.<br> Quando un metodo è dichiarato come `final`, significa che non può essere sovrascritto da una sottoclasse.
+
+## `abstract` e `interface`
+
+- **`abstract`**: Una classe dichiarata come `abstract` non può essere istanziata (cioè, non puoi creare oggetti da essa). Invece, serve come base per le sottoclassi. Una classe astratta può avere metodi sia astratti che concreti (cioè, con corpo). I metodi astratti devono essere implementati dalle sottoclassi, mentre i metodi concreti possono essere utilizzati direttamente dalle sottoclassi senza alcuna implementazione aggiuntiva. Ad esempio:
+```java
+public abstract class Animale {
+  private String nome;
+
+  public Animale(String nome) {
+      this.nome = nome;
+  }
+
+  public abstract void emettiSuono();
+
+  public String getNome() {
+      return nome;
+  }
+}
+```
+- **`interface`**: Un'**interfaccia** è una classe speciale che contiene solo metodi astratti (cioè, senza corpo). Una classe può implementare un'interfaccia (scrivendo `implements`, invece di `extends`), in cui **deve** implementare tutti i metodi astratti dell'interfaccia. Le interfacce sono spesso utilizzate per definire un contratto che le classi devono seguire, ad esempio per garantire che le classi abbiano determinati metodi o attributi.
+
+## `this`
+
+La parola chiave **`this`** si riferisce all'oggetto corrente che sta invocando il metodo o l'accesso all'attributo. Ciò può essere utile quando si vuole fare riferimento a un attributo o un metodo dell'oggetto corrente all'interno di un metodo o di un costruttore della classe. Ad esempio:
+```java
+public class Persona {
+  private String nome;
+  private int età;
+
+  public Persona(String nome, int età) {
+    /* Assegna i valori di nome e età 
+    agli attributi dell'oggetto corrente */
+    this.nome = nome;
+    this.età = età;
+  }
+
+  ...
+}
+```
+
+Nell'esempio sopra, `this` viene utilizzato nel costruttore per fare riferimento agli attributi dell'oggetto corrente.
+
 ---
 
 ## Collections
