@@ -91,6 +91,78 @@ d.ottieniMese() + "/" d.ottieniAnno());
 1/12/2011
 ```
 
+## Ereditarietà
+
+L'**ereditarietà** è il meccanismo tramite il quale una classe può _estendere_ un'altra classe, ereditando tutte le sue variabili e metodi (a meno che questi non siano stati dichiarati come `private`). Ciò significa che una classe figlia può usare tutto ciò che è stato definito nella classe padre, e può anche aggiungere nuove funzionalità.
+Per farlo si utilizza la keyword `extends`.
+
+È inoltre possibile sovrascrivere i metodi della classe padre, cioè fornire una nuova implementazione per un metodo che è già stato definito nella superclasse. Per farlo, si può utilizzare l'annotazione `@Override` sopra al metodo che si vuole sovrascrivere.
+
+---
+
+Ad esempio consideriamo le seguenti classi:
+
+```java
+public class Animal {
+  private String name;
+  private int age;
+  
+  public Animal(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
+  
+  public void makeNoise() {
+    System.out.println("Some noise");
+  }
+}
+
+public class Dog extends Animal {
+  private boolean canBark;
+  
+  public Dog
+  (String name, int age, boolean canBark) {
+    super(name, age);
+    this.canBark = canBark;
+  }
+  
+  @Override
+  public void makeNoise() {
+    if (canBark) {
+      System.out.println("Bark bark!");
+    } else {
+      System.out.println("No barking");
+    }
+  }
+}
+```
+
+In questo esempio, la classe `Dog` eredita da `Animal`, il che significa che può usare le variabili `name` e `age` e il metodo `makeNoise()`. Inoltre, `Dog` ha una propria variabile `canBark` e una propria implementazione del metodo `makeNoise()`, che sovrascrive quella presente nella classe padre.
+
+```java
+Animal a = new Animal("Fluffy", 5);
+a.makeNoise(); // stampa "Some noise"
+
+Dog d = new Dog("Max", 3, true);
+d.makeNoise(); // stampa "Bark bark!"
+```
+
+### Binding dinamico e Method resolution
+
+In Java (riguardo all'esempio di prima), potrei anche creare una variabile di tipo `Animal` e assegnarle un'istanza di `Dog`:
+```java
+Animal a = new Dog("Max", 3, true);
+a.makeNoise(); // stampa "Bark bark!"
+```
+ammissibile purché `Dog` sia una sottoclasse di `Animal` (e non il contrario, ad esempio `Dog a = new Animal("Max", 3)` risulta **errato**). In questo caso, `Animal` è il **tipo statico** della variabile `a`, mentre `Dog` è il **tipo dinamico**. <br>
+Quando viene invocato il metodo `makeNoise()`, il compilatore non sa quale metodo invocare, poiché non sa quale sia il tipo dinamico della variabile `a` (che viene determinato a runtime). Per questo motivo, Java utilizza il **binding dinamico**.
+
+I passi che segue Java per decidere quale metodo invocare sono i seguenti:
+
+1. Il compilatore controlla se il tipo **statico** della variabile contiene il metodo richiesto (con la stessa signature). Se non è presente, si ha un errore di compilazione. <br> (in questo esempio, Animal ha il metodo `makeNoise()`, quindi si procede al punto 2.).
+2. A runtime, Java invece controlla il tipo **dinamico** della variabile. Se questo ha una sua implementazione del metodo richiesto, quella viene utilizzata; altrimenti, si sale lungo la gerarchia delle classi, partendo dal tipo **dinamico**, fino a trovare una classe che ha una implementazione del metodo richiesto (con la stessa signature), o fino a raggiungere la classe del tipo **statico** (che sappiamo contenere per forza il metodo). <br> (in questo esempio, la classe del tipo dinamico `Dog` ha già una sua implementazione di `makeNoise()`, quindi viene scelta quella).
+3. Viene invocato il primo metodo trovato.
+
 ## `public`, `private`, `protected`, friendly
 
 In Java, ci sono diverse parole chiave che possono essere utilizzate per modificare la visibilità di una classe, di un attributo o di un metodo.
@@ -99,8 +171,6 @@ In Java, ci sono diverse parole chiave che possono essere utilizzate per modific
 - **`private`**: quando una classe, un attributo o un metodo è dichiarato come `private`, significa che esso è accessibile solo all'interno della classe in cui è dichiarato.
 - **`protected`**: quando una classe, un attributo o un metodo è dichiarato come `protected`, significa che esso è accessibile nello stesso pakage, ma solo all'interno della classe in cui è dichiarato e dalle sottoclassi di quella classe.
 - **friendly** (o **`default`**): si dichiara non scrivendo nient'altro, significa che esso è accessibile solo all'interno del package in cui è dichiarato.
-
----
 
 ## `static` e `final`
 
@@ -121,7 +191,8 @@ COSTANTE_GAS_PERFETTO e chiamare il metodo
 kelvinToCelsius() senza creare un'istanza 
 della classe ConversioneTemperature */
 ```
-- **`final`**: quando una classe è dichiarata come `final`, significa che non può essere estesa (cioè, non può avere sottoclassi).<br> Quando un attributo è dichiarato come `final`, significa che ha un valore costante e non può essere modificato una volta assegnato.<br> Quando un metodo è dichiarato come `final`, significa che non può essere sovrascritto da una sottoclasse.
+---
+- **`final`**: quando una classe è dichiarata come `final`, significa che non può essere estesa (cioè, non può avere sottoclassi). Quando un attributo è dichiarato come `final`, significa che ha un valore costante e non può essere modificato una volta assegnato. Quando un metodo è dichiarato come `final`, significa che non può essere sovrascritto da una sottoclasse.
 
 ## `abstract` e `interface`
 
