@@ -196,7 +196,9 @@ della classe ConversioneTemperature */
 
 ## `abstract` e `interface`
 
-- **`abstract`**: Una classe dichiarata come `abstract` non può essere istanziata (cioè, non puoi creare oggetti da essa). Invece, serve come base per le sottoclassi. Una classe astratta può avere metodi sia astratti che concreti (cioè, con corpo). I metodi astratti devono essere implementati dalle sottoclassi, mentre i metodi concreti possono essere utilizzati direttamente dalle sottoclassi senza alcuna implementazione aggiuntiva. Ad esempio:
+- **`abstract`**: Una classe dichiarata come `abstract` non può essere istanziata (cioè, non puoi creare oggetti da essa). Invece, serve come base per le sottoclassi. Una classe astratta può avere metodi sia astratti che concreti (cioè, con corpo). I metodi astratti devono essere implementati dalle sottoclassi, mentre i metodi concreti possono essere utilizzati direttamente dalle sottoclassi senza alcuna implementazione aggiuntiva. 
+<!--
+Ad esempio:
 ```java
 public abstract class Animale {
   private String nome;
@@ -212,6 +214,7 @@ public abstract class Animale {
   }
 }
 ```
+-->
 - **`interface`**: Un'**interfaccia** è una classe speciale che contiene solo metodi astratti (cioè, senza corpo). Una classe può implementare un'interfaccia (scrivendo `implements`, invece di `extends`) ; per farlo **deve** definirne tutti i metodi. Le interfacce sono spesso utilizzate per definire un contratto a cui le classi devono aderire.
 
 ## `this` e `super`
@@ -236,6 +239,38 @@ Nell'esempio sopra, `this` viene utilizzato nel costruttore per fare riferimento
 
 - La parola chiave **`super`** si riferisce alla **superclasse** di una sottoclasse. Può essere utilizzata per fare riferimento a metodi e attributi della superclasse all'interno della sottoclasse.
 Una delle principali ragioni per cui si utilizza `super` è per chiamare il costruttore della superclasse nel costruttore della sottoclasse. Ciò viene fatto utilizzando la sintassi `super(arg1, arg2, ...)`, dove gli argomenti sono i parametri del costruttore della superclasse.
+
+## Casting ed errori a runtime (`ClassCastException`)
+
+Il **casting** in Java è un'operazione che consiste nel convertire un riferimento di un tipo di dato in un riferimento di un altro tipo di dato. Esistono due tipi di casting:
+
+- **Upcasting**: è la conversione di un riferimento a un tipo di dato più specifico in un riferimento a un tipo di dato più generico. Ad esempio:
+```java
+String s = new String("Ciao");
+Object o = s;
+```
+In questo esempio, si sta convertendo il riferimento a un oggetto `String` in un riferimento a un oggetto `Object`. L'upcasting viene eseguito in modo implicito e non richiede l'utilizzo delle parentesi tonde. <br>
+_Attenzione_: È lecito solo se il tipo di dato al quale si sta convertendo il riferimento è un supertipo del tipo di dato del riferimento originale (per le regole dell'ereditarietà).
+- **Downcasting**: è la conversione di un riferimento a un tipo di dato più generico in un riferimento a un tipo di dato più specifico. Ad esempio:
+```java
+Object o = new String("Ciao");
+String s = (String) o;
+```
+In questo esempio, si sta convertendo il riferimento a un oggetto `Object` in un riferimento a un oggetto `String`. Il downcasting viene eseguito in modo esplicito e richiede l'utilizzo delle parentesi tonde. <br>
+_Attenzione_: Può lanciare un'eccezione (errore a runtime) di tipo `ClassCastException` se eseguito impropriamente.
+
+### `ClassCastException`
+I cast eseguiti impropriamente possono generare errori a runtime (eccezioni) di tipo `ClassCastException`. Si verificano quando si tenta di convertire un riferimento di un oggetto in un tipo di riferimento che non è compatibile con l'oggetto a cui fa riferimento. <br> Ad esempio, questo può accadere quando si tenta di fare un cast da un oggetto di una classe a un oggetto di una classe figlia, ma l'oggetto non è effettivamente un'istanza della classe figlia. In questo caso, verrà generata un'eccezione di tipo `ClassCastException` a runtime. Ad esempio, in questo codice:
+```java
+Object o = new Object();
+String s = (String) o;
+```
+l'oggetto `o` non è un'istanza della classe `String`, quindi il cast non è valido e verrà generata un'eccezione di tipo `ClassCastException` a runtime. Per evitare questo tipo di eccezione, è necessario assicurarsi che l'oggetto a cui fa riferimento il riferimento originale sia effettivamente un'istanza della classe a cui si sta tentando di fare il cast. Ad esempio:
+```java
+Object o = new String("Ciao");
+String s = (String) o;
+// ok, o è un'istanza di String
+```
 
 ---
 
@@ -360,5 +395,3 @@ La classe **`java.util.Map`** è un'interfaccia che rappresenta una mappa di chi
 - **`V remove(Object key)`**: rimuove la coppia chiave-valore associata alla chiave specificata dalla mappa. Restituisce il valore associato alla chiave, oppure null se la chiave non era presente nella mappa.
 - **`int size()`**: restituisce il numero di coppie chiave-valore presenti nella mappa.
 - **`Collection<V> values()`**: restituisce una collezione di tutti i valori presenti nella mappa.
-
-
