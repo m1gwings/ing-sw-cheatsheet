@@ -65,6 +65,23 @@ e nel ramo `else`: `x != 0` e `y <= 0`.
 
 Sono quindi sufficienti 3 casi di test: `x = 0, y = -1`, `x = 1, y = 1` e `x = 1, y = -1`.
 
+Si noti che la short circuit evaluation implica che servono tre casi di test anche con il seguente programma:
+
+```java
+void p(int x, int y) {
+  if(x == 0 && y > 0)
+    y = y/x;
+  else
+    y = (-y)/x;
+}
+```
+
+Si può entrare nel ramo `if` solamente se: `x = 0, y > 0`
+
+e nel ramo `else` con: `x != 0, y qualsiasi` e `x = 0, y <= 0`.
+
+Servono quindi anche in questo caso 3 casi di test: `x = 0, y = 1`, `x = 1, y = 1` e `x = 0, y = -1`.
+
 ---
 
 ### Criterio di copertura dei cammini (path coverage)
