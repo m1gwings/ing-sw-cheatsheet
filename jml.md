@@ -647,58 +647,95 @@ Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator
 > **se `obsInd` permette di osservare la modifica apportata all'oggetto**, dobbiamo specificare che la modifica è avvenuta correttamente (non abbiamo modificato troppo o troppo poco). Vediamo alcune porzioni di specifica ricorrenti (ricordiamo che `obsInd` è un _place holder_ per il nome dell'_observer indipendente_ in questione): (_Continua nella facciata successiva_)
 
 ---
+<!-- _class: due -->
 
-> - **Inserire un elemento `el` di tipo `T` in una `Collection<T>`** (come `List<T>`, `Set<T>`, ...):
+> - **Inserire un elemento `el` di tipo `T` in un `Set<T>`**:
 
 ```java
 //@ requires el != null && ...;
-//@ ensures obsInd().contains(el) &&
-//@   obsInd().size() == \old(obsInd().size()
-//@   + obsInd().contains(el) ? 0 : 1)
-//@   && obsInd().containsAll(\old(obsInd()))
-//@   && ...;
-...
+//@ ensures (\forall T t; ; obsInd().contains(t) <==>
+//@   (\old(obsInd().contains(t)) || t.equals(el))) && ...;
 ```
-> - **Rimuovere un elemento `el` di tipo `T` da una `Collection<T>`**:
+> - **Rimuovere un elemento `el` di tipo `T` da una `Set<T>`**:
 
 ```java
 //@ requires el != null && ...;
-//@ ensures !obsInd().contains(el) &&
-//@   obsInd().size() == \old(obsInd().size()
-//@   - obsInd.contains(el) ? 1 : 0)
-//@   && \old(obsInd()).containsAll(obsInd())
-//@   && ...;
+//@ ensures (\forall T t; ; obsInd().contains(t) <==>
+//@   (\old(obsInd().contains(t)) && !t.equals(el))) && ...;
 ```
 
 > - **Inserire un elemento `el` di tipo `T` in fondo ad una `List<T>`**:
 
 ```java
 //@ requires el != null && ...;
-//@ ensures obsInd().size() ==
-//@   \old(obsInd().size() + 1) &&
-//@   obsInd().get(obsInd().size() - 1)
-//@     .equals(el) &&
-//@   (\forall int i; 0 <= i &&
-//@     i < \old(obsInd().size());
-//@     obsInd().get(i).equals(\old(obsInd()
-//@     .get(i)))) && ...
+//@ ensures obsInd().size() == \old(obsInd().size() + 1) &&
+//@   obsInd().get(obsInd().size() - 1).equals(el) &&
+//@   (\forall int i; 0 <= i && i < \old(obsInd().size());
+//@     obsInd().get(i).equals(\old(obsInd().get(i)))) && ...;
 ```
 
-<!-- TODO: Rimuovere un elemento da una List -->
-<!-- TODO: Specificare che non conserva l'ordine -->
+> - **Inserire un elemento `el` di tipo `T` in una `List<T>` ordinata secondo un certo ordine**:
+
+`mou(t1, t2)` (`mou` sta per "minore o uguale") è un _placeholder_ per l'espressione che restituisce `true` sse `t1` deve precedere `t2` nella lista.<br>**Attenzione!**: questa porzione di specifica permette l'inserimento di `el` anche se è già presente nella lista, quindi non va bene se nella specifica informale viene esplicitamente detto che la lista non ammette l'inserimento di duplicati.
+```java
+//@ requires el != null && ...;
+//@ ensures obsInd().size() == \old(obsInd().size() + 1) &&
+//@   (\exists int i; 0 <= i && i < obsInd().size();
+//@     obsInd().get(i).equals(el) &&
+//@     (\forall int j; 0 <= j && j < i;
+//@       obsInd().get(j).equals(\old(obsInd().get(j))) &&
+//@       mou(obsInd().get(j), obsInd().get(i))) &&
+//@     (\forall int j; i < j && j < obsInd().size();
+//@       obsInd().get(j).equals(\old(obsInd().get(j - 1))) &&
+//@       mou(obsInd().get(i), obsInd().get(j)))) && ...;
+```
+
+> - **Rimuovere un elemento dal fondo di una `List<T>`**:
+
+**Attenzione!**: se la lista non contiene elementi, questa specifica ci dice che la lista rimarrà vuota (vedi la parte `\old(obsInd().size() == 0)`). Se nell'esercizio venisse richiesto di lanciare un'eccezione se la lista è vuota, occorre adattare la specifica di conseguenza.
+```java
+//@ ensures (\old(obsInd().size() == 0) ==> obsInd().size() == 0) &&
+//@   (\old(obsInd().size() > 0) ==>
+//@     obsInd().size() == \old(obsInd().size() - 1) &&
+//@     (\forall int i; 0 <= i && i < obsInd().size();
+//@       obsInd().get(i).equals(\old(obsInd().get(i))))) && ...;
+```
+
+> - **Rimuovere un elemento `el` di tipo `T` da una `List<T>`**:
+
+**Attenzione!**: se `el` non fa parte della lista, questa specifica ci dice che la lista rimarrà invariata (vedi la parte `!obsInd().contains(el) ==> ...`). Se nell'esercizio venisse richiesto di lanciare un'eccezione se `el` non fa parte della lista, occorre adattare la specifica di conseguenza.
+```java
+//@ requires el != null && ...;
+//@ ensures (obsInd().contains(el) ==>
+//@   obsInd().size() == \old(obsInd().size() - 1) &&
+//@   (\exists int i; 0 <= i && i < \old(obsInd().size());
+//@     \old(obsInd().get(i).equals(el)) &&
+//@     (\forall int j; 0 <= j && j < i;
+//@       obsInd().get(j).equals(\old(obsInd().get(j)))) &&
+//@     (\forall int j; i <= j && j < obsInd().size();
+//@       obsInd().get(j).equals(\old(obsInd().get(j + 1)))))) &&
+//@   (!obsInd().contains(el) ==>
+//@     <specificare che una lista rimane invariata (vedi dopo)> && ...;
+```
 
 > **altrimenti, se `obsInd` non permette di osservare la modifica apportata all'oggetto**, dobbiamo specificare che la porzione di stato osservata è rimasta invariata. Vediamo alcune porzioni di specifica ricorrenti:
 
-> - **Specificare che una `Collection<T>` rimane invariata**:
+> - **Specificare che un `Set<T>` rimane invariato**:
 
 ```java
-//@ requires ...;
-//@ ensures obsInd().size() ==
-//@   \old(obsInd().size()) && obsInd().
-//@   containsAll(\old(obsInd())) && ...;
+//@ ensures obsInd().size() == \old(obsInd().size()) &&
+//@   obsInd().containsAll(\old(obsInd())) && ...;
 ```
 
-<!-- TODO: Specificare che una list rimane invariata e conserva l'ordine -->
+> - **Specificare che una `List<T>` rimane invariata**:
+
+```java
+//@ ensures obsInd().size() == \old(obsInd().size()) &&
+//@   (\forall int i; 0 <= i && i < obsInd().size();
+//@     obsInd().get(i).equals(\old(obsInd().get(i)))) && ...;
+```
+
+---
 
 - #### _Observer puri_
 
@@ -747,9 +784,7 @@ Quindi per specificare un _mutator che restituisce qualcosa_ sarà sufficiente f
 - #### _Creator_
 
 I _creator_ creano un oggetto "dal nulla" (tutti i _creator_ sono costruttori, non vale il viceversa), quindi l'oggetto creato non ha uno stato precedente all'invocazione del metodo. Per questo motivo, a differenza dei _mutator_ non dobbiamo specificare ciò che cambia o ciò che rimane invariato al termine dell'esecuzione. Ci basta che lo stato osservato sia compatibile con la specifica e con i parametri in input. Per farlo è sufficiente, **per ogni _observer indipendente_**, esplicitare che valore restituisce.
-Nell'esempio `InsiemeDiInteri`, l'unico _observer indipendente_ è `appartiene`. Da specifica il costruttore di `InsiemeDiInteri`, che è anche un _creator_, inizializza un insieme vuoto, quindi la specifica corrispondente sarà: (_Continua nella facciata successiva_)
-
----
+Nell'esempio `InsiemeDiInteri`, l'unico _observer indipendente_ è `appartiene`. Da specifica il costruttore di `InsiemeDiInteri`, che è anche un _creator_, inizializza un insieme vuoto, quindi la specifica corrispondente sarà:
 
 ```java
 public class InsiemeDiInteri {
@@ -779,6 +814,8 @@ Dato che la classe che stiamo specificando è **pura** (`public /* @ pure @ */ c
 Stiamo costruendo un nuovo oggetto della stessa classe che stiamo specificando, come nel caso dei _creator_ ne specificheremo lo stato iniziale esplicitando il valore restituito da **ogni _observer indipendente_**. **A differenza dei _creator_** però, **l'oggetto che si trova nello stato iniziale specificato è `\result`**, **NON** `this`. Un'ulteriore differenza è che lo stato iniziale di `\result` non dipende solo dai parametri di input del metodo, ma anche dallo stato dell'oggetto sul quale invochiamo il _producer_ (`this`).
 Solitamente nei TdE non viene richiesto di specificare dei _producer_.
 
+---
+
 ### Ricavare la postcondizione eccezionale (`signals`)
 
 - #### _Mutator che non restituiscono nulla_
@@ -801,6 +838,36 @@ Quando un _creator_ fallisce (lancia un'eccezione) non c'è nessuno stato che po
 
 Il fatto che la classe sia **pura** implica che lo stato dell'oggetto non possa cambiare: come nel caso degli _observer puri_ è sufficiente esplicitare cosa ha provocato l'eccezione, facendo riferimento alla specifica informale.
 
-<!-- TODO: RI:
-Collezioni che contengono liste: liste non nulle e non vuote,
-AF, Esempio che usa le tecniche introdotte -->
+### Ricavare l'invariante di rappresentazione
+
+Se il `rep` è di tipo riferimento solitamente occorre specificare `rep != null`.
+
+Se il `rep` è una collezione di oggetti solitamente occorre specificare `!rep.contains(null)`.
+
+Se il `rep` è una collezione di collezioni di oggetti solitamente occorre specificare che ciascuna "sottocollezione" non sia vuota e non contenga `null`.
+Nel caso in cui il `rep` sia una `Map<K, V>` dove `V` estende `Collection<T>`:
+```java
+//@ private invariant
+//@   (\forall K k; rep.containsKey(k);
+//@     rep.get(k).size() > 0 &&
+//@     !rep.get(k).contains(null)) && ...;
+```
+Nel caso in cui il `rep` sia un `Set<V>` dove `V` estende `Collection<T>`:
+```java
+//@ private invariant
+//@   (\forall V v; rep.contains(v);
+//@     v.size() > 0 && !v.contains(null))
+//@   && ...;
+```
+Nel caso in cui il `rep` sia una `List<V>` dove `V` estende `Collection<T>`:
+```java
+//@ private invariant
+//@   (\forall int i; 0 <= i && i < rep.size();
+//@     rep.get(i).size() > 0 &&
+//@     !rep.get(i).contains(null)) && ...;
+```
+
+### Ricavare la funzione di astrazione
+
+Per ricavare la funzione di astrazione è importante ricordare che è possibile definire completamente lo stato astratto di un oggetto attraverso gli _observer indipendenti_.
+Quindi è sufficiente definire il valore restituito da ciascun _observer indipendente_ in funzione del `rep`.
