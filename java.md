@@ -128,6 +128,8 @@ La classe **`java.util.List`** è un'interfaccia che rappresenta una lista ordin
 - **`Object[] toArray()`**: restituisce un array di oggetti contenente tutti gli elementi della lista.
 - **`<T> T[] toArray(T[] a)`**: restituisce un array di tipo specificato contenente tutti gli elementi della lista.
 
+Le principali implementazioni dell'interfaccia sono ArrayList e LinkedList.
+
 ### `Set<E>`
 
 La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di elementi, ovvero una raccolta di elementi **senza duplicati**. Ecco i metodi disponibili per questa interfaccia:
@@ -149,6 +151,10 @@ La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di el
 - **`<T> T[] toArray(T[] a)`**: restituisce un array di tipo specificato contenente tutti gli elementi dell'insieme.
 
 ---
+
+La principale implementazione dell'interfaccia è HashSet.
+
+Un metodo importante eridato da Object e che viene ridefinito allo stesso modo dalle implementazioni precedenti di List e Set è **`String toString()`**: data una Lista/Set di A, B, ..., F restituisce "[A.toString(), B.toString(), ..., F.toString()]".
 
 ### Iterare su un insieme
 
@@ -216,5 +222,37 @@ La classe **`java.util.Map`** è un'interfaccia che rappresenta una mappa di chi
 - **`V remove(Object key)`**: rimuove la coppia chiave-valore associata alla chiave specificata dalla mappa. Restituisce il valore associato alla chiave, oppure null se la chiave non era presente nella mappa.
 - **`int size()`**: restituisce il numero di coppie chiave-valore presenti nella mappa.
 - **`Collection<V> values()`**: restituisce una collezione di tutti i valori presenti nella mappa.
+
+Le principali implementazioni di Map sono HashMap, LinkedMap e TreeMap. Si noti come nella prima implementazione non è definito un ordine tra elementi, nella seconda l'ordine è quello di inserimento e nella terza l'ordine ASCII tra chiavi. 
+
+Data una Map di (kA,A), (kB,B), ..., (kF,F) il metodo **`String toString()`** delle implementazioni restituisce "{kE.toString():E.toString(), kB.toString():B.toString(), ..., kC.toString():C.toString()}" nell'ordine stabilito.
+
+---
+
+### Arrays
+
+Un array di elementi E viene dichiarato e inizializzato nel seguente modo:
+
+```java
+//dichiarazione
+E[] anArray;
+//inizializzazione
+anArray = new E[SIZE];
+//inizializzazione di un certo elemento
+anArray[INDEX] = new E();
+//dichiarazione di un array bidimensionale
+E[][] a2dimArray;
+//inizializzazione di un array bidimensionale
+a2dimArray = new E[SIZE1][SIZE2];
+//dichiarazione e inizializzazione
+//di un array di interi
+int[] intArray = {0, 4, 3, -2};
+```
+
+Si noti come con la prima istruzione viene allocato solamente lo spazio per un riferimento sullo stack, con la seconda lo spazio per SIZE riferimenti sullo heap e con la terza lo spazio per un oggetto E sullo heap. Nel caso di array di tipi primitivi, nella seconda istruzione viene invece allocato spazio sullo heap per contenere SIZE elementi, la terza istruzione (sostituendo new E() con il valore dell'elemento) non alloca quindi spazio in memoria.
+
+Gli array hanno un attributo pubblico **`int length`** che contiene la lunghezza dell'array.
+
+Il metodo **`String toString()`**, applicato su un array di A, B, ..., F restituisce "{A.toString(), B.toString(), ..., F.toString()}".
 
 
