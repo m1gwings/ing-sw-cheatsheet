@@ -128,7 +128,7 @@ La classe **`java.util.List`** è un'interfaccia che rappresenta una lista ordin
 - **`Object[] toArray()`**: restituisce un array di oggetti contenente tutti gli elementi della lista.
 - **`<T> T[] toArray(T[] a)`**: restituisce un array di tipo specificato contenente tutti gli elementi della lista.
 
-Le principali implementazioni dell'interfaccia sono ArrayList e LinkedList.
+Le principali implementazioni dell'interfaccia sono `ArrayList` e `LinkedList`.
 
 ### `Set<E>`
 
@@ -152,9 +152,9 @@ La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di el
 
 ---
 
-La principale implementazione dell'interfaccia è HashSet.
+La principale implementazione dell'interfaccia è `HashSet`.
 
-Un metodo importante eridato da Object e che viene ridefinito allo stesso modo dalle implementazioni precedenti di List e Set è **`String toString()`**: data una Lista/Set di A, B, ..., F restituisce "[A.toString(), B.toString(), ..., F.toString()]".
+Un metodo importante eridato da Object e che viene ridefinito allo stesso modo dalle implementazioni precedenti di List e Set è **`String toString()`**: data una Lista/Set di elementi A, B, ..., F restituisce "[A.toString(), B.toString(), ..., F.toString()]".
 
 ### Iterare su un insieme
 
@@ -223,9 +223,9 @@ La classe **`java.util.Map`** è un'interfaccia che rappresenta una mappa di chi
 - **`int size()`**: restituisce il numero di coppie chiave-valore presenti nella mappa.
 - **`Collection<V> values()`**: restituisce una collezione di tutti i valori presenti nella mappa.
 
-Le principali implementazioni di Map sono HashMap, LinkedMap e TreeMap. Si noti come nella prima implementazione non è definito un ordine tra elementi, nella seconda l'ordine è quello di inserimento e nella terza l'ordine ASCII tra chiavi. 
+Le principali implementazioni di Map sono `HashMap`, `LinkedMap` e `TreeMap`. Si noti come nella prima implementazione non è definito un ordine tra elementi, nella seconda l'ordine è quello di inserimento e nella terza l'ordine ASCII tra chiavi. 
 
-Data una Map di (kA,A), (kB,B), ..., (kF,F) il metodo **`String toString()`** delle implementazioni restituisce "{kE.toString():E.toString(), kB.toString():B.toString(), ..., kC.toString():C.toString()}" nell'ordine stabilito.
+Data una Map di elementi (kA,A), (kB,B), ..., (kF,F) il metodo **`String toString()`** delle implementazioni restituisce "{kE.toString():E.toString(), kB.toString():B.toString(), ..., kC.toString():C.toString()}" nell'ordine stabilito.
 
 ---
 
@@ -253,6 +253,6 @@ Si noti come con la prima istruzione viene allocato solamente lo spazio per un r
 
 Gli array hanno un attributo pubblico **`int length`** che contiene la lunghezza dell'array.
 
-Il metodo **`String toString()`**, applicato su un array di A, B, ..., F restituisce "{A.toString(), B.toString(), ..., F.toString()}".
+Il metodo **`String toString()`**, applicato su un array di elementi A, B, ..., F restituisce "{A.toString(), B.toString(), ..., F.toString()}".
 
 
