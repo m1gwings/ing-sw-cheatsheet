@@ -715,7 +715,7 @@ Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator
 //@     (\forall int j; i <= j && j < obsInd().size();
 //@       obsInd().get(j).equals(\old(obsInd().get(j + 1)))))) &&
 //@   (!obsInd().contains(el) ==>
-//@     <specificare che una lista rimane invariata (vedi dopo)> && ...;
+//@     <specificare che una lista rimane invariata (vedi dopo)>) &&...;
 ```
 
 > **altrimenti, se `obsInd` non permette di osservare la modifica apportata all'oggetto**, dobbiamo specificare che la porzione di stato osservata è rimasta invariata. Vediamo alcune porzioni di specifica ricorrenti:
@@ -739,13 +739,13 @@ Per definizione, nel caso di esecuzione "normale" (senza eccezioni), un _mutator
 
 - #### _Observer puri_
 
-Gli _observer_ **puri** (esplicitati attraverso la keyword `/* @ pure @ */`) per definizione non possono modificare lo stato degli oggetti, quindi non è necessario specificarlo in JML (lo si considera sottinteso).
+Gli _observer_ **puri** (esplicitati attraverso la keyword `/* @ pure @ */`) per definizione non possono modificare lo stato degli oggetti, quindi non è necessario specificare in JML che lo stato dell'oggetto rimane invariato (lo si considera sottinteso).
 Dobbiamo focalizzarci sullo specificare correttamente `\result` (gli _observer_ per definizione **NON** sono `void`).
 Solitamente se il tipo restituito è un riferimento, bisogna specificare che non sia `null`: `\result != null`.
 Notiamo che, se in un TdE ci viene chiesto di specificare un _observer_, questo allora non sarà un _observer indipendente_ (in quanto può essere specificato in funzione di altri _observer_). Quindi per caratterizzare `\result` **faremo riferimento alla specifica informale** e **sfrutteremo gli _observer indipendenti_**.
 Vediamo alcune porzioni di specifica ricorrenti:
 
-> - **`\result` è un `Set<T>` di elementi che soddisfano una determinata proprietà** (che sarà necessariamente osservabile tramite gli _observer indipendenti_):
+> - **`\result` è un `Set<T>` di elementi che soddisfano una determinata proprietà** (la proprietà sarà necessariamente osservabile tramite gli _observer indipendenti_):
 
 ```java
 //@ requires ...;
@@ -820,7 +820,7 @@ Solitamente nei TdE non viene richiesto di specificare dei _producer_.
 
 - #### _Mutator che non restituiscono nulla_
 
-Quando si verifica un'eccezione durante l'esecuzione di un _mutator_, ci si  aspetta che lo stato dell'oggetto su cui abbiamo invocato il metodo rimanga invariato. Quindi, nella postcondizione nel caso eccezionale, **oltre** a esplicitare cosa ha provocato l'eccezione (facendo riferimento alla specifica informale), specificheremo che lo stato dell'oggetto è rimasto invariato: **per ogni _observer indipendente_** il valore restituito da tale _observer_ è lo stesso di prima che eseguissimo il _mutator_. Possiamo sfruttare le porzioni di specifica ricorrenti introdotte nel paragrafo precedente.
+Quando si verifica un'eccezione durante l'esecuzione di un _mutator_, ci si  aspetta che lo stato dell'oggetto su cui abbiamo invocato il metodo rimanga invariato. Quindi, nella postcondizione nel caso eccezionale, **oltre** a esplicitare cosa ha provocato l'eccezione (facendo riferimento alla specifica informale), specificheremo che lo stato dell'oggetto è rimasto invariato: **per ogni _observer indipendente_** il valore restituito da tale _observer_ è lo stesso di prima che eseguissimo il _mutator_. Possiamo sfruttare le porzioni di specifica ricorrenti introdotte nel paragrafo precedente (`Set` che non varia, `List` che non varia, ...).
 
 - #### _Observer puri_
 
@@ -862,7 +862,7 @@ Nel caso in cui il `rep` sia un `Set<V>` dove `V` estende `Collection<T>`:
 Nel caso in cui il `rep` sia una `List<V>` dove `V` estende `Collection<T>`:
 ```java
 //@ private invariant
-//@   (\forall int i; 0 <= i && i < rep.size();
+//@   (\forall int i; 0 <= i && i <rep.size();
 //@     rep.get(i).size() > 0 &&
 //@     !rep.get(i).contains(null)) && ...;
 ```
@@ -871,3 +871,183 @@ Nel caso in cui il `rep` sia una `List<V>` dove `V` estende `Collection<T>`:
 
 Per ricavare la funzione di astrazione è importante ricordare che è possibile definire completamente lo stato astratto di un oggetto attraverso gli _observer indipendenti_.
 Quindi è sufficiente definire il valore restituito da ciascun _observer indipendente_ in funzione del `rep`.
+
+## Esercizio (TdE del 2022-02-07 esercizio 1 - punto a, b e c)
+
+Vediamo come risolvere un esercizio preso da un TdE applicando i _trucchi_ discussi nel paragafo precedente.
+
+### Testo dell'esercizio
+
+Si consideri la classe Java `JobsDB` per la gestione di domande e offerte di lavoro (classi `JobRequest` e `JobOffer`).
+
+```java
+public class JobsDB {
+  // Ritorna l’elenco delle richieste salvate.
+  public /*@ pure @*/ Set<JobRequest>
+    getRequests();
+
+  // Ritorna l’elenco delle offerte salvate
+  // in ordine cronologico dalla meno alla
+  // piu’ recente.
+  public /*@ pure @*/ List<JobOffer>
+    getOffers();
+
+  // Aggiunge una richiesta di lavoro.
+  // Lancia una DuplicateException se la
+  // richiesta e’ gia’ presente.
+  public void addRequest(JobRequest req)
+    throws DuplicateException;
+
+  // Aggiunge un’offerta di lavoro e
+  // ritorna l’insieme di tutte le richieste
+  // di lavoro compatibili con l’offerta
+  // (senza rimuoverle)
+  public Set<JobRequest>
+    addOffer(JobOffer offer);
+
+  // Ricerca un’offerta di lavoro compatibile 
+  // on la richiesta req. Se esiste almeno
+  // un’offerta di lavoro compatibile con la
+  // richiesta, ritorna la prima offerta
+  // compatibile (meno recente) e la rimuove.
+  // Altrimenti, ritorna null.
+  public JobOffer getOffer(JobRequest req);
+}
+public /*@ pure @*/ class JobRequest {
+  // Ritorna true se e solo se l’offerta
+  // e’ compatibile con la richiesta.
+  public boolean matches(JobOffer offer);
+... }
+```
+
+---
+<!-- _class: due -->
+
+Gli _observer indipendenti_ di `JobsDB` sono `getRequests` e `getOffers`.
+
+### Domanda a)
+
+Si specifichi in JML il metodo `addOffer`.
+
+`addOffer` è un _mutator che restituisce qualcosa_.
+Dai _trucchi_ sulla precondizione, dato che il parametro offer è di tipo riferimento, imponiamo nella precondizione `offer != null`.
+```java
+//@ requires offer != null;
+...
+```
+Ricaviamo la postcondizione normale: l'_observer indipendente_ che permette di osservare la modifica è `getOffers`; possiamo riutilizzare la porzione di specifica ricorrente _inserire un elemento `el` di tipo `T` in fondo ad una `List<T>`_:
+```java
+...
+//@ ensures getOffers().size() == \old(getOffers().size() + 1) &&
+//@   getOffers().get(getOffers().size() - 1).equals(offer) &&
+//@   (\forall int i; 0 <= i && i < \old(getOffers().size());
+//@     getOffers().get(i).equals(\old(getOffers().get(i)))) &&
+...
+```
+**Ma NON abbiamo ancora finito!**: dobbiamo specificare, per ogni altro _observer indipendente_ (`getRequests`), che tutto è rimasto invariato; possiamo riutilizzare la porzione di specifica ricorrente _specificare che un Set<T> rimane invariato_:
+```java
+...
+//@   getRequests().size() == \old(getRequests().size()) &&
+//@   getRequests().containsAll(\old(getRequests())) &&
+...
+```
+Abbiamo finito di specificare la "parte" _mutator_, ora dobbiamo specificare la "parte" _observer_ (ricordiamo che `addOffer` è un _mutator che restituisce qualcosa_); possiamo riutilizzare la porzione di specifica _\result è un Set<T> di elementi che soddisfano una determinata proprietà_ (la proprietà è osservabile tramite `getRequests`):
+```java
+...
+//@   \result != null && !\result.contains(null)
+//@   (\forall JobRequest r; ;
+//@     \result.contains(r) <==> (getRequests().contains(r) &&
+//@     r.matches(offer)));
+public Set<JobRequests> addOffer(JobOffer offer);
+```
+(In questo caso abbiamo già specificato che `getRequests` non varia, possiamo scrivere la specifica come se stessimo trattando un normale _observer_).
+
+Dato che il metodo non lancia eccezioni non sarà necessario specificare il blocco `signals`.
+
+### Domanda b)
+
+Si specifichi in JML il metodo `getOffer`.
+
+Anche `getOffer` è un mutator che restituisce qualcosa, procediamo come prima scrivendo la specifica secondo il seguente schema:
+```java
+//@ requires <req non nullo>
+//@ ensures <esiste un'offerta compatibile> ?
+//@   (* specifica della parte mutator *) &&
+//@     <rimuovere la prima offerta compatibile dalla lista getOffers>&&
+//@     <il set getRequests rimane invariato> &&
+//@   (* specifica della parte observer *) &&
+//@     <\result è l'elemento rimosso dalla lista> :
+//@   (* specifica della parte mutator *) &&
+//@     <la lista getOffer rimane invariata> &&
+//@     <il set getRequests rimane invariato> &&
+//@   (* specifica della parte observer *)
+//@     <\result è nullo>
+```
+Possiamo eliminare le ripetizioni come segue:
+```java
+//@ requires <req non nullo>
+//@ ensures (<esiste un'offerta compatibile> ?
+//@   <rimuovere la prima offerta compatibile dalla lista getOffers> &&
+//@   <\result è l'elemento rimosso dalla lista> :
+//@   <la lista getOffer rimane invariata> &&
+//@   <\result è nullo>) &&
+//@ <il set getRequests rimane invariato>;
+```
+Siamo pronti per scrivere la specifica (_Continua nella facciata successiva_):
+
+---
+<!-- _class: due -->
+
+```java
+//@ requires req != null;
+//@ ensures ((\exists JobOffer o; \old(getOffers().contains(o));
+//@   req.matches(o)) ?
+//@     (getOffers().size() == \old(getOffers().size() - 1) &&
+//@     (\exists int i; 0 <= i && i < \old(getOffers().size());
+//@       \old(req.matches(getOffers().get(i))) &&
+//@       (\forall int j; 0 <= j && j < i;
+//@         getOffers().get(j).equals(\old(getOffers().get(j))) &&
+//@         !req.matches(getOffers().get(j))) &&
+//@       (\forall int j; i <= j && j < getOffers().size();
+//@         getOffers().get(j).equals(\old(getOffers().get(j + 1)))) &&
+//@       \result.equals(\old(getOffers().get(i))))) :
+//@     (getOffers().size() == \old(getOffers().size()) &&
+//@     (\forall int i; 0 <= i && i < getOffers().size();
+//@       getOffers().get(i).equals(\old(getOffers().get(i)))) &&
+//@     \result == null)) &&
+//@   getRequests().size() == \old(getRequests().size()) &&
+//@   getRequests().containsAll(\old(getRequests()));
+public JobOffer getOffer(JobRequest req);
+```
+Nello scrivere la specifica abbiamo utilizzato alcune porzioni ricorrenti per la lista o il set che rimangono invariati ed abbiamo riadattato _rimuovere un elemento `el` di tipo `T` da una `List<T>`_.
+Risulta evidente che le tecniche di cui abbiamo parlato non permettono di ricavare la specifica in modo meccanico, aiutano solo a non dimenticare qualcosa.
+
+### Domanda c)
+
+Si consideri un’implementazione di `JobsDB` che fa uso di un `Set` per memorizzare le richieste di lavoro e di una `List` per memorizzare le offerte di lavoro, come mostrato di seguito.
+```java
+public class JobsDB {
+  private Set<JobRequest> requests;
+  private List<JobOffer> offers;
+... }
+```
+Per tale implementazione, fornire l’invariante di rappresentazione (representation invariant, RI) e la funzione di astrazione (abstraction function, AF).
+
+Dalle teniche per ricavare l'RI deduciamo `requests` e `offers` non nulli e `requests` e `offers` non contengono `null`. (Non viene esplicitamente detto che `offers` non contiene duplicati ed è anche corretto semanticamente: ci possono essere più offerte uguali in momenti diversi)
+```java
+// RI:
+//@ private invariant requests != null && !requests.contains(null) &&
+//@   offers != null && !offers.contains(null);
+```
+
+Per definire l'AF è sufficiente specificare gli _observer indipendenti_ `getRequests` e `getOffers` tramite `requests` e `offers`:
+```java
+// AF:
+//@ private invariant
+//@   getRequests().size() == requests.size() &&
+//@   getRequests().containsAll(requests) &&
+//@   getOffers().size() == offers.size() &&
+//@   (\forall int i; 0 <= i && i < offers.size();
+//@     getOffers().get(i).equals(offers.get(i)));
+```
+(È molto simile alla specifica di una lista o di un set che non variano).
