@@ -842,7 +842,7 @@ Il fatto che la classe sia **pura** implica che lo stato dell'oggetto non possa 
 
 Se il `rep` è di tipo riferimento solitamente occorre specificare `rep != null`.
 
-Se il `rep` è una collezione di oggetti solitamente occorre specificare `!rep.contains(null)`.
+Se il `rep` è una collezione di oggetti solitamente occorre specificare `!rep.contains(null)` (nel caso in cui `rep` sia una `Map`: `!rep.containsKey(null) && !rep.containsValue(null)`).
 
 Se il `rep` è una collezione di collezioni di oggetti solitamente occorre specificare che ciascuna "sottocollezione" non sia vuota e non contenga `null`.
 Nel caso in cui il `rep` sia una `Map<K, V>` dove `V` estende `Collection<T>`:
@@ -885,26 +885,22 @@ public class JobsDB {
   // Ritorna l’elenco delle richieste salvate.
   public /*@ pure @*/ Set<JobRequest>
     getRequests();
-
   // Ritorna l’elenco delle offerte salvate
   // in ordine cronologico dalla meno alla
   // piu’ recente.
   public /*@ pure @*/ List<JobOffer>
     getOffers();
-
   // Aggiunge una richiesta di lavoro.
   // Lancia una DuplicateException se la
   // richiesta e’ gia’ presente.
   public void addRequest(JobRequest req)
     throws DuplicateException;
-
   // Aggiunge un’offerta di lavoro e
   // ritorna l’insieme di tutte le richieste
   // di lavoro compatibili con l’offerta
   // (senza rimuoverle)
   public Set<JobRequest>
     addOffer(JobOffer offer);
-
   // Ricerca un’offerta di lavoro compatibile 
   // on la richiesta req. Se esiste almeno
   // un’offerta di lavoro compatibile con la
