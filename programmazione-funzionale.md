@@ -216,7 +216,7 @@ Collections.sort(a, Comparator.reverseOrder());
 
 ### `flatMap`
 
-[**`Stream<U> flatMap(<funzione da T a Stream<U>>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMap-java.util.function.Function-) prende in input una funzione (`Function<T, Stream<U>>`), la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contentente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
+[**`Stream<U> flatMap(<funzione da T a Stream<U>>)`**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#flatMap-java.util.function.Function-) prende in input una funzione (`Function<T, Stream<U>>`), la applica ad ogni elemento di tipo T dello `stream`. La funzione restituisce un altro `stream` (in generale contenente elementi di tipo diverso U) per ogni elemento. Infine tutti gli `stream` restituiti dalla funzione vengono concatenati in un unico `stream`.
 
 Nel nostro esempio, vogliamo trasformare ogni persona (sempre filtrata con età >= 30) in una lista di stringhe contenenti il nome e l'età, e poi concatenare tutti gli `stream` in un unico `stream`:
 
@@ -260,7 +260,7 @@ Integer sommaEta = persone.stream()
     (eta1, eta2) -> eta1 + eta2 );
 ```
 
-Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contentente le età `[30, 40, 50]`, la `reduce` si applica in questo modo: 
+Otterrò un intero: 120. Nelle varie iterazioni nello `stream` contenente le età `[30, 40, 50]`, la `reduce` si applica in questo modo: 
 
 - 0 (valore iniziale) + 30 (primo elemento dello stream) = 30 (risultato parziale), 
 - 30 (risultato parziale della iterazione precedente) + 40 (secondo elemento dello stream) = 70, 
@@ -384,7 +384,7 @@ Sono poi disponibili i metodi per lavorare con gli Optional:
 
 ---
 
-Facciamo un esempio usando gli `Optional` e i tre metodi visti in precendenza:
+Facciamo un esempio usando gli `Optional` e i tre metodi visti in precedenza:
 
 ```java
 Optional<String> opt = Optional.of("ciao");
@@ -473,7 +473,7 @@ Predicate<String> pred2 = s ->
 
 ### Testo dell'esercizio
 
-Si consideri il seguente metodo statico, che ha la precondizione che ciascun elemento di nums è una stringa corrispondente a una rappresenatazione testuale di un numero intero
+Si consideri il seguente metodo statico, che ha la precondizione che ciascun elemento di nums è una stringa corrispondente a una rappresentazione testuale di un numero intero
 
 ```java
 public static List<Integer> addX

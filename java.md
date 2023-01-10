@@ -169,7 +169,7 @@ In Java, ci sono diverse parole chiave che possono essere utilizzate per modific
 
 - **`public`**: quando una classe, un attributo o un metodo è dichiarato come `public`, significa che esso è accessibile da qualsiasi altra classe o codice all'interno del programma.
 - **`private`**: quando una classe, un attributo o un metodo è dichiarato come `private`, significa che esso è accessibile solo all'interno della classe in cui è dichiarato.
-- **`protected`**: quando una classe, un attributo o un metodo è dichiarato come `protected`, significa che esso è accessibile nello stesso pakage, ma solo all'interno della classe in cui è dichiarato e dalle sottoclassi di quella classe.
+- **`protected`**: quando una classe, un attributo o un metodo è dichiarato come `protected`, significa che esso è accessibile nello stesso package, ma solo all'interno della classe in cui è dichiarato e dalle sottoclassi di quella classe.
 - **friendly** (o **`default`**): si dichiara non scrivendo nient'altro, significa che esso è accessibile solo all'interno del package in cui è dichiarato.
 
 ## `static` e `final`
@@ -219,7 +219,7 @@ public abstract class Animale {
 
 ## `this` e `super`
 
-- La parola chiave **`this`** fornisce un riferimento all'oggetto corrente su cui è stato invocato il metodo che stiamo implementando. Può risultare utile quando tale metodo acquisisce dei parametri in input che hanno lo stesso nome di alcuni attributi della classe a cui appartiene: attraverso la keyword `this` possiamo accedere a questi attributi della classe che altrimenti risulterbbero "oscurati" dai parametri. Ad esempio:
+- La parola chiave **`this`** fornisce un riferimento all'oggetto corrente su cui è stato invocato il metodo che stiamo implementando. Può risultare utile quando tale metodo acquisisce dei parametri in input che hanno lo stesso nome di alcuni attributi della classe a cui appartiene: attraverso la keyword `this` possiamo accedere a questi attributi della classe che altrimenti risulterebbero "oscurati" dai parametri. Ad esempio:
 ```java
 public class Persona {
   private String nome;
@@ -333,7 +333,7 @@ La classe **`java.util.Set`** è un'interfaccia che rappresenta un insieme di el
 
 La principale implementazione dell'interfaccia è `HashSet`.
 
-Un metodo importante eridato da Object e che viene ridefinito allo stesso modo dalle implementazioni precedenti di List e Set è **`String toString()`**: data una Lista/Set di elementi A, B, ..., F restituisce "[A.toString(), B.toString(), ..., F.toString()]".
+Un metodo importante ereditato da Object e che viene ridefinito allo stesso modo dalle implementazioni precedenti di List e Set è **`String toString()`**: data una Lista/Set di elementi A, B, ..., F restituisce "[A.toString(), B.toString(), ..., F.toString()]".
 
 ### Iterare su un insieme
 
