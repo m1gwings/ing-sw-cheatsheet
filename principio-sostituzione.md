@@ -110,14 +110,14 @@ In termini non formali un metodo _ereditato_ soddisfa la specifica del metodo _o
 
 #### Condizioni _forti_ e _deboli_
 
-Una condizione è _più forte_ di un altra se è _vera "in meno casi"_.
+Una condizione è _più forte_ di un'altra se è _vera "in meno casi"_.
 Questo concetto si formalizza in logica attraverso l'implicazione: una condizione `a` è **_più forte_**  di una condizione `b` se è sempre vera la condizione `a ==> b`.
 Questo introduce un ordinamento (non totale) delle formule logiche dalla _più forte_ alla _più debole_. In particolare `false` è la condizione _più forte_ in assoluto e `true` la _più debole_ in assoluto.
 
 Vediamo l'**effetto degli operatori logici** sulla `forza` delle condizioni:
 - `||` _indebolisce_: `a ==> a || b` (cioè `a || b` è _più debole_ di `a`)
 - `&&` _rafforza_: `a && b ==> a` (cioè `a && b` è _più forte_ di `a`)
-- `==>` _indebolice_: `a ==> (b ==> a)`, si deduce ricordando che `b ==> a` equivale ad `!b || a`
+- `==>` _indebolisce_: `a ==> (b ==> a)`, si deduce ricordando che `b ==> a` equivale ad `!b || a`
 - se _rafforziamo_ la premessa _indeboliamo_ l'implicazione:
 supponiamo che `c` sia _più forte_ di `a`, allora è sempre vero `c ==> a`.
 Allora, se `a ==> b` è vero, per transitività `c ==> b` è vero, cioè abbiamo dimostrato che `(a ==> b) ==> (c ==> b)` e cioè che `a ==> b` è _più forte_ di `c ==> b`.
@@ -125,7 +125,7 @@ Allora, se `a ==> b` è vero, per transitività `c ==> b` è vero, cioè abbiamo
 #### Precondizione _più debole_
 
 Se la precondizione del metodo _ereditato_ è più debole di quella del metodo _originale_ allora se è vera la precondizione del metodo _originale_ è anche vera quella del metodo _ereditato_ e cioè possiamo richiamare il metodo _ereditato_ in tutti i casi in cui potevano richiamare quello _originale_; proprio come ci aspetteremmo!
-Quindi condizione **necessaria** perchè valaga la _method rule_ è la **_precondition rule_**: detta `pre_sub` la precondizione del metodo _ereditato_ e `pre_super` la precondizione di quello _originale_, `pre_sub` è _più debole_ di `pre_super` e cioè `pre_super ==> pre_sub` è sempre vera.
+Quindi condizione **necessaria** perchè valga la _method rule_ è la **_precondition rule_**: detta `pre_sub` la precondizione del metodo _ereditato_ e `pre_super` la precondizione di quello _originale_, `pre_sub` è _più debole_ di `pre_super` e cioè `pre_super ==> pre_sub` è sempre vera.
 
 Se `pre_sub` non fosse _più debole_ di `pre_super` esisterebbe un caso in cui _pre_sub_ è falsa e _pre_super_ è vera. L'utente richiamando il metodo in quel caso (che soddisfa la precondizione del metodo _originale_ e quindi risulta un caso valido di input) otterrebbe un risultato inaspettato (dato che tale caso viola la precondizione del metodo _ereditato_ che è quello che viene effettivamente invocato).
 
@@ -175,7 +175,7 @@ public class InsiemeDiInteriEccezDuplicati {
   //@ ensures !\old(appartiene(x)) &&
   //@   appartiene(x) && ...;
   //@ signals (EccezioneDuplicato e)
-  //@   \old(appertiene(x));
+  //@   \old(appartiene(x));
   public void inserisci(int x)
     throws EccezioneDuplicato;
   ...
@@ -272,5 +272,5 @@ Quindi, in questo esempio, `InsiemeDiInteri` **viola** la _property rule_ e di c
 Consideriamo la classe `InsiemeDiInteriSenzaRimuovi` che è uguale ad `InsiemeDiInteri` ma non ha il metodo `rimuovi`.
 `InsiemeDiInteriSenzaRimuovi` gode della seguente proprietà _evolutiva_: _"il valore restituito da `cardinalita` nello stato prossimo è maggiore o uguale a quello restituito nello stato corrente"_ (l'insieme non si "restringe").
 Supponiamo che la classe `InsiemeDiInteri` estenda la classe `InsiemeDiInteriSenzaRimuovi` aggiungendo, come nell'esempio precedente, solo il metodo `rimuovi` definito come al solito.
-Come nell'esempio precedente la _signature rule_ e la _method rule_ non possono essere violate, dato che `InsiemeDiInteri` non ridefinice alcun metodo.
+Come nell'esempio precedente la _signature rule_ e la _method rule_ non possono essere violate, dato che `InsiemeDiInteri` non ridefinisce alcun metodo.
 Chiaramente ad essere violata è la proprietà evolutiva di `InsiemeDiInteriSenzaRimuovi` e di conseguenza la _property rule_.

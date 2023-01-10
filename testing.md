@@ -32,7 +32,7 @@ _Osservazione_: se una funzione ha n `return` allora avremo per forza **almeno n
 
 ### Criterio di copertura delle decisioni (edge coverage)
 
-Si vuole coprire tutte le possibili _diramazioni_ del programma. Per fare ciò è utile costruire il **control flow graph** (o **CFG**) del programma in cui si evidenziono proprio tutte le diramazioni.
+Si vuole coprire tutte le possibili _diramazioni_ del programma. Per fare ciò è utile costruire il **control flow graph** (o **CFG**) del programma in cui si evidenziano proprio tutte le diramazioni.
 Nella figura seguente è riportato il CFG della funzione `sqrt` (esempio precedente):
 
 ![](./immagini/cfg.svg)

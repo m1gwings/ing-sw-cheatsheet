@@ -61,7 +61,7 @@ O in modo ancora più compatto:
 new Thread(() -> { /* Fai cose */ }).start();
 ```
 
-Notiamo come, in entrambi i casi di crezione (estendendo `Thread` o implementando `Runnable`), il thread sia libero di accedere a qualsiasi variabile globale o passata nel costruttore,
+Notiamo come, in entrambi i casi di creazione (estendendo `Thread` o implementando `Runnable`), il thread sia libero di accedere a qualsiasi variabile globale o passata nel costruttore,
 causando potenzialmente errori di interferenza se più thread accedono alle stesse variabili contemporaneamente.
 
 ## Intrinsic lock
@@ -159,8 +159,8 @@ andando potenzialmente a poter interferire con lo stato interno di un oggetto, c
 --> 
 
 Altre cose su cui riporre particolare attenzione quando si utilizza un intrinsic lock:
-- essendo il lock legato ad un'instanza di una classe, quando si utilizza `synchronized` in metodi statici non si ha a disposizione
-  un istanza su cui sincronizzare. Si utilizza quindi l'istanza della classe stessa, ovvero:
+- essendo il lock legato ad un'istanza di una classe, quando si utilizza `synchronized` in metodi statici non si ha a disposizione
+  un'istanza su cui sincronizzare. Si utilizza quindi l'istanza della classe stessa, ovvero:
 ```java
 public class ExampleClass {
   public static void static1() {
@@ -421,7 +421,7 @@ public class Vector {
 ```java
 public class Vector {
   ...
-  public synchronized void sum(Vector other) {
+  public void sum(Vector other) {
     	double otherX, otherY;
       synchronized(other) {
         otherX = other.x;

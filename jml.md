@@ -55,13 +55,13 @@ Sia `T` un generico tipo di Java ed `a(t)`, `b(t)` due condizioni JML definite s
 
 Nel caso `T` non sia un tipo primitivo assumiamo `t != null`.
 
-#### Operatori di aggragazione
+#### Operatori di aggregazione
 
 Sia `T` un generico tipo di Java ed `N` uno dei tipi numerici primitivi di Java (`int`, `float`, ...).
 Sia `a(t)` una condizione JML definita sull'oggetto `t` di tipo `T`.
 Sia `b : T -> N` una funzione (in senso matematico) implementata attraverso Java. Ad esempio:
 `T = String`, `N = int`, `a(t) = !t.isEmpty() && t.charAt(0) == 'e'`, `b(t) = t.length()`.
-Allora possiamo applicare i seguenti operatori di aggragazione:
+Allora possiamo applicare i seguenti operatori di aggregazione:
 
 - `(\sum T t; a(t); b(t))`: restituisce la somma `b(t_1) + b(t_2) + ...` per tutti i `t_i` tali che `a(t_i)`
 - `(\product T t; a(t); b(t))`: restituisce il prodotto `b(t_1)*b(t_2)*...` per tutti i `t_i` tali che `a(t_i)`
@@ -180,7 +180,7 @@ Vogliamo descrivere attraverso la specifica un _insieme (mutabile) di interi_ su
 - _inserisci(x)_: aggiunge l'elemento x all'insieme
 - _rimuovi(x)_: rimuove l'elemento x dall'insieme
 - _appartiene(x)_: restituisce _vero_ se x appartiene all'insieme, _falso_ altrimenti
-- _cardinalità_: resituisce la cardinalità dell'insieme
+- _cardinalità_: restituisce la cardinalità dell'insieme
 - _scegli_: restituisce uno tra gli elementi dell'insieme
 
 Alcuni valori ammissibili per l'insieme sono: _{1, 10, 35}_, _{7}_, ...
@@ -266,7 +266,7 @@ Possiamo classificare le operazioni (i metodi pubblici) definite su un ADT nelle
 
 Un tipo _mutabile_ "adeguato" dovrebbe disporre di _creator_, _observer_ e _mutator_.
 
-Un tipo _immutabile_ "adeguato" dovrebbe disporre di _crator_, _observer_ e _producer_.
+Un tipo _immutabile_ "adeguato" dovrebbe disporre di _creator_, _observer_ e _producer_.
 
 ### Proprietà astratte (evolutive e invarianti)
 
@@ -276,7 +276,7 @@ Si distinguono in:
 
 ---
 
-- Properità **invarianti**: si tratta di proprietà che sono valide per qualunque stato ammissibile dell'oggetto. Nell'esempio `InsiemeDiInteri`, una proprietà invariante è: `cardinalita() >= 0`.
+- Proprietà **invarianti**: si tratta di proprietà che sono valide per qualunque stato ammissibile dell'oggetto. Nell'esempio `InsiemeDiInteri`, una proprietà invariante è: `cardinalita() >= 0`.
 
 Le proprietà **evolutive** **NON** sono **rappresentabili direttamente in JML**: non esiste una sintassi per dichiararle esplicitamente, ma seguono dalle specifiche dei singoli metodi.
 
@@ -295,7 +295,7 @@ Le proprietà astratte permettono agli utenti dell'ADT di fare assunzioni che ne
 
 Dichiarare un invariante pubblico non è sufficiente per garantirne la validità.
 Dobbiamo assicurarci, attraverso la specifica, che l'invariante sia valido per tutti gli stati "iniziali" delle istanze dell'ADT: ovvero gli oggetti ottenuti invocando i creator. Successivamente è necessario verificare che, a partire da un generico stato ammissibile dell'oggetto, applicando una qualsiasi delle operazioni definite e assumendo vere le rispettive precondizioni, la proprietà sia ancora valida.
-In particolare uno stato si considera "ammissibile" se è raggiungibile applicando un nunmero finito di volte le operazioni dell'ADT ad uno degli stati iniziali.
+In particolare uno stato si considera "ammissibile" se è raggiungibile applicando un numero finito di volte le operazioni dell'ADT ad uno degli stati iniziali.
 Non è necessario dimostrare che gli observer soddisfino l'invariante, dato che non modificano lo stato dell'oggetto.
 
 ### Rappresentante
@@ -381,7 +381,7 @@ Nella condizione JML siamo interessati ad esplicitare la **relazione** (logica) 
 Nell'esempio `InsiemeDiInteri` con un'`ArrayList` come `rep`, a prescindere da come l'AF venga realizzata, vale che _"un elemento `x` appartiene all'insieme s (stato astratto) sse esiste un indice i compreso tra 0 e `rep.size()` tale che `rep.get(i) == x` (stato concreto)"_.
 Lo stato concreto è rappresentato dal `rep`, a cui possiamo accedere dato che è costituito da un insieme di attributi privati (ricordiamo che siamo nel private invariant). 
 Lo stato astratto invece non è realmente memorizzato da nessuna parte, è possibile accedervi solo attraverso gli _observer_.
-Quindi nella condizione JML compariranno gli attributi **privati** che costituiscono il `rep` ed gli _observer_ che permettono di osservare lo stato astratto dell'ADT, legati tra loro attraverso delle formule logiche che risultano vere solo quando i valori assunti dagli attributi **privati** corrispondono con lo stato astratto osservato.
+Quindi nella condizione JML compariranno gli attributi **privati** che costituiscono il `rep` e gli _observer_ che permettono di osservare lo stato astratto dell'ADT, legati tra loro attraverso delle formule logiche che risultano vere solo quando i valori assunti dagli attributi **privati** corrispondono con lo stato astratto osservato.
 Dichiariamo l'AF nell'esempio `InsiemeDiInteri`:
 ```java
 public class InsiemeDiInteri {
@@ -513,7 +513,7 @@ public class InsiemeDiInteri {
   ...
 }
 ```
-Anche in questo caso l'implementazione è **sbagliata!** Non solo stiamo esponendo il `rep`, non stiamo nenche controllando che `lista` soddisfi l'RI.
+Anche in questo caso l'implementazione è **sbagliata!** Non solo stiamo esponendo il `rep`, non stiamo neanche controllando che `lista` soddisfi l'RI.
 
 Per ovviare a questi problemi di solito si ricorre ai _copy constructor_.
 Ad esempio, per evitare l'esposizione del `rep` in `comeArrayList`:
@@ -757,7 +757,7 @@ Vediamo alcune porzioni di specifica ricorrenti:
 //@      observer indipendenti>) && ...;
 ```
 
-> - **`\reuslt` è una `List<T>` di elementi che soddisfano una determinata proprietà**:
+> - **`\result` è una `List<T>` di elementi che soddisfano una determinata proprietà**:
 
 Come prima solo che dobbiamo specificare che nella `List` non vi sono duplicati (per i `Set` è sempre garantito)
 ```java
@@ -874,7 +874,7 @@ Quindi è sufficiente definire il valore restituito da ciascun _observer indipen
 
 ## Esercizio (TdE del 2022-02-07 esercizio 1 - punto a, b e c)
 
-Vediamo come risolvere un esercizio preso da un TdE applicando i _trucchi_ discussi nel paragafo precedente.
+Vediamo come risolvere un esercizio preso da un TdE applicando i _trucchi_ discussi nel paragrafo precedente.
 
 ### Testo dell'esercizio
 
@@ -1029,7 +1029,7 @@ public class JobsDB {
 ```
 Per tale implementazione, fornire l’invariante di rappresentazione (representation invariant, RI) e la funzione di astrazione (abstraction function, AF).
 
-Dalle teniche per ricavare l'RI deduciamo `requests` e `offers` non nulli e `requests` e `offers` non contengono `null`. (Non viene esplicitamente detto che `offers` non contiene duplicati ed è anche corretto semanticamente: ci possono essere più offerte uguali in momenti diversi)
+Dalle tecniche per ricavare l'RI deduciamo `requests` e `offers` non nulli e `requests` e `offers` non contengono `null`. (Non viene esplicitamente detto che `offers` non contiene duplicati ed è anche corretto semanticamente: ci possono essere più offerte uguali in momenti diversi)
 ```java
 // RI:
 //@ private invariant requests != null && !requests.contains(null) &&
