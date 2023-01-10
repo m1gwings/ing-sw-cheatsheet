@@ -421,7 +421,7 @@ public class Vector {
 ```java
 public class Vector {
   ...
-  public synchronized void sum(Vector other) {
+  public void sum(Vector other) {
     	double otherX, otherY;
       synchronized(other) {
         otherX = other.x;
